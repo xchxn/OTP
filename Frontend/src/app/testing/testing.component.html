@@ -1,0 +1,21 @@
+<p>testing works!</p>
+
+<form class="optionForm" [formGroup]="optionForm" (ngSubmit)="getThumbnail()">
+  <select id="season" type="text" formControlName="season">
+    <option *ngFor="let season of Options.season" [value]="season">{{ season }}</option>
+  </select>
+  <select id="member" type="text" formControlName="member">
+    <option *ngFor="let member of Options.member" [value]="member">{{ member }}</option>
+  </select>
+  <select id="collectionNo" type="text" formControlName="collectionNo">
+    <option *ngFor="let collectionNo of Options.collectionNo" [value]="collectionNo">{{ collectionNo }}</option>
+  </select>
+  <select id="classes" type="text" formControlName="classes">
+    <option *ngFor="let classes of Options.classes" [value]="classes">{{ classes }}</option>
+  </select>
+  <div class="submitButton">
+    <button type="submit" (click)="getThumbnail()">가져오기</button>
+  </div>
+</form>
+
+<img [src]="thumbnailUrl" alt="thumbnail" >
