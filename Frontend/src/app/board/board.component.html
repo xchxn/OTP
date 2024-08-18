@@ -1,1 +1,12 @@
 <p>board works!</p>
+<a routerLink="/post" routerLinkActive="active" ariaCurrentWhenActive="page">
+  Post
+</a>
+
+@for ( posting of postings; track posting.id) {
+  <div>
+    <p>{{ posting.title }}</p>
+    <p>{{ posting.author }}</p>
+    <p>{{ posting.content }}</p>
+  </div>
+}
