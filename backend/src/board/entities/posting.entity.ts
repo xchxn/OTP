@@ -21,19 +21,12 @@ export class PostingEntity {
   @Column({ length: 50 })
   author: string;
 
-  // @Column('simple-array')
-  // tags: number[]; // 숫자 배열
-
   @Column('json')
-  objekts: number[]; // 숫자 배열을 JSON으로 저장
+  objekts: { have: number[]; want: number[] }; // 숫자 배열을 JSON으로 저장
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  // Have Objekt List
-
-  // Want Objekt List
 }
