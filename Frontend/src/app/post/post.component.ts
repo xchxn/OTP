@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PostService } from './post.service';
 
 interface objektFilter {
-  season: string;
-  member: string;
-  collectionNo: string;
-  classes: string;
+  season: Array<string>;
+  member: Array<string>;
+  collectionNo: Array<string>;
+  classes: Array<string>;
 }
 
 @Component({
@@ -20,8 +20,9 @@ interface objektFilter {
 })
 export class PostComponent {
   postingForm!: FormGroup;
-  objektFiler!: objektFilter;
+  objektFilter!: objektFilter;
   objektFilterForm!: FormGroup;
+  thumbnail: string[] = [];
 
   constructor(
     private postService: PostService,
@@ -35,10 +36,10 @@ export class PostComponent {
       title: [''],
       content: [''],
       author: [''],
-      classes: [''],
       objekt: this.formBuilder.group({
-        have: [''],
+        have: this.formBuilder.array([]),
         want: ['']
+        // 해당 배열에서 id를 읽어 클라이언트의 화면에는 썸네일만 보여지도록
       })
     });
 
@@ -46,27 +47,53 @@ export class PostComponent {
       season: [''],
       member: [''],
       collectionNo: [''],
-      objekt: [''],
+      classes: ['']
     });
   }
 
   loadData(): void {
     this.postService.getSelectOption().subscribe({
       next: (data) => {
-        this.objektFiler = data;
-        console.log(this.objektFiler);
+        this.objektFilter = data;
+        console.log(this.objektFilter);
+      },
+      error: (err) => console.error(err),
+      complete: () => console.log('Data loading complete')
+    });
+  }
+  // 작성중인 포스트의 내용을 볼 수 있는 함수 추가하기
+  
+  addObjektToArray(): void {
+    const objektFormValue = this.objektFilterForm.value;
+
+    this.postService.getTargetObjekt(objektFormValue).subscribe({
+      next: (data) => {
+        console.log(data.id);
+
+        const haveArray = this.postingForm.get('objekt.have') as FormArray;
+        haveArray.push(this.formBuilder.control(data.id));
       },
       error: (err) => console.error(err),
       complete: () => console.log('Data loading complete')
     });
   }
 
-  // 작성중인 포스트의 내용을 볼 수 있는 함수 추가하기
+  getThumbnail(): void {
+    const haveArray = this.postingForm.get('objekt.have') as FormArray;
 
-  addObjektToArray(): void {
-    const objektFormValue = this.objektFilterForm.value;
-
-    // service에서 오브젝트 id와 썸네일 가져오기
-    // 썸네일 클릭하면 postingForm 배열에 추가하기
+    haveArray.controls.forEach(control => {
+      const haveValue = {
+        id: control.value
+      }
+      this.postService.getThumbnail(haveValue).subscribe({
+        next: (data) => {
+          // 썸네일 주소 배열에 data 추가
+          console.log(data.thumbnailImage);
+          this.thumbnail.push(data.thumbnailImage);
+        },
+        error: (err) => console.error(err),
+        complete: () => console.log('Thumbnail loading complete')
+      });
+    });
   }
 }

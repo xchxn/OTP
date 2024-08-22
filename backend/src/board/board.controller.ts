@@ -40,4 +40,19 @@ export class BoardController {
   deletePosting(@Body() body: { id: string }): any {
     return this.boardService.deletePosting(body);
   }
+
+  @Get('option')
+  getSelectOption(): any {
+    return this.boardService.getSelectOption();
+  }
+
+  @Post('objekt')
+  getTargetObjekt(@Body() body: any): any {
+    return this.boardService.getTargetObjekt(body);
+  }
+
+  @Post('thumbnail')
+  getThumbnail(@Body() body: any): any {
+    return this.boardService.getThumbnail(body);
+  }
 }

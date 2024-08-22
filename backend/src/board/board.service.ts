@@ -96,17 +96,26 @@ export class BoardService {
   }
 
   // 선택 오브젝트의 아이디와 썸네일 주소 반환
-  async getThumbnail(body: any): Promise<any> {
+  async getTargetObjekt(body: any): Promise<any> {
     const selectOption = await this.objektRepository
       .createQueryBuilder()
-      .select('DISTINCT thumbnailImage', 'thumbnailImage')
-      .addSelect('id', 'id')
+      .select('DISTINCT id', 'id')
       .where('season = :season', { season: body.season })
       .andWhere('member = :member', { member: body.member })
       .andWhere('collectionNo = :collectionNo', {
         collectionNo: body.collectionNo,
       })
       .andWhere('classes = :classes', { classes: body.classes })
+      .getRawOne();
+    return selectOption;
+  }
+
+  async getThumbnail(body: any): Promise<any> {
+    console.log(body);
+    const selectOption = await this.objektRepository
+      .createQueryBuilder()
+      .select('DISTINCT thumbnailImage', 'thumbnailImage')
+      .where('id = :id', { id: body.id })
       .getRawOne();
     return selectOption;
   }

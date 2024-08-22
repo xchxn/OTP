@@ -4,6 +4,7 @@ import { BoardService } from './board.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 interface Posting {
+  id: number;
   title: string;
   author: string;
   content: string;

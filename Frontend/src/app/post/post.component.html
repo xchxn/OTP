@@ -1,1 +1,41 @@
 <p>post works!</p>
+
+<form class="objektFilterForm" [formGroup]="objektFilterForm" (ngSubmit)="getThumbnail()">
+  <select id="season" type="text" formControlName="season">
+    <option *ngFor="let season of objektFilter.season" [value]="season">{{ season }}</option>
+  </select>
+  <select id="member" type="text" formControlName="member">
+    <option *ngFor="let member of objektFilter.member" [value]="member">{{ member }}</option>
+  </select>
+  <select id="collectionNo" type="text" formControlName="collectionNo">
+    <option *ngFor="let collectionNo of objektFilter.collectionNo" [value]="collectionNo">{{ collectionNo }}</option>
+  </select>
+  <select id="classes" type="text" formControlName="classes">
+    <option *ngFor="let classes of objektFilter.classes" [value]="classes">{{ classes }}</option>
+  </select>
+  <div class="submitButton">
+    <button type="button" (click)="addObjektToArray()">가져오기</button>
+  </div>
+  <div class="submitButton">
+    <button type="button" (click)="getThumbnail()">썸네일가져오기</button>
+  </div>
+</form>
+
+<form [formGroup]="postingForm">
+  <ul id="season" type="text" formControlName="season">
+    <li *ngFor="let haveItem of postingForm.get('objekt.have')?.value; let i = index">
+      {{ haveItem }}
+    </li>
+  </ul>
+</form>
+
+<div>
+  <h3>Thumbnails</h3>
+  <div *ngIf="thumbnail.length > 0">
+    <ul>
+      <li *ngFor="let thumb of thumbnail">
+        <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+      </li>
+    </ul>
+  </div>
+</div>

@@ -11,11 +11,15 @@ export class PostService {
 
   // 오브젝트 옵션
   getSelectOption(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/api/option`);
+    return this.http.get<any>(`http://localhost:3000/board/option`);
   }
 
-  getThumbnail(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/api/option`);
+  getTargetObjekt(body: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/board/objekt`, body);
+  }
+
+  getThumbnail(body: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/board/thumbnail`, body);
   }
 
   // 포스팅 CRUD
