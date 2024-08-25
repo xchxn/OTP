@@ -23,8 +23,8 @@ export class PostService {
   }
 
   // 포스팅 CRUD
-  createPosting(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/api/option`);
+  createPosting(body: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/board/create`, body);
   }
 
   updatePosting(): Observable<any> {

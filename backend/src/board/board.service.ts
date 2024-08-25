@@ -29,7 +29,10 @@ export class BoardService {
         title: body.title,
         content: body.content,
         author: body.author,
-        objekts: body.objekts,
+        objekts: {
+          have: body.objekt.have,
+          want: body.objekt.want,
+        },
       })
       .execute();
     return createTicket;

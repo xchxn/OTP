@@ -10,14 +10,17 @@ export class BoardController {
     return this.boardService.getPostingList();
   }
 
-  @Post()
+  @Post('create')
   createPosting(
     @Body()
     body: {
-      user: string;
+      title: string;
       content: string;
       author: string;
-      objekts: string;
+      objekt: {
+        have: number[];
+        want: number[];
+      };
     },
   ): any {
     return this.boardService.createPosting(body);
