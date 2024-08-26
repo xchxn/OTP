@@ -16,7 +16,7 @@ export class BoardService {
     const getPostingList = await this.postingRepository
       .createQueryBuilder()
       .select()
-      .getRawMany();
+      .getMany();
     return getPostingList;
   }
 
@@ -110,6 +110,9 @@ export class BoardService {
       })
       .andWhere('classes = :classes', { classes: body.classes })
       .getRawOne();
+    if (!selectOption) {
+      throw new Error('No matching object found for the provided criteria.');
+    }
     return selectOption;
   }
 

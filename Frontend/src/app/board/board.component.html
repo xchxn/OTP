@@ -8,5 +8,25 @@
     <p>{{ posting.title }}</p>
     <p>{{ posting.author }}</p>
     <p>{{ posting.content }}</p>
+    <div>
+      <div class="content">
+        <p>Have배열</p>
+        <div class="haveObjekt">
+          <ul>
+            <li *ngFor="let thumb of posting.thumbnails.have">
+              <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+            </li>
+          </ul>
+        </div>
+        <p>Want배열</p>
+        <div class="wantObejkt">
+          <ul>
+            <li *ngFor="let thumb of posting.thumbnails.want">
+              <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 }

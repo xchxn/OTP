@@ -77,7 +77,10 @@ export class PostComponent {
         const haveArray = this.postingForm.get('objekt.have') as FormArray;
         haveArray.push(this.formBuilder.control(data.id));
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        alert('objekt가 존재하지 않음');
+      },
       complete: () => console.log('Data loading complete')
     });
   }
@@ -92,7 +95,10 @@ export class PostComponent {
         const wantArray = this.postingForm.get('objekt.want') as FormArray;
         wantArray.push(this.formBuilder.control(data.id));
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        alert('objekt가 존재하지 않음');
+      },
       complete: () => console.log('Data loading complete')
     });
   }

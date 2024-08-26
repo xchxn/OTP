@@ -16,6 +16,6 @@ export class BoardService {
   };
 
   getPostingList(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/api/list`, this.httpOptions);
+    return this.http.get<any>(`http://localhost:3000/board/list`, this.httpOptions);
   }  
 }

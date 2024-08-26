@@ -5,7 +5,7 @@ import { BoardService } from './board.service';
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
-  @Get()
+  @Get('list')
   getBoardList(): any {
     return this.boardService.getPostingList();
   }
