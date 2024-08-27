@@ -86,4 +86,10 @@ export class BoardComponent {
     });
 
   }
+
+  searchObjekt(): void{
+    // 필터로 추가해서 찾기
+
+    // 포스트 기반으로 찾기
+  }
 }
