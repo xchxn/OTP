@@ -4,9 +4,17 @@ import { AuthController } from './auth.controller';
 import { KakaoStrategy } from './strategy/kakao-strategy';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './strategy/google.strategy';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [PassportModule],
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.jwtConstants,
+      signOptions: { expiresIn: '15m' },
+    }),
+  ],
   providers: [AuthService, KakaoStrategy, GoogleStrategy],
   controllers: [AuthController],
 })

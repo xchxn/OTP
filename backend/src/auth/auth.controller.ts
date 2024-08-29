@@ -1,10 +1,21 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  // 일반 로그인, 회원가입
+  @Post('login')
+  async login(@Body() req: any): Promise<any> {
+    return this.authService.login(req);
+  }
+
+  @Post('register')
+  async register(@Body() req: any): Promise<any> {
+    return this.authService.register(req);
+  }
 
   @Get('kakao')
   @UseGuards(AuthGuard('kakao'))

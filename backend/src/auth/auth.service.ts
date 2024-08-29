@@ -1,8 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { AuthEntity } from './entities/auth.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor() {}
+  constructor(
+    @Inject('AUTH_REPOSITORY')
+    private authRepository: Repository<AuthEntity>,
+    private jwtService: JwtService,
+  ) {}
+
+  private saltOrRounds = 10;
+
+  async register(req: any): Promise<any> {
+    const existingUser = await this.authRepository.findOne({
+      where: { id: req.id },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException('ID already in use.');
+    }
+
+    const payload = { sub: req.id, username: req.username };
+    // JWT 인증 토큰 발급 추가
+    const register = await this.authRepository
+      .createQueryBuilder()
+      .insert()
+      .values({
+        id: req.id,
+        password: await bcrypt.hash(req.password, this.saltOrRounds),
+        accessToken: await this.jwtService.signAsync(payload),
+      })
+      .execute();
+    console.log(register);
+    return true;
+  }
+
+  async login(req: any): Promise<any> {
+    const login = await this.authRepository
+      .createQueryBuilder()
+      .select()
+      .where('id = :id', { id: req.id })
+      .getOne();
+    const check = await bcrypt.compare(req.password, login.password);
+    if (check) return true;
+    else throw new UnauthorizedException();
+  }
 
   async kakaoValidateUser(profile: any): Promise<any> {
     // 카카오 프로필 정보를 통해 유저 검증 및 DB에 저장하거나 불러옵니다.
