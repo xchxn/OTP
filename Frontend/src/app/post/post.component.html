@@ -1,5 +1,7 @@
 <p>post works!</p>
 
+<p> {{ check }}</p>
+
 <form [formGroup]="postingForm" (ngSubmit)="createPosting()">
   <div>
     <label for="title">Title:</label>
@@ -10,12 +12,6 @@
     <label for="content">Content:</label>
     <input id="content" formControlName="content">
   </div>
-
-  <div>
-    <label for="author">Author:</label>
-    <input id="author" formControlName="author">
-  </div>
-
   <div>
     <ul>
       <li *ngFor="let haveItem of postingForm.get('objekt.have')?.value; let i = index">

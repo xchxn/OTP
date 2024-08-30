@@ -5,6 +5,9 @@ import { KakaoStrategy } from './strategy/kakao-strategy';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { DatabaseModule } from 'src/database/database.module';
+import { authProviders } from './auth.providers';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -14,8 +17,10 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.jwtConstants,
       signOptions: { expiresIn: '15m' },
     }),
+    DatabaseModule,
+    ConfigModule,
   ],
-  providers: [AuthService, KakaoStrategy, GoogleStrategy],
+  providers: [...authProviders, AuthService, KakaoStrategy, GoogleStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

@@ -12,7 +12,7 @@ export class AuthEntity {
   refreshToken: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  name: string;
+  username: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   password: string;

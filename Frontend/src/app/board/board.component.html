@@ -3,11 +3,11 @@
   Post
 </a>
 
-@for ( posting of postings; track posting.id) {
+@for ( posting of postings; track posting.posting_id) {
   <div>
-    <p>{{ posting.title }}</p>
+    <p>{{ posting.posting_title }}</p>
     <p>{{ posting.author }}</p>
-    <p>{{ posting.content }}</p>
+    <p>{{ posting.posting_content }}</p>
     <div>
       <div class="content">
         <p>Have배열</p>

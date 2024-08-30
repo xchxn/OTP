@@ -5,11 +5,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PostService } from '../post/post.service';
 
 interface Posting {
-  id: number;
-  title: string;
+  posting_id: number;
+  posting_title: string;
   author: string;
-  content: string;
-  objekts: {
+  posting_content: string;
+  posting_objekts: {
     have: number[];
     want: number[];
   };
@@ -31,7 +31,7 @@ export class BoardComponent {
 
   constructor(
     private boardService: BoardService,
-    private postService: PostService
+    private postService: PostService,
   ) { this.loadData(); }
 
   loadData(): void {
@@ -53,8 +53,8 @@ export class BoardComponent {
 
   getThumbnail(): void {
     this.postings.forEach(posting => {
-      const haveArr = posting.objekts.have;
-      const wantArr = posting.objekts.want;
+      const haveArr = posting.posting_objekts.have;
+      const wantArr = posting.posting_objekts.want;
 
       haveArr.forEach(cont => {
         const haveValue = {

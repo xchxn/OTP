@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PostService } from './post.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 interface objektFilter {
   season: Array<string>;
@@ -16,6 +17,7 @@ interface objektFilter {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
     FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
+  providers: [CookieService],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
@@ -25,9 +27,10 @@ export class PostComponent {
   objektFilterForm!: FormGroup;
   haveObjektThumbnail: string[] = [];
   wantObjektThumbnail: string[] = [];
+  check!: string;
   constructor(
     private postService: PostService,
-    // private cookieService: CookieService,
+    private cookieService: CookieService,
     private formBuilder: FormBuilder
   ) {
     this.loadData();
@@ -36,7 +39,7 @@ export class PostComponent {
     this.postingForm = this.formBuilder.group({
       title: [''],
       content: [''],
-      author: [''],
+      author: [this.cookieService.get('kakaoId')],
       objekt: this.formBuilder.group({
         have: this.formBuilder.array([]),
         want: this.formBuilder.array([])

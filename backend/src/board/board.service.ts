@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { PostingEntity } from './entities/posting.entity';
 import { ObjektEntity } from './entities/objekt.entity';
+import { AuthEntity } from 'src/auth/entities/auth.entity';
 @Injectable()
 export class BoardService {
   constructor(
@@ -14,9 +15,19 @@ export class BoardService {
   // 모든 포스팅 목록, 보드 채우기
   async getPostingList(): Promise<any> {
     const getPostingList = await this.postingRepository
-      .createQueryBuilder()
-      .select()
-      .getMany();
+      .createQueryBuilder('posting')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.author')
+      .select([
+        'posting.id',
+        'posting.title',
+        'posting.content',
+        'posting.objekts',
+        'posting.createdAt',
+        'posting.updatedAt',
+      ])
+      .addSelect('auth.username', 'author')
+      .getRawMany();
+    console.log(getPostingList);
     return getPostingList;
   }
 
