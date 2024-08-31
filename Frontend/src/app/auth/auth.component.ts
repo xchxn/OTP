@@ -30,4 +30,8 @@ export class AuthComponent {
   onKakaoGetCode(): void {
     window.location.href = `http://localhost:3000/auth/kakao`;
   }
+
+  onGoogleGetCode(): void {
+    window.location.href = `http://localhost:3000/auth/google`;
+  }
 }

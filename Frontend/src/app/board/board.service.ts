@@ -17,5 +17,13 @@ export class BoardService {
 
   getPostingList(): Observable<any> {
     return this.http.get<any>(`http://localhost:3000/board/list`, this.httpOptions);
-  }  
+  }
+
+  searchObjekt(body: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/search/mtom`, { objekts: body }, this.httpOptions);
+  }
+
+  searchWithPosting(body: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/search/posting`, { user: body } , this.httpOptions);
+  }
 }
