@@ -1,1 +1,9 @@
 <p>dm works!</p>
+
+<ul>
+  <li *ngFor="let dm of dmList" (click)="selectUser(user)">
+    {{ dm.name }}
+  </li>
+</ul>
+
+<!-- DM OPEN -->

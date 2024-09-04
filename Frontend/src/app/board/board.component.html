@@ -19,7 +19,7 @@
       </li>
     </ul>
   </div>
-  <button type="submit">Submit Post</button>
+  <button type="submit">Search Objekt</button>
 </form>
 
 <button type="button" (click)="searchWithPosting()">PostingSearch</button>
@@ -38,10 +38,10 @@
     <option *ngFor="let classes of objektFilter.classes" [value]="classes">{{ classes }}</option>
   </select>
   <div class="submitButton">
-    <button type="button" (click)="addObjektToHaveArray()">Have 가져오기</button>
+    <button type="button" (click)="addObjektToHaveArray()">Have 찾기</button>
   </div>
   <div class="submitButton">
-    <button type="button" (click)="addObjektToWantArray()">Want 가져오기</button>
+    <button type="button" (click)="addObjektToWantArray()">Want 찾기</button>
   </div>
   <div class="submitButton">
     <button type="button" (click)="getThumbnail()">썸네일가져오기</button>

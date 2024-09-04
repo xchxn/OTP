@@ -28,8 +28,10 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.4.1",
+    "@nestjs/platform-ws": "^10.4.1",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/websockets": "^10.4.1",
+    "@socket.io/redis-adapter": "^8.3.0",
     "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "mysql2": "^3.11.0",
@@ -37,8 +39,11 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-kakao": "^1.0.1",
+    "redis": "^4.7.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
