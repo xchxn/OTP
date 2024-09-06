@@ -16,8 +16,8 @@ export class DmService {
     this.connect();
   }
 
-  getDmList(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/dm/list`);
+  getDmList(body: any): Observable<any> {
+    return this.http.post<any>(`http://localhost:3000/dm/list`, body);
   }
 
   private connect(): void {

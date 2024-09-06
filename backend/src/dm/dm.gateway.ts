@@ -23,7 +23,14 @@ export class DMGateway {
 
   constructor() {
     this.redisClient = createClient({ url: 'redis://localhost:6379' });
-    this.redisClient.connect();
+    this.redisClient.connect().catch((err) => {
+      console.error('Failed to connect to Redis:', err);
+    });
+
+    // Redis 클라이언트에 'error' 이벤트 핸들러 추가
+    this.redisClient.on('error', (err) => {
+      console.error('Redis error:', err);
+    });
   }
 
   @SubscribeMessage('dm')
@@ -69,6 +76,7 @@ export class DMGateway {
   async getUserSessions(userId: string): Promise<string[]> {
     const pattern = `session:${userId}:*`;
     const keys = await this.redisClient.keys(pattern);
+    console.log(keys);
     return keys;
   }
 }

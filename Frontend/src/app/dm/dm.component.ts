@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DmService } from './dm.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-dm',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule,
+    FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
+  providers: [CookieService],
   templateUrl: './dm.component.html',
   styleUrl: './dm.component.scss'
 })
@@ -23,7 +28,8 @@ export class DmComponent {
 
   constructor(
     private dmService: DmService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cookieService: CookieService,
   ) {
     this.messageSubscription = this.dmService.onMessage().subscribe({
       next: (msg) => {
@@ -33,7 +39,7 @@ export class DmComponent {
   }
 
   ngOnInit() {
-    this.dmService.getDmList().subscribe(users => {
+    this.dmService.getDmList(this.cookieService.get('kakaoId')).subscribe(users => {
       this.dmList = users;  
     });
     // 혹은 messages의 sendorId 목록으로 대체
@@ -49,7 +55,7 @@ export class DmComponent {
   }
 
   send(): void {
-    const message = { senderId: 'userId', receiverId: 'otherUserId', content:  this.messageForm.value };
+    const message = { senderId: 'userId', receiverId: 'otherUserId', content: this.messageForm.value };
     this.dmService.sendMessage(message);
   }
 

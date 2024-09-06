@@ -1,9 +1,23 @@
 <p>dm works!</p>
 
 <ul>
-  <li *ngFor="let dm of dmList" (click)="selectUser(user)">
+  <li *ngFor="let dm of dmList" (click)="selectDm()">
     {{ dm.name }}
   </li>
 </ul>
 
+<ul>
+  <li *ngFor="let dm of dmList" (click)="selectDm()">
+    {{ dm }}
+  </li>
+</ul>
+
+
+<form [formGroup]="messageForm" (ngSubmit)="send()">
+  <div>
+    <label for="message">message:</label>
+    <input id="message" formControlName="message">
+  </div>
+  <button type="submit">Send Message</button>
+</form>
 <!-- DM OPEN -->

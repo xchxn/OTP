@@ -68,8 +68,31 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  googleLoginCallback(@Req() req) {
+  googleLoginCallback(@Req() req: any, @Res({ passthrough: true }) res: any) {
     // 리다이렉트 후 유저 정보가 req.user에 담깁니다.
-    return req.user;
+    const { user } = req;
+
+    console.log(user);
+
+    res.cookie('kakaoId', user.kakaoId, {
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    });
+
+    res.cookie('accessToken', user.accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 15 * 60 * 1000, // 15분
+    });
+
+    res.cookie('refreshToken', user.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    });
+
+    res.redirect('http://localhost:4200');
+
+    // return req.user;
   }
 }
