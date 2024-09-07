@@ -74,7 +74,7 @@ export class AuthController {
 
     console.log(user);
 
-    res.cookie('kakaoId', user.kakaoId, {
+    res.cookie('kakaoId', user.googleId, {
       secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });

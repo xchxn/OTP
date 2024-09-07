@@ -21,3 +21,9 @@
   <button type="submit">Send Message</button>
 </form>
 <!-- DM OPEN -->
+
+  <div class="message-list">
+    <div *ngFor="let msg of messages">
+      <strong>{{ msg.senderId }}:</strong> {{ msg.content }}
+    </div>
+  </div>

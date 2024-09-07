@@ -111,18 +111,26 @@ export class AuthService {
       username: displayName,
     };
 
-    // TypeORM으로 DB에 유저 추가
-    const newUser = await this.authRepository
-      .createQueryBuilder()
-      .insert()
-      .values({
-        id: profile.id,
-        username: profile.username,
-        accessToken: googleAccessToken,
-        refreshToken: googleRefreshToken,
-      })
-      .execute();
-    console.log(newUser);
+    const existingUser = await this.authRepository.findOne({
+      where: { id: profile.id },
+    });
+
+    if (existingUser) {
+      return user;
+    } else {
+      // TypeORM으로 DB에 유저 추가
+      const newUser = await this.authRepository
+        .createQueryBuilder()
+        .insert()
+        .values({
+          id: profile.id,
+          username: profile.username,
+          accessToken: googleAccessToken,
+          refreshToken: googleRefreshToken,
+        })
+        .execute();
+      console.log(newUser);
+    }
 
     // 예시: 유저가 없다면 DB에 생성
     // const existingUser = await this.usersService.findByGoogleId(id);

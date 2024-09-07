@@ -31,6 +31,8 @@ export class DMGateway {
     this.redisClient.on('error', (err) => {
       console.error('Redis error:', err);
     });
+
+    console.log('good');
   }
 
   @SubscribeMessage('dm')
@@ -39,7 +41,9 @@ export class DMGateway {
     data: { senderId: string; receiverId: string; message: string },
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    const receiverSocketId = this.redisClient.get(`user:${data.receiverId}`);
+    const receiverSocketId = await this.redisClient.get(
+      `user:${data.receiverId}`,
+    );
     if (receiverSocketId) {
       this.server.to(receiverSocketId).emit('dm', data);
     } else {
@@ -53,10 +57,11 @@ export class DMGateway {
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     // this.connectedUsers.set(userId, client.id);
+    console.log(userId);
     await this.redisClient.set(`user:${userId}`, client.id);
   }
 
-  @SubscribeMessage('disconnectUser')
+  @SubscribeMessage('disconnect')
   handleDisconnect(@ConnectedSocket() client: Socket): void {
     // this.connectedUsers.forEach(async (socketId, userId) => {
     //   if (socketId === client.id) {
@@ -76,7 +81,6 @@ export class DMGateway {
   async getUserSessions(userId: string): Promise<string[]> {
     const pattern = `session:${userId}:*`;
     const keys = await this.redisClient.keys(pattern);
-    console.log(keys);
     return keys;
   }
 }

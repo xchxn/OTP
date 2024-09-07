@@ -24,6 +24,9 @@ export class DmComponent {
 
   // 디엠 유저 목록
   dmList: any[] = [];
+  
+  // 메시지 배열 확인용
+  // messages: { senderId: string, content: string }[] = [];
 
 
   constructor(
@@ -33,6 +36,7 @@ export class DmComponent {
   ) {
     this.messageSubscription = this.dmService.onMessage().subscribe({
       next: (msg) => {
+        console.log(msg);
         this.messages.push(msg);
       }
     });
@@ -47,6 +51,10 @@ export class DmComponent {
     this.messageForm = this.formBuilder.group({
       message: this.formBuilder.control('', Validators.required)
     });
+
+    this.dmService.onMessage().subscribe((message) => {
+      this.messages.push(message); // 메시지를 목록에 추가
+    });
   }
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
@@ -55,7 +63,8 @@ export class DmComponent {
   }
 
   send(): void {
-    const message = { senderId: 'userId', receiverId: 'otherUserId', content: this.messageForm.value };
+    const message = { senderId: this.cookieService.get('kakaoId'), receiverId: '113484026984211984993', content: this.messageForm.value.message };
+    console.log(message);
     this.dmService.sendMessage(message);
   }
 
