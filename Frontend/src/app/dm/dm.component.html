@@ -1,17 +1,11 @@
 <p>dm works!</p>
 
-<ul>
-  <li *ngFor="let dm of dmList" (click)="selectDm()">
-    {{ dm.name }}
-  </li>
-</ul>
-
-<ul>
-  <li *ngFor="let dm of dmList" (click)="selectDm()">
-    {{ dm }}
-  </li>
-</ul>
-
+<div class="receiver-list">
+  <h3>Receivers for</h3>
+  <ul>
+    <li *ngFor="let receiver of dmList">{{ receiver }}</li>
+  </ul>
+</div>
 
 <form [formGroup]="messageForm" (ngSubmit)="send()">
   <div>

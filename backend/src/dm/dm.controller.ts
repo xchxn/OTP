@@ -4,8 +4,8 @@ import { DMGateway } from './dm.gateway';
 export class DmController {
   constructor(private readonly dmgateway: DMGateway) {}
 
-  @Post('list')
-  async getUserSessions(@Body('userId') userId: string): Promise<any> {
-    return this.dmgateway.getUserSessions(userId);
-  }
+  // @Post('list')
+  // async getUserSessions(@Body('userId') userId: string): Promise<any> {
+  //   return this.dmgateway.getUserSessions(userId);
+  // }
 }

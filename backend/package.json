@@ -34,6 +34,7 @@
     "@socket.io/redis-adapter": "^8.3.0",
     "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
+    "ioredis": "^5.4.1",
     "mysql2": "^3.11.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",

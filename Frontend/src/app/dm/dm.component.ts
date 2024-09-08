@@ -36,20 +36,22 @@ export class DmComponent {
   ) {
     this.messageSubscription = this.dmService.onMessage().subscribe({
       next: (msg) => {
-        console.log(msg);
         this.messages.push(msg);
       }
     });
   }
 
   ngOnInit() {
-    this.dmService.getDmList(this.cookieService.get('kakaoId')).subscribe(users => {
-      this.dmList = users;  
-    });
-    // 혹은 messages의 sendorId 목록으로 대체
-
     this.messageForm = this.formBuilder.group({
       message: this.formBuilder.control('', Validators.required)
+    });
+
+    const idData = { senderId: this.cookieService.get('kakaoId')};
+
+    this.dmService.getReceivers(idData);
+
+    this.dmService.onReceivers().subscribe((receivers: string[]) => {
+      this.dmList = receivers;
     });
 
     this.dmService.onMessage().subscribe((message) => {
