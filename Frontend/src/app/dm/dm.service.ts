@@ -36,6 +36,20 @@ export class DmService {
   getReceivers(data : { senderId: string}): void {
     this.socket.emit('getReceivers', data);
   }
+
+  // 특정 사용자와의 메시지 기록을 서버에 요청
+  fetchMessages(senderId: string, receiverId: string): void {
+    this.socket.emit('fetchMessages', { senderId, receiverId });
+  }
+
+  // 서버로부터 받은 메시지 기록을 구독
+  onFetchMessages(): Observable<any[]> {
+    return new Observable((observer) => {
+      this.socket.on('dm', (messages: any[]) => {
+        observer.next(messages);
+      });
+    });
+  }
   
   // 서버로부터 수신자 목록 수신
   onReceivers(): Observable<string[]> {
@@ -47,13 +61,13 @@ export class DmService {
   }
 
   // 메시지 보내기
-  sendMessage(message: { senderId: string, receiverId: string, content: string }): void {
+  sendMessage(message: { senderId: string, receiverId: string, message: string }): void {
     this.socket.emit('dm', message);
   }
 
   // 메시지 수신 대기
-  onMessage(): Observable<{ senderId: string, content: string }> {
-    return new Observable<{ senderId: string, content: string }>(observer => {
+  onMessage(): Observable<{ senderId: string, message: string }> {
+    return new Observable<{ senderId: string, message: string }>(observer => {
       this.socket.on('dm', (data) => {
         observer.next(data);
       });

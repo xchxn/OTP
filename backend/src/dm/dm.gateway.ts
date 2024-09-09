@@ -66,7 +66,19 @@ export class DMGateway {
     if (receiverSocketId) {
       this.server.to(receiverSocketId).emit('dm', data);
     } else {
-      console.log('Receiver is not connected');
+      // console.log('Receiver is not connected');
+
+      // 오프라인 유저의 메시지 저장
+      const messagesKey = `messages:pending:${data.receiverId}`;
+      await this.redisClient.rpush(
+        messagesKey,
+        JSON.stringify({
+          senderId: data.senderId,
+          receiverId: data.receiverId,
+          message: data.message,
+          timestamp: new Date().toISOString(),
+        }),
+      );
     }
   }
 
@@ -82,14 +94,46 @@ export class DMGateway {
   @SubscribeMessage('fetchMessages')
   async fetchMessages(
     @MessageBody()
-    data: { userId: string; receiverId: string },
+    data: { senderId: string; receiverId: string },
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    const messagesKey = `messages:${data.userId}:${data.receiverId}`;
-    let messages = await this.redisClient.lrange(messagesKey, 0, -1);
-    messages = messages.map((message) => JSON.parse(message));
+    // 사용자가 보낸 메시지 키
+    const sentMessagesKey = `messages:${data.senderId}:${data.receiverId}`;
+    // 사용자가 받은 메시지 키
+    const receivedMessagesKey = `messages:${data.receiverId}:${data.senderId}`;
 
-    client.emit('messages', messages);
+    // 사용자가 보낸 메시지 조회
+    let sentMessages = await this.redisClient.lrange(sentMessagesKey, 0, -1);
+    sentMessages = sentMessages.map((message) => {
+      const sendmsg = JSON.parse(message);
+      return {
+        ...sendmsg,
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+      };
+    });
+
+    // 사용자가 받은 메시지 조회
+    let receivedMessages = await this.redisClient.lrange(
+      receivedMessagesKey,
+      0,
+      -1,
+    );
+    receivedMessages = receivedMessages.map((message) => {
+      const sendmsg = JSON.parse(message);
+      return {
+        ...sendmsg,
+        senderId: data.receiverId,
+        receiverId: data.senderId,
+      };
+    });
+
+    // 메시지들을 시간순으로 정렬
+    const allMessages = sentMessages.concat(receivedMessages);
+    // allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    console.log(allMessages);
+    client.emit('dm', allMessages);
   }
 
   @SubscribeMessage('connectUser')
@@ -98,6 +142,18 @@ export class DMGateway {
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     await this.redisClient.set(`user:${userId}`, client.id);
+
+    // 오프라인 유저를 위한 메시지 펜딩 기능
+    const messagesKey = `messages:pending:${userId}`;
+    const messages = await this.redisClient.lrange(messagesKey, 0, -1);
+    console.log(messages);
+    if (messages.length > 0) {
+      messages.forEach(async (message) => {
+        client.emit('dm', JSON.parse(message));
+      });
+
+      await this.redisClient.del(messagesKey);
+    }
   }
 
   @SubscribeMessage('disconnect')
@@ -116,10 +172,4 @@ export class DMGateway {
     const receiverSetKey = `senders:${senderId}:receivers`;
     return await this.redisClient.smembers(receiverSetKey);
   }
-
-  // async getUserSessions(userId: string): Promise<string[]> {
-  //   const pattern = `session:${userId}:*`;
-  //   const keys = await this.redisClient.keys(pattern);
-  //   return keys;
-  // }
 }

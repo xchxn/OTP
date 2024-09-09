@@ -16,8 +16,9 @@
 </form>
 <!-- DM OPEN -->
 
+<button type="submit" (click)="selectDm()">Fetch</button>
   <div class="message-list">
     <div *ngFor="let msg of messages">
-      <strong>{{ msg.senderId }}:</strong> {{ msg.content }}
+      <strong>{{ msg.senderId }}:</strong> {{ msg.message }}
     </div>
   </div>
