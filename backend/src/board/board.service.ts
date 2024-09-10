@@ -25,7 +25,7 @@ export class BoardService {
         'posting.createdAt',
         'posting.updatedAt',
       ])
-      .addSelect('auth.username', 'author')
+      .addSelect('auth.id', 'author')
       .getRawMany();
     console.log(getPostingList);
     return getPostingList;

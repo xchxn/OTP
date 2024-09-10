@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { BoardService } from './board.service';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PostService } from '../post/post.service';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-
+import {MatMenuModule} from '@angular/material/menu';
+import { DmService } from '../dm/dm.service';
+import { DmComponent } from '../dm/dm.component';
 interface Posting {
   posting_id: number;
   posting_title: string;
@@ -33,7 +35,7 @@ interface objektFilter {
   selector: 'app-board',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule,
-    FormsModule],
+    FormsModule, MatMenuModule],
   providers: [CookieService],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
@@ -49,6 +51,7 @@ export class BoardComponent {
     private postService: PostService,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
+    private router: Router
   ) { this.loadData(); }
 
   ngOnInit() {
@@ -207,5 +210,9 @@ export class BoardComponent {
       error: (err) => console.error(err),
       complete: () => console.log('Thumbnail loading complete')
     });
+  }
+
+  goDM(author: string): void{
+    this.router.navigate(['/dm'], { queryParams: { user: author } })
   }
 }

@@ -1,9 +1,9 @@
 <p>dm works!</p>
-
+<p> DM Now {{ selectedReceiverId }}</p>
 <div class="receiver-list">
   <h3>Receivers for</h3>
   <ul>
-    <li *ngFor="let receiver of dmList">{{ receiver }}</li>
+    <button *ngFor="let receiver of dmList" (click)="selectDm(receiver)">{{ receiver }}</button>
   </ul>
 </div>
 
@@ -16,7 +16,7 @@
 </form>
 <!-- DM OPEN -->
 
-<button type="submit" (click)="selectDm()">Fetch</button>
+<button type="submit" (click)="selectDm(selectedReceiverId)">Fetch</button>
   <div class="message-list">
     <div *ngFor="let msg of messages">
       <strong>{{ msg.senderId }}:</strong> {{ msg.message }}

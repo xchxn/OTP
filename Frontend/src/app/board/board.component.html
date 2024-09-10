@@ -51,7 +51,11 @@
 @for ( posting of postings; track posting.posting_id) {
   <div>
     <p>{{ posting.posting_title }}</p>
-    <p>{{ posting.author }}</p>
+    <button mat-button [matMenuTriggerFor]="menu">{{ posting.author }}</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="goDM(posting.author)">DM</button>
+      <button mat-menu-item>Close</button>
+    </mat-menu>
     <p>{{ posting.posting_content }}</p>
     <div>
       <div class="content">

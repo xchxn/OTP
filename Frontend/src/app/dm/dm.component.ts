@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { DmService } from './dm.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -26,7 +26,9 @@ export class DmComponent {
   // 디엠 유저 목록
   dmList: any[] = [];
 
-  selectedReceiverId: string = '113484026984211984993'; // 선택된 수신자
+  // selectedReceiverId: string = '113484026984211984993'; // 선택된 수신자
+  selectedReceiverId!: string;
+
   // 메시지 배열 확인용
   // messages: { senderId: string, content: string }[] = [];
 
@@ -35,6 +37,7 @@ export class DmComponent {
     private dmService: DmService,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
+    private route: ActivatedRoute,
   ) {
     // this.messageSubscription = this.dmService.onMessage().subscribe({
     //   next: (msg) => {
@@ -44,6 +47,10 @@ export class DmComponent {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.selectedReceiverId = params['user'];
+    });
+
     this.messageForm = this.formBuilder.group({
       message: this.formBuilder.control('', Validators.required)
     });
@@ -70,12 +77,12 @@ export class DmComponent {
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
-  selectDm(): void {
-    this.selectedReceiverId = '113484026984211984993';
+  selectDm(receiver: string): void {
+    this.selectedReceiverId = receiver;
     const senderId = this.cookieService.get('kakaoId');
 
     // 서버로부터 선택된 수신자와의 메시지 기록을 요청
-    this.dmService.fetchMessages(senderId, '113484026984211984993');
+    this.dmService.fetchMessages(senderId, this.selectedReceiverId);
 
     // 서버로부터 받은 메시지 기록 구독
     this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe((messages) => {
@@ -90,7 +97,7 @@ export class DmComponent {
 
     const message = { 
       senderId: this.cookieService.get('kakaoId'),
-      receiverId: '113484026984211984993',
+      receiverId: this.selectedReceiverId,
       message: this.messageForm.value.message
     };
 
