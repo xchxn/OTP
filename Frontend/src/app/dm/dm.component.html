@@ -1,0 +1,24 @@
+<p>dm works!</p>
+<p> DM Now {{ selectedReceiverId }}</p>
+<div class="receiver-list">
+  <h3>Receivers for</h3>
+  <ul>
+    <button *ngFor="let receiver of dmList" (click)="selectDm(receiver)">{{ receiver }}</button>
+  </ul>
+</div>
+
+<form [formGroup]="messageForm" (ngSubmit)="send()">
+  <div>
+    <label for="message">message:</label>
+    <input id="message" formControlName="message">
+  </div>
+  <button type="submit">Send Message</button>
+</form>
+<!-- DM OPEN -->
+
+<button type="submit" (click)="selectDm(selectedReceiverId)">Fetch</button>
+  <div class="message-list">
+    <div *ngFor="let msg of messages">
+      <strong>{{ msg.senderId }}:</strong> {{ msg.message }}
+    </div>
+  </div>

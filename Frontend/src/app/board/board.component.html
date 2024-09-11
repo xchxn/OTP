@@ -1,0 +1,81 @@
+<p>board works!</p>
+<a routerLink="/post" routerLinkActive="active" ariaCurrentWhenActive="page">
+  Post
+</a>
+
+<form [formGroup]="searchForm" (ngSubmit)="searchObjekt()">
+  <div>
+    <ul>
+      <li *ngFor="let haveItem of searchForm.get('objekt.have')?.value; let i = index">
+        {{ haveItem }}
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <ul>
+      <li *ngFor="let wantItem of searchForm.get('objekt.want')?.value; let i = index">
+        {{ wantItem }}
+      </li>
+    </ul>
+  </div>
+  <button type="submit">Search Objekt</button>
+</form>
+
+<button type="button" (click)="searchWithPosting()">PostingSearch</button>
+
+<form class="objektFilterForm" [formGroup]="objektFilterForm" (ngSubmit)="getThumbnail()">
+  <select id="season" type="text" formControlName="season">
+    <option *ngFor="let season of objektFilter.season" [value]="season">{{ season }}</option>
+  </select>
+  <select id="member" type="text" formControlName="member">
+    <option *ngFor="let member of objektFilter.member" [value]="member">{{ member }}</option>
+  </select>
+  <select id="collectionNo" type="text" formControlName="collectionNo">
+    <option *ngFor="let collectionNo of objektFilter.collectionNo" [value]="collectionNo">{{ collectionNo }}</option>
+  </select>
+  <select id="classes" type="text" formControlName="classes">
+    <option *ngFor="let classes of objektFilter.classes" [value]="classes">{{ classes }}</option>
+  </select>
+  <div class="submitButton">
+    <button type="button" (click)="addObjektToHaveArray()">Have 찾기</button>
+  </div>
+  <div class="submitButton">
+    <button type="button" (click)="addObjektToWantArray()">Want 찾기</button>
+  </div>
+  <div class="submitButton">
+    <button type="button" (click)="getThumbnail()">썸네일가져오기</button>
+  </div>
+</form>
+
+@for ( posting of postings; track posting.posting_id) {
+  <div>
+    <p>{{ posting.posting_title }}</p>
+    <button mat-button [matMenuTriggerFor]="menu">{{ posting.author }}</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="goDM(posting.author)">DM</button>
+      <button mat-menu-item>Close</button>
+    </mat-menu>
+    <p>{{ posting.posting_content }}</p>
+    <div>
+      <div class="content">
+        <p>Have배열</p>
+        <div class="haveObjekt">
+          <ul>
+            <li *ngFor="let thumb of posting.thumbnails.have">
+              <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+            </li>
+          </ul>
+        </div>
+        <p>Want배열</p>
+        <div class="wantObejkt">
+          <ul>
+            <li *ngFor="let thumb of posting.thumbnails.want">
+              <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+}
