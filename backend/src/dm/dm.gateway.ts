@@ -63,6 +63,11 @@ export class DMGateway {
     const senderReceiversKey = `senders:${data.senderId}:receivers`;
     await this.redisClient.sadd(senderReceiversKey, data.receiverId);
 
+    // 반대의 경우도 저장
+    // 즉, 받는 사람 측에서도 dm목록을 조회할 수 이도록 redis Key로 저장
+    // const receiverSendersKey = `receivers:${data.receiverId}:senders`;
+    // await this.redisClient.sadd(receiverSendersKey, data.senderId);
+
     if (receiverSocketId) {
       this.server.to(receiverSocketId).emit('dm', data);
     } else {
@@ -169,7 +174,11 @@ export class DMGateway {
   }
 
   async getReceiversForSender(senderId: string): Promise<string[]> {
+    // 내가 메시지를 보낸 사람
     const receiverSetKey = `senders:${senderId}:receivers`;
+    // 나에게 메시지를 보낸 사람
+    // const senderSetKey = `receivers:${senderId}:senders`;
+
     return await this.redisClient.smembers(receiverSetKey);
   }
 }
