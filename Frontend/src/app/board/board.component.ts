@@ -5,9 +5,13 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { PostService } from '../post/post.service';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import {MatMenuModule} from '@angular/material/menu';
 import { DmService } from '../dm/dm.service';
 import { DmComponent } from '../dm/dm.component';
+
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
 interface Posting {
   posting_id: number;
   posting_title: string;
@@ -35,7 +39,7 @@ interface objektFilter {
   selector: 'app-board',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule,
-    FormsModule, MatMenuModule],
+    FormsModule, MatMenuModule, MatButtonModule],
   providers: [CookieService],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
@@ -127,6 +131,8 @@ export class BoardComponent {
 
         const wantArray = this.searchForm.get('objekt.want') as FormArray;
         wantArray.push(this.formBuilder.control(data.id));
+        
+        this.getThumbnail()
       },
       error: (err) => {
         console.error(err);
