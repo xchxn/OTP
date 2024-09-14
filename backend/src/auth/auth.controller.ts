@@ -9,19 +9,39 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { LoginDto, SignUpDto } from './dto/auth.dto';
 
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiResponse,
+  ApiExcludeEndpoint,
+  ApiProduces,
+  ApiConsumes,
+} from '@nestjs/swagger';
+
+@ApiTags('인증 API')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   // 일반 로그인, 회원가입
+  @ApiProduces('application/json')
+  @ApiConsumes('application/json')
+  @ApiOperation({ summary: '사용자 로그인 처리 후 JWT 토큰 반환' })
+  @ApiBody({
+    description: '로그인 요청 정보',
+    type: LoginDto,
+  })
   @Post('login')
-  async login(@Body() req: any): Promise<any> {
+  async login(@Body() req: LoginDto): Promise<any> {
     return this.authService.login(req);
   }
 
   @Post('register')
-  async register(@Body() req: any): Promise<any> {
+  async register(@Body() req: SignUpDto): Promise<any> {
     return this.authService.register(req);
   }
 

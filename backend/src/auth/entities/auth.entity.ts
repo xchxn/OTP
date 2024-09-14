@@ -19,4 +19,10 @@ export class AuthEntity {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   email: string;
+
+  @Column({ default: false })
+  isEmailConfirmed: boolean;
+
+  @Column({ nullable: true })
+  emailConfirmationToken: string;
 }

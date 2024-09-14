@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -9,19 +10,33 @@ import { Repository } from 'typeorm';
 import { AuthEntity } from './entities/auth.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { SignUpDto } from './dto/auth.dto';
+import { randomBytes } from 'crypto';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class AuthService {
+  private transporter: nodemailer.Transporter;
+  private saltOrRounds = 10;
+
   constructor(
     @Inject('AUTH_REPOSITORY')
     private authRepository: Repository<AuthEntity>,
     private jwtService: JwtService,
     private configServcie: ConfigService,
-  ) {}
+  ) {
+    this.transporter = nodemailer.createTransport({
+      host: 'smtp.example.com',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'example@example.com', // 이메일 계정
+        pass: 'password', // 이메일 비밀번호
+      },
+    });
+  }
 
-  private saltOrRounds = 10;
-
-  async register(req: any): Promise<any> {
+  async register(req: SignUpDto): Promise<any> {
     const existingUser = await this.authRepository.findOne({
       where: { id: req.id },
     });
@@ -39,10 +54,49 @@ export class AuthService {
         id: req.id,
         password: await bcrypt.hash(req.password, this.saltOrRounds),
         accessToken: await this.jwtService.signAsync(payload),
+        emailConfirmationToken: randomBytes(16).toString('hex'),
       })
       .execute();
+
+    // 이메일 전송 후 토큰 확인 로직까지 추가 요망
+
     console.log(register);
     return true;
+  }
+
+  async sendEmail(
+    to: string,
+    subject: string,
+    text: string,
+    html: string,
+    // token: string,
+  ): Promise<any> {
+    // const url = `${token}`;
+    const mailOptions = {
+      from: '"Example Team" <example@example.com>',
+      to: to,
+      subject: subject,
+      text: text,
+      html: html,
+    };
+
+    const info = await this.transporter.sendMail(mailOptions);
+    console.log('Message sent: %s', info.messageId);
+  }
+
+  async confirmEmail(token: string): Promise<void> {
+    const user = await this.authRepository.findOne({
+      where: { emailConfirmationToken: token },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Token is invalid.');
+    }
+
+    user.isEmailConfirmed = true;
+    user.emailConfirmationToken = null;
+
+    await this.authRepository.save(user);
   }
 
   async login(req: any): Promise<any> {
