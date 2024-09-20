@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   Res,
@@ -36,13 +37,24 @@ export class AuthController {
     type: LoginDto,
   })
   @Post('login')
-  async login(@Body() req: LoginDto): Promise<any> {
-    return this.authService.login(req);
+  async login(@Body() req: LoginDto, @Res() res: any): Promise<any> {
+    const result = await this.authService.login(req);
+    res.cookie('accessToken', result.token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 15 * 60 * 1000, // 15분
+    });
+    return res.send({ message: 'Login Success' });
   }
 
   @Post('register')
   async register(@Body() req: SignUpDto): Promise<any> {
     return this.authService.register(req);
+  }
+
+  @Post('confirm/:token')
+  async confirmEmail(@Param('token') token: string): Promise<any> {
+    return this.authService.confirmEmail(token);
   }
 
   @Get('kakao')

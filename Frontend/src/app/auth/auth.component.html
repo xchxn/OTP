@@ -1,4 +1,27 @@
 <p>auth works!</p>
+
+<!-- 기본 화면 로그인 폼 -->
+<div>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <label for="id">ID:</label>
+    <input id="id" formControlName="id">
+
+    <label for="password">Password:</label>
+    <input id="password" formControlName="password">
+  </form>
+</div>
+
+<!-- 회원가입 폼으로 전환 -->
+<div>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <label for="id">ID:</label>
+    <input id="id" formControlName="id">
+
+    <label for="password">Password:</label>
+    <input id="password" formControlName="password">
+  </form>
+</div>
+
 <button (click)="onKakaoGetCode()">kakaotest</button>
 
 <button (click)="onGoogleGetCode()">googletest</button>
