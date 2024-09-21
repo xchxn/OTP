@@ -4,23 +4,38 @@
 <div>
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <label for="id">ID:</label>
-    <input id="id" formControlName="id">
+    <input id="id" formControlName="id" required>
 
     <label for="password">Password:</label>
-    <input id="password" formControlName="password">
+    <input id="password" formControlName="password" required>
+
+    <button type="submit" [disabled]="!loginForm.valid">Login</button>
   </form>
 </div>
 
 <!-- 회원가입 폼으로 전환 -->
 <div>
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
     <label for="id">ID:</label>
-    <input id="id" formControlName="id">
+    <input id="id" formControlName="id" required>
+
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" required>
+
+    <label for="username">ID:</label>
+    <input id="username" formControlName="username" required>
 
     <label for="password">Password:</label>
-    <input id="password" formControlName="password">
+    <input id="password" formControlName="password" required minlength="6" required>
+
+    <label for="passwordCheck">PasswordCheck:</label>
+    <input id="passwordCheck" formControlName="passwordCheck" required>
+
+    <button type="submit" [disabled]="!registerForm.valid">Register</button>
   </form>
 </div>
+
+<!-- Validator 검사 실패 시 에러문 작성 -->
 
 <button (click)="onKakaoGetCode()">kakaotest</button>
 

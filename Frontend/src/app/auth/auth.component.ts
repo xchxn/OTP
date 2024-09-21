@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 interface authInform {
   id: string;
@@ -38,16 +38,16 @@ export class AuthComponent {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      id: [''],
-      password: [''],
+      id: ['', Validators.required],
+      password: ['', Validators.required],
     });
 
     this.registerForm = this.formBuilder.group({
-      id: [''],
-      username: [''],
-      email: [''],
-      password: [''],
-      passwordCheck: ['']
+      id: ['', Validators.required],
+      username: ['', Validators.required],
+      email: ['',  Validators.compose([ Validators.required, Validators.email ])],
+      password: ['',  Validators.compose([ Validators.required, Validators.minLength(6) ])],
+      passwordCheck: ['', Validators.required]
     });
   }
 

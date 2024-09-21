@@ -1,7 +1,7 @@
 .navContainer {
   width: 100%;
   height: 64px;
-  background-color: #000126;
+  background-color: rgba(139, 143, 255, 0.5);
 
   nav {
     display: flex;
@@ -12,7 +12,7 @@
       color: #ffffff;
       font-size: large;
       font-weight: bold;
-
+      border: transparent;
       background: transparent;
       height: 100%;
       padding: 9px 6px;
@@ -30,5 +30,6 @@
 .footerContainer {
   width: 100%;
   height: 64px;
-  background-color: #030035;
+  border-top: 1px solid #000000;
+  background-color: #ffffff;
 }

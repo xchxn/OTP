@@ -26,6 +26,11 @@
     <select id="member" type="text" formControlName="member">
       <option *ngFor="let member of objektFilter.member" [value]="member">{{ member }}</option>
     </select>
+    <!-- <mat-select>
+      @for (member of objektFilter.member; track member) {
+      <mat-option [value]="member">{{member}}</mat-option>
+    }
+    </mat-select> -->
     <select id="collectionNo" type="text" formControlName="collectionNo">
       <option *ngFor="let collectionNo of objektFilter.collectionNo" [value]="collectionNo">{{ collectionNo }}</option>
     </select>
