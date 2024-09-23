@@ -1,0 +1,38 @@
+.kakaoLoginButton {
+  background-image: url('/Frontend/src/assets/images/kakaoLoginButton.png');
+  background-size: contain; // 아이콘 크기 조정
+  background-repeat: no-repeat;
+  background-position: center; // 아이콘을 왼쪽에 배치
+  display: inline-block;
+  width: auto;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+
+  // &:hover {
+  //   background-color: #0056b3;
+  // }
+}
+
+.googleLoginButton {
+  background-image: url('/Frontend/public/googleLoginButton.svg');
+  // background-size: 20px 20px; // 아이콘 크기 조정
+  // background-repeat: no-repeat;
+  // background-position: 10px center; // 아이콘을 왼쪽에 배치
+  // padding-left: 40px; // 아이콘에 맞게 padding을 설정
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+
+  // &:hover {
+  //   background-color: #0056b3;
+  // }
+
+  // &:active {
+  //   background-color: #003f7f;
+  // }
+}
