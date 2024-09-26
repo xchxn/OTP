@@ -1,44 +1,80 @@
-<p>auth works!</p>
-
 <!-- 기본 화면 로그인 폼 -->
-<div>
+<div class="example-container">
   <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <label for="id">ID:</label>
-    <input id="id" formControlName="id" required>
+    <mat-form-field>
+      <mat-label for="id">ID:</mat-label>
+      <input matInput id="id" formControlName="id" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label for="password">Enter your password</mat-label>
+      <input matInput [type]="hide() ? 'password' : 'text'" id="password" formControlName="password" required />
+      <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()">
+        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
 
-    <label for="password">Password:</label>
-    <input id="password" formControlName="password" required>
-
-    <button type="submit" [disabled]="!loginForm.valid">Login</button>
+    <div class="buttonContainer">
+      <button mat-flat-button type="submit" [disabled]="!loginForm.valid">Login</button>
+      <button mat-flat-button type="button">Register</button>
+    </div>
+    <div class="socialAuthContainer">
+      <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
+      </button>
+      <button class="googleLoginButton" (click)="onGoogleGetCode()">
+      </button>
+    </div>
   </form>
 </div>
 
 <!-- 회원가입 폼으로 전환 -->
-<div>
+<div class="example-container">
   <form [formGroup]="registerForm" (ngSubmit)="register()">
-    <label for="id">ID:</label>
-    <input id="id" formControlName="id" required>
 
-    <label for="email">Email:</label>
-    <input id="email" formControlName="email" required>
+    <mat-form-field>
+      <mat-label for="id">ID</mat-label>
+      <input matInput id="id" formControlName="id" required>
+    </mat-form-field>
 
-    <label for="username">ID:</label>
-    <input id="username" formControlName="username" required>
+    <mat-form-field>
+      <mat-label for="email">Email</mat-label>
+      <input id="email" formControlName="email" required matInput placeholder="pat@example.com"
+        [formGroup]="registerForm" (blur)="updateErrorMessage()" required />
+      @if (registerForm.invalid) {
+      <mat-error>{{errorMessage()}}</mat-error>
+      }
+    </mat-form-field>
 
-    <label for="password">Password:</label>
-    <input id="password" formControlName="password" required minlength="6" required>
+    <mat-form-field>
+      <mat-label for="username">Username</mat-label>
+      <input matInput id="username" formControlName="username" required>
+    </mat-form-field>
 
-    <label for="passwordCheck">PasswordCheck:</label>
-    <input id="passwordCheck" formControlName="passwordCheck" required>
+    <mat-form-field>
+      <mat-label for="password">Password</mat-label>
+      <input matInput [type]="hide() ? 'password' : 'text'" id="password" formControlName="password" minlength="6"
+        required />
+      <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()">
+        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
 
-    <button type="submit" [disabled]="!registerForm.valid">Register</button>
+    <mat-form-field>
+      <mat-label for="passwordCheck">PasswordCheck</mat-label>
+      <input matInput id="passwordCheck" formControlName="passwordCheck" required>
+    </mat-form-field>
+
+
+
+    <button mat-flat-button type="submit" [disabled]="!registerForm.valid">Register</button>
   </form>
 </div>
 
 <!-- Validator 검사 실패 시 에러문 작성 -->
-<div>
-  <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
-    Kakao
-  </button>
-</div>
-<button class="googleLoginButton" (click)="onGoogleGetCode()">googletest</button>
+<!-- <div class="socialAuthContatiner">
+<button class="kakaoLoginButton" (click)="onKakaoGetCode()">
+</button>
+<button class="googleLoginButton" (click)="onGoogleGetCode()">
+</button>
+</div> -->

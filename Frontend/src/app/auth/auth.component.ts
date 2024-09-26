@@ -1,9 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import { merge } from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 interface authInform {
   id: string;
@@ -22,19 +29,35 @@ interface registerInform {
   selector: 'app-auth',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule,
-    FormsModule],
+    FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule,
+    MatButtonModule],
   providers: [CookieService],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss'
+  styleUrl: './auth.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
   loginForm!: FormGroup;
   registerForm!: FormGroup;
 
+  errorMessage = signal('');
+
+  hide = signal(true);
+  clickEvent(event: MouseEvent) {
+    this.hide.set(!this.hide());
+    event.stopPropagation();
+  }
+
   constructor (
     private authservice: AuthService,
     private formBuilder: FormBuilder,
-  ) {}
+  ) {
+    // 이메일 입력 오류 컨트롤을 위한 merge
+    // 오류 발생 구간
+    // merge(this.registerForm.value.email.statusChanges, this.registerForm.value.email.valueChanges)
+    //   .pipe(takeUntilDestroyed())
+    //   .subscribe(() => this.updateErrorMessage());
+  }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -85,5 +108,16 @@ export class AuthComponent {
 
   onGoogleGetCode(): void {
     window.location.href = `http://localhost:3000/auth/google`;
+  }
+
+  // 이메일 입력 오류 메시지
+  updateErrorMessage() {
+    if (this.registerForm.value.email.hasError('required')) {
+      this.errorMessage.set('You must enter a value');
+    } else if (this.registerForm.value.email.hasError('email')) {
+      this.errorMessage.set('Not a valid email');
+    } else {
+      this.errorMessage.set('');
+    }
   }
 }

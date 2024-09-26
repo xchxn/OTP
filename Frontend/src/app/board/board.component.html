@@ -29,41 +29,43 @@
         <mat-option [value]="season">{{season}}</mat-option>
         }
       </mat-select>
-      
+    </mat-form-field>
       <!-- <select id="member" type="text" formControlName="member">
         <option *ngFor="let member of objektFilter.member" [value]="member">{{ member }}</option>
       </select> -->
+      <mat-form-field>
       <mat-select formControlName="member" placeholder="Member">
         @for (member of objektFilter.member; track member) {
         <mat-option [value]="member">{{member}}</mat-option>
         }
       </mat-select>
-
+    </mat-form-field>
       <!-- <select id="collectionNo" type="text" formControlName="collectionNo">
         <option *ngFor="let collectionNo of objektFilter.collectionNo" [value]="collectionNo">{{ collectionNo }}</option>
       </select> -->
+      <mat-form-field>
       <mat-select formControlName="collectionNo" placeholder="collectionNo">
         @for (collectionNo of objektFilter.collectionNo; track collectionNo) {
         <mat-option [value]="collectionNo">{{collectionNo}}</mat-option>
         }
       </mat-select>
-
+    </mat-form-field>
       <!-- <select id="classes" type="text" formControlName="classes">
         <option *ngFor="let classes of objektFilter.classes" [value]="classes">{{ classes }}</option>
       </select> -->
+      <mat-form-field>
       <mat-select formControlName="classes" placeholder="classes">
         @for (classes of objektFilter.classes; track classes) {
         <mat-option [value]="classes">{{classes}}</mat-option>
         }
       </mat-select>
-      
-  
-      <div class="submitButton">
-        <button type="button" (click)="addObjektToHaveArray()">Have 찾기</button>
-        <button type="button" (click)="addObjektToWantArray()">Want 찾기</button>
-        <button type="button" (click)="getThumbnail()">썸네일가져오기</button>
-      </div>
     </mat-form-field>
+
+    <div class="submitButton">
+      <button type="button" (click)="addObjektToHaveArray()">Have 찾기</button>
+      <button type="button" (click)="addObjektToWantArray()">Want 찾기</button>
+      <button type="button" (click)="getThumbnail()">썸네일가져오기</button>
+    </div>
   </form>
 </div>
 
