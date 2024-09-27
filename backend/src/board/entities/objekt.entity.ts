@@ -6,6 +6,9 @@ export class ObjektEntity {
   id: number;
 
   @Column({ type: 'varchar', length: 255 })
+  collectionId: string;
+
+  @Column({ type: 'varchar', length: 255 })
   season: string;
 
   @Column({ type: 'varchar', length: 255 })

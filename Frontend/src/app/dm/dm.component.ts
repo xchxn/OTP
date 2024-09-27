@@ -5,12 +5,14 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
   selector: 'app-dm',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
+    FormsModule, RouterOutlet, RouterLink, RouterLinkActive, MatDividerModule
+  ],
   providers: [CookieService],
   templateUrl: './dm.component.html',
   styleUrl: './dm.component.scss'
