@@ -1,0 +1,54 @@
+.example-container form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+  padding: 12px 9px;
+
+  mat-form-field {
+    width: 256px;
+  }
+
+  .buttonContainer {
+    flex-direction: row;
+    button {
+      justify-self: center;
+      margin: 6px 6px;
+    }
+  }
+}
+
+.socialAuthContatiner {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.kakaoLoginButton {
+  background: url('C:/otp/Frontend/public/kakaoLoginButton.png') no-repeat;
+  background-size: contain; // 아이콘 크기 조정
+  display: inline-block;
+  width: 200px;
+  cursor: pointer;
+  border: none;
+  height: 40px;
+
+  // &:hover {
+  //   background-color: #0056b3;
+  // }
+}
+
+.googleLoginButton {
+  background-image: url('C:/otp/Frontend/public/googleLoginButton.svg');
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}

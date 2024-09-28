@@ -1,0 +1,11 @@
+.postContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  justify-content: center;
+
+  .example-full-width {
+    width: 80%;
+  }
+}

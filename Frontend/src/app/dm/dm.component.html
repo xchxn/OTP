@@ -1,24 +1,28 @@
-<p>dm works!</p>
-<p> DM Now {{ selectedReceiverId }}</p>
 <div class="receiver-list">
   <h3>Receivers for</h3>
   <ul>
-    <button *ngFor="let receiver of dmList" (click)="selectDm(receiver)">{{ receiver }}</button>
+    <button class="dmList" *ngFor="let receiver of dmList" (click)="selectDm(receiver)">
+      {{ receiver }}
+      <mat-divider />
+    </button>
   </ul>
 </div>
 
-<form [formGroup]="messageForm" (ngSubmit)="send()">
-  <div>
-    <label for="message">message:</label>
-    <input id="message" formControlName="message">
-  </div>
-  <button type="submit">Send Message</button>
-</form>
-<!-- DM OPEN -->
+<div class="nowDmContainer">
+  <p> DM Now {{ selectedReceiverId }}</p>
 
-<button type="submit" (click)="selectDm(selectedReceiverId)">Fetch</button>
-  <div class="message-list">
-    <div *ngFor="let msg of messages">
-      <strong>{{ msg.senderId }}:</strong> {{ msg.message }}
-    </div>
+  <!-- 해당 메시지 목록에 스크롤 추가하기  -->
+  <!-- Max-height 추가 -->
+  <div class="messageContainer" *ngFor="let msg of messages">
+    <strong>{{ msg.senderId }}:</strong> {{ msg.message }}
   </div>
+
+  <form [formGroup]="messageForm" (ngSubmit)="send()">
+    <div>
+      <label for="message">message:</label>
+      <input id="message" formControlName="message">
+    </div>
+    <button type="submit">Send Message</button>
+  </form>
+</div>
+<button type="submit" (click)="selectDm(selectedReceiverId)">Fetch</button>

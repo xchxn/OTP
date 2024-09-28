@@ -1,20 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environments';
 
 @Injectable({
   providedIn: 'any'
 })
 export class TestingService {
-  private url = `http://localhost:3000/api`;
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
   getOptions(): Observable<any> {
-    return this.http.get<any>(`${this.url}/option`);
+    return this.http.get<any>(`${this.apiUrl}/option`);
   }
 
   getThumbnail(body: any): Observable<any> {
-    return this.http.post<any>(`${this.url}/thumbnail`, body);
+    return this.http.post<any>(`${this.apiUrl}/thumbnail`, body);
   }
 }

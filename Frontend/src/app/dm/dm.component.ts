@@ -5,12 +5,14 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
   selector: 'app-dm',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
+    FormsModule, RouterOutlet, RouterLink, RouterLinkActive, MatDividerModule
+  ],
   providers: [CookieService],
   templateUrl: './dm.component.html',
   styleUrl: './dm.component.scss'
@@ -29,22 +31,12 @@ export class DmComponent {
   // selectedReceiverId: string = '113484026984211984993'; // 선택된 수신자
   selectedReceiverId!: string;
 
-  // 메시지 배열 확인용
-  // messages: { senderId: string, content: string }[] = [];
-
-
   constructor(
     private dmService: DmService,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
     private route: ActivatedRoute,
-  ) {
-    // this.messageSubscription = this.dmService.onMessage().subscribe({
-    //   next: (msg) => {
-    //     this.messages.push(msg);
-    //   }
-    // });
-  }
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -64,14 +56,11 @@ export class DmComponent {
       this.dmList = receivers;
     });
 
-    // 메시지 저장
-    // this.dmService.onMessage().subscribe((message) => {
-    //   this.messages.push(message); // 메시지를 목록에 추가
-    // });
-
     // 새로운 메시지 수신 구독
     this.messageSubscription = this.dmService.onMessage().subscribe((message) => {
       this.messages.push(message); // 새 메시지 추가
+
+      this.dmService.fetchMessages(this.cookieService.get('kakaoId'), this.selectedReceiverId);
     });
   }
 

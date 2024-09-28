@@ -43,6 +43,7 @@ export class ManageService {
         datas.add(collectionId);
 
         const data = {
+          collectionId: response.data.objekt.collectionId,
           season: response.data.objekt.season,
           member: response.data.objekt.member,
           collectionNo: response.data.objekt.collectionNo,

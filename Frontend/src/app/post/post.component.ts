@@ -5,6 +5,11 @@ import { PostService } from './post.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSelectModule} from '@angular/material/select';
+
 interface objektFilter {
   season: Array<string>;
   member: Array<string>;
@@ -16,7 +21,8 @@ interface objektFilter {
   selector: 'app-post',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
+    FormsModule, RouterOutlet, RouterLink, RouterLinkActive, MatInputModule,
+    MatFormFieldModule, MatButtonModule, MatSelectModule],
   providers: [CookieService],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
@@ -79,6 +85,7 @@ export class PostComponent {
 
         const haveArray = this.postingForm.get('objekt.have') as FormArray;
         haveArray.push(this.formBuilder.control(data.id));
+        this.getThumbnail();
       },
       error: (err) => {
         console.error(err);
@@ -97,6 +104,7 @@ export class PostComponent {
 
         const wantArray = this.postingForm.get('objekt.want') as FormArray;
         wantArray.push(this.formBuilder.control(data.id));
+        this.getThumbnail();
       },
       error: (err) => {
         console.error(err);

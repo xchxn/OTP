@@ -1,0 +1,43 @@
+.receiver-list {
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+  padding: 6px 12px;
+  margin: 6px 9px;
+
+  .dmList{
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    border: transparent;
+    align-items: center;
+    border-radius: 12px;
+    padding: 6px 6px;
+    margin: 6px 6px;
+
+    &:hover {
+      background-color: #888888;
+    }
+  }
+}
+
+.nowDmContainer{
+  display: flex;
+  flex-direction: column;
+
+  max-height: 400px;
+  overflow-y: auto; 
+  width: 40%;
+
+  justify-content: end;
+  border: 1px solid #999999;
+  border-radius: 12px;
+  box-sizing: border-box; 
+
+  padding: 6px 12px;
+  margin: 6px 9px;
+}
+
+.messageContainer{
+  flex-shrink: 0;
+}
