@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environments';
 
 @Injectable({
   providedIn: 'any'
 })
 export class BoardService {
-
+  apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
   httpOptions = {
@@ -16,14 +17,14 @@ export class BoardService {
   };
 
   getPostingList(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/board/list`, this.httpOptions);
+    return this.http.get<any>(`${this.apiUrl}/board/list`, this.httpOptions);
   }
 
   searchObjekt(body: any): Observable<any> {
-    return this.http.post<any>(`http://localhost:3000/search/mtom`, { objekts: body }, this.httpOptions);
+    return this.http.post<any>(`${this.apiUrl}/search/mtom`, { objekts: body }, this.httpOptions);
   }
 
   searchWithPosting(body: any): Observable<any> {
-    return this.http.post<any>(`http://localhost:3000/search/posting`, { user: body } , this.httpOptions);
+    return this.http.post<any>(`${this.apiUrl}/search/posting`, { user: body } , this.httpOptions);
   }
 }

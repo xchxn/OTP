@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../../environments/environments';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ import { io, Socket } from 'socket.io-client';
 export class DmService {
   private socket!: Socket;
   private url = 'http://localhost:3000';  // WebSocket 서버 URL
-
+  apiUrl = environment.apiUrl;
+  
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
@@ -19,7 +21,7 @@ export class DmService {
   }
 
   private connect(userId: string): void {
-    this.socket = io(this.url, { autoConnect: false, transports: [ "websocket" ] });
+    this.socket = io(this.apiUrl, { autoConnect: false, transports: [ "websocket" ] });
     this.socket.connect();
 
     // 연결 상태 확인
