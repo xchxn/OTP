@@ -10,13 +10,14 @@
 
 <div class="nowDmContainer">
   <p> DM Now {{ selectedReceiverId }}</p>
-
   <!-- 해당 메시지 목록에 스크롤 추가하기  -->
   <!-- Max-height 추가 -->
-  <div class="messageContainer" *ngFor="let msg of messages">
-    <strong>{{ msg.senderId }}:</strong> {{ msg.message }}
+  <div #messageList class="messageListContainer">
+    <div class="messageContainer" *ngFor="let msg of messages">
+      <strong>{{ msg.senderId }}:</strong>
+      {{ msg.message }}
+    </div>
   </div>
-
   <form [formGroup]="messageForm" (ngSubmit)="send()">
     <div>
       <label for="message">message:</label>

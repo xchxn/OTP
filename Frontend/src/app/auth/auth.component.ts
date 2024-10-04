@@ -40,6 +40,8 @@ export class AuthComponent {
   loginForm!: FormGroup;
   registerForm!: FormGroup;
 
+  isLoginMode = true;  // 기본 로그인 모드
+
   errorMessage = signal('');
 
   hide = signal(true);
@@ -57,6 +59,11 @@ export class AuthComponent {
     // merge(this.registerForm.value.email.statusChanges, this.registerForm.value.email.valueChanges)
     //   .pipe(takeUntilDestroyed())
     //   .subscribe(() => this.updateErrorMessage());
+  }
+
+  // 로그인 폼과 회원가입 폼 전환
+  toggleForm() {
+    this.isLoginMode = !this.isLoginMode;  // 로그인/회원가입 모드 토글
   }
 
   ngOnInit() {

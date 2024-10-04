@@ -24,9 +24,6 @@
 .nowDmContainer{
   display: flex;
   flex-direction: column;
-
-  max-height: 400px;
-  overflow-y: auto; 
   width: 40%;
 
   justify-content: end;
@@ -38,6 +35,13 @@
   margin: 6px 9px;
 }
 
+.messageListContainer {
+  flex-grow: 1;
+  margin-bottom: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .messageContainer{
-  flex-shrink: 0;
+  margin-bottom: 5px;
 }
