@@ -1,6 +1,6 @@
 <!-- 기본 화면 로그인 폼 -->
 <div class="example-container">
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <form *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="login()">
     <mat-form-field>
       <mat-label for="id">ID:</mat-label>
       <input matInput id="id" formControlName="id" required>
@@ -16,7 +16,7 @@
 
     <div class="buttonContainer">
       <button mat-flat-button type="submit" [disabled]="!loginForm.valid">Login</button>
-      <button mat-flat-button type="button">Register</button>
+      <button mat-flat-button type="button" (click)="toggleForm()">Register</button>
     </div>
     <div class="socialAuthContainer">
       <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
@@ -29,7 +29,7 @@
 
 <!-- 회원가입 폼으로 전환 -->
 <div class="example-container">
-  <form [formGroup]="registerForm" (ngSubmit)="register()">
+  <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="register()">
 
     <mat-form-field>
       <mat-label for="id">ID</mat-label>
@@ -65,9 +65,8 @@
       <input matInput id="passwordCheck" formControlName="passwordCheck" required>
     </mat-form-field>
 
-
-
     <button mat-flat-button type="submit" [disabled]="!registerForm.valid">Register</button>
+    <button mat-flat-button type="button" (click)="toggleForm()">Back to Login</button> <!-- 로그인 폼으로 전환 -->
   </form>
 </div>
 

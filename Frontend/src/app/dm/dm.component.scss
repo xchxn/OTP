@@ -1,9 +1,20 @@
-.receiver-list {
+.dmContainer {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  height: auto;
+}
+
+.receiver-list {
+  display: flex;
+  flex-direction: column;
   width: 40%;
   padding: 6px 12px;
   margin: 6px 9px;
+  justify-content: center;
+  align-items: center;
 
   .dmList{
     display: flex;
@@ -24,10 +35,8 @@
 .nowDmContainer{
   display: flex;
   flex-direction: column;
-
-  max-height: 400px;
-  overflow-y: auto; 
   width: 40%;
+  align-items: center;
 
   justify-content: end;
   border: 1px solid #999999;
@@ -38,6 +47,13 @@
   margin: 6px 9px;
 }
 
+.messageListContainer {
+  flex-grow: 1;
+  margin-bottom: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .messageContainer{
-  flex-shrink: 0;
+  margin-bottom: 5px;
 }

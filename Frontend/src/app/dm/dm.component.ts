@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DmService } from './dm.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,8 +17,9 @@ import {MatDividerModule} from '@angular/material/divider';
   templateUrl: './dm.component.html',
   styleUrl: './dm.component.scss'
 })
-export class DmComponent {
+export class DmComponent{
   messageForm!: FormGroup;
+  @ViewChild('scrollMe') private messageContainer!: ElementRef;
 
   // 대상 유저와의 메시지 기록
   messages: Array<{ senderId: string, message: string }> = [];
@@ -28,7 +29,6 @@ export class DmComponent {
   // 디엠 유저 목록
   dmList: any[] = [];
 
-  // selectedReceiverId: string = '113484026984211984993'; // 선택된 수신자
   selectedReceiverId!: string;
 
   constructor(
@@ -64,6 +64,19 @@ export class DmComponent {
     });
   }
 
+  ngAfterViewInit() {
+    // DOM이 완전히 로드된 후에 스크롤을 하단으로 이동
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+    } catch(err) { 
+      console.log("get error");
+    }
+  }
+
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
   selectDm(receiver: string): void {
@@ -77,6 +90,8 @@ export class DmComponent {
     this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe((messages) => {
       this.messages = messages; // 기존 메시지 기록으로 업데이트
     });
+
+    this.scrollToBottom();
   }
 
   send(): void {
@@ -94,10 +109,12 @@ export class DmComponent {
     this.dmService.sendMessage(message);
 
     this.messageForm.reset();
+    
+    this.scrollToBottom();
   }
 
   ngOnDestroy(): void {
-    this.messageSubscription.unsubscribe();
-    this.fetchMessagesSubscription.unsubscribe();
+    // this.messageSubscription.unsubscribe();
+    // this.fetchMessagesSubscription.unsubscribe();
   }
 }
