@@ -27,7 +27,7 @@ export class BoardService {
       ])
       .addSelect('auth.id', 'author')
       .getRawMany();
-    console.log(getPostingList);
+    // console.log(getPostingList);
     return getPostingList;
   }
 
@@ -128,12 +128,14 @@ export class BoardService {
   }
 
   async getThumbnail(body: any): Promise<any> {
-    console.log(body);
+    // console.log(body);
     const selectOption = await this.objektRepository
-      .createQueryBuilder()
-      .select('DISTINCT thumbnailImage', 'thumbnailImage')
+      .createQueryBuilder('')
+      // .select('DISTINCT thumbnailImage', 'thumbnailImage')
+      // .select()
       .where('id = :id', { id: body.id })
-      .getRawOne();
+      .getOne();
+    // console.log(selectOption);
     return selectOption;
   }
 }
