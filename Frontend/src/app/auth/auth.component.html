@@ -18,13 +18,13 @@
       <button mat-flat-button type="submit" [disabled]="!loginForm.valid">Login</button>
       <button mat-flat-button type="button" (click)="toggleForm()">Register</button>
     </div>
-    <div class="socialAuthContainer">
-      <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
-      </button>
-      <button class="googleLoginButton" (click)="onGoogleGetCode()">
-      </button>
-    </div>
   </form>
+  <div class="socialAuthContainer">
+    <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
+    </button>
+    <button class="googleLoginButton" (click)="onGoogleGetCode()">
+    </button>
+  </div>
 </div>
 
 <!-- 회원가입 폼으로 전환 -->

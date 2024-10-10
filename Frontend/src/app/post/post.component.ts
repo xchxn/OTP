@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PostService } from './post.service';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
@@ -22,7 +23,7 @@ interface objektFilter {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
     FormsModule, RouterOutlet, RouterLink, RouterLinkActive, MatInputModule,
-    MatFormFieldModule, MatButtonModule, MatSelectModule],
+    MatFormFieldModule, MatButtonModule, MatSelectModule, MatTooltipModule],
   providers: [CookieService],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
@@ -31,13 +32,14 @@ export class PostComponent {
   postingForm!: FormGroup;
   objektFilter!: objektFilter;
   objektFilterForm!: FormGroup;
-  haveObjektThumbnail: string[] = [];
-  wantObjektThumbnail: string[] = [];
+  haveObjektThumbnail: any[] = [];
+  wantObjektThumbnail: any[] = [];
   check!: string;
   constructor(
     private postService: PostService,
     private cookieService: CookieService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.loadData();
   }
@@ -129,7 +131,7 @@ export class PostComponent {
         next: (data) => {
           // 썸네일 주소 배열에 data 추가
           console.log(data.thumbnailImage);
-          this.haveObjektThumbnail.push(data.thumbnailImage);
+          this.haveObjektThumbnail.push(data);
         },
         error: (err) => console.error(err),
         complete: () => console.log('Thumbnail loading complete')
@@ -145,7 +147,7 @@ export class PostComponent {
         next: (data) => {
           // 썸네일 주소 배열에 data 추가
           console.log(data.thumbnailImage);
-          this.wantObjektThumbnail.push(data.thumbnailImage);
+          this.wantObjektThumbnail.push(data);
         },
         error: (err) => console.error(err),
         complete: () => console.log('Thumbnail loading complete')
@@ -160,6 +162,7 @@ export class PostComponent {
       next: (data) => {
         // Board로 리다이렉션
         console.log(data);
+        this.router.navigate(['/board'])
       },
       error: (err) => console.error(err),
       complete: () => {

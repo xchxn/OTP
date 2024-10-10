@@ -37,14 +37,13 @@ export class AuthController {
     type: LoginDto,
   })
   @Post('login')
-  async login(@Body() req: LoginDto, @Res() res: any): Promise<any> {
+  async login(@Body() req: LoginDto): Promise<any> {
     const result = await this.authService.login(req);
-    res.cookie('accessToken', result.token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 15 * 60 * 1000, // 15분
-    });
-    return res.send({ message: 'Login Success' });
+
+    return {
+      message: 'Login Success',
+      accessToken: result.token,
+    };
   }
 
   @Post('register')
@@ -52,7 +51,7 @@ export class AuthController {
     return this.authService.register(req);
   }
 
-  @Post('confirm/:token')
+  @Get('confirm/:token')
   async confirmEmail(@Param('token') token: string): Promise<any> {
     return this.authService.confirmEmail(token);
   }
@@ -70,6 +69,7 @@ export class AuthController {
     const { user } = req;
 
     console.log(user);
+    const accessToken = user.accessToken;
 
     res.cookie('kakaoId', user.kakaoId, {
       secure: true,
@@ -77,18 +77,16 @@ export class AuthController {
     });
 
     res.cookie('accessToken', user.accessToken, {
-      httpOnly: true,
       secure: true,
       maxAge: 15 * 60 * 1000, // 15분
     });
 
     res.cookie('refreshToken', user.refreshToken, {
-      httpOnly: true,
       secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
 
-    res.redirect('http://localhost:4200');
+    res.redirect(`http://localhost:4200?token=${accessToken}`);
     // return req.user;
   }
 
@@ -105,6 +103,7 @@ export class AuthController {
     const { user } = req;
 
     console.log(user);
+    const accessToken = user.accessToken;
 
     res.cookie('kakaoId', user.googleId, {
       secure: true,
@@ -112,18 +111,16 @@ export class AuthController {
     });
 
     res.cookie('accessToken', user.accessToken, {
-      httpOnly: true,
       secure: true,
       maxAge: 15 * 60 * 1000, // 15분
     });
 
     res.cookie('refreshToken', user.refreshToken, {
-      httpOnly: true,
       secure: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
 
-    res.redirect('http://localhost:4200');
+    res.redirect(`http://localhost:4200?token=${accessToken}`);
 
     // return req.user;
   }

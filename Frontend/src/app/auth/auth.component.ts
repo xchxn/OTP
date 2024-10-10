@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import { merge } from 'rxjs';
+import { BehaviorSubject, merge } from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 interface authInform {
@@ -53,6 +53,7 @@ export class AuthComponent {
   constructor (
     private authservice: AuthService,
     private formBuilder: FormBuilder,
+    private router: Router
   ) {
     // 이메일 입력 오류 컨트롤을 위한 merge
     // 오류 발생 구간
@@ -87,18 +88,24 @@ export class AuthComponent {
     this.authservice.login(loginId, loginPassword).subscribe({
       next: (res) => {
         console.log('Logged in successfully!', res);
+        this.authservice.isLogin(res.accessToken);
+        this.router.navigate(['/'])
       },
       error: (err) => console.error(err),
-      complete: () => console.log('login success')
+      complete: () => {
+        console.log('login success')
+      }
     });
+
+    
   }
 
   register(): void {
     const registerBody = {
-      registerId: this.registerForm.value.id,
-      registerUsername: this.registerForm.value.username,
-      registerEmail: this.registerForm.value.email,
-      registerPassword: this.registerForm.value.password
+      id: this.registerForm.value.id,
+      username: this.registerForm.value.username,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password
     }
     this.authservice.register(registerBody).subscribe({
       next: (res) => {

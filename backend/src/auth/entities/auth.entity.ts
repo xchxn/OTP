@@ -8,7 +8,7 @@ export class AuthEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   accessToken: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
   refreshToken: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

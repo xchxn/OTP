@@ -69,7 +69,7 @@ export class AuthService {
   async sendEmail(to: string, subject: string, token: string): Promise<any> {
     // const url = `${token}`;
     const mailOptions = {
-      from: '"Example Team" <example@example.com>',
+      // from: '"Example Team" <example@example.com>',
       to: to,
       subject: subject,
       text: 'Please confirm your email for service.',
@@ -77,6 +77,7 @@ export class AuthService {
     };
 
     const info = await this.transporter.sendMail(mailOptions);
+
     console.log('Message sent: %s', info.messageId);
   }
 
@@ -96,13 +97,14 @@ export class AuthService {
   }
 
   async login(req: any): Promise<any> {
+    console.log(req);
     const login = await this.authRepository
       .createQueryBuilder()
       .select()
       .where('id = :id', { id: req.id })
       .getOne();
     if (login === null) {
-      throw new Error('There is no login information, register firest please');
+      throw new Error('There is no login information, register first please');
     }
     if (!login.isEmailConfirmed) {
       throw new Error(

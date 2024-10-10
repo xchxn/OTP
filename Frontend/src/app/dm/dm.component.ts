@@ -19,7 +19,7 @@ import {MatDividerModule} from '@angular/material/divider';
 })
 export class DmComponent{
   messageForm!: FormGroup;
-  @ViewChild('scrollMe') private messageContainer!: ElementRef;
+  // @ViewChild('scrollMe') private messageContainer!: ElementRef;
 
   // 대상 유저와의 메시지 기록
   messages: Array<{ senderId: string, message: string }> = [];
@@ -64,18 +64,18 @@ export class DmComponent{
     });
   }
 
-  ngAfterViewInit() {
-    // DOM이 완전히 로드된 후에 스크롤을 하단으로 이동
-    this.scrollToBottom();
-  }
+  // ngAfterViewInit() {
+  //   // DOM이 완전히 로드된 후에 스크롤을 하단으로 이동
+  //   this.scrollToBottom();
+  // }
 
-  scrollToBottom(): void {
-    try {
-      this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
-    } catch(err) { 
-      console.log("get error");
-    }
-  }
+  // scrollToBottom(): void {
+  //   try {
+  //     this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+  //   } catch(err) { 
+  //     console.log("get error");
+  //   }
+  // }
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
@@ -91,7 +91,7 @@ export class DmComponent{
       this.messages = messages; // 기존 메시지 기록으로 업데이트
     });
 
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   send(): void {
@@ -109,12 +109,10 @@ export class DmComponent{
     this.dmService.sendMessage(message);
 
     this.messageForm.reset();
-    
-    this.scrollToBottom();
   }
 
   ngOnDestroy(): void {
-    // this.messageSubscription.unsubscribe();
-    // this.fetchMessagesSubscription.unsubscribe();
+    this.messageSubscription.unsubscribe();
+    this.fetchMessagesSubscription.unsubscribe();
   }
 }

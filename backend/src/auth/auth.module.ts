@@ -7,15 +7,18 @@ import { GoogleStrategy } from './strategy/google.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
 import { authProviders } from './auth.providers';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     PassportModule,
-    JwtModule.register({
-      global: true,
-      secret: process.env.jwtConstants,
-      signOptions: { expiresIn: '15m' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'), // JWT_SECRET 환경 변수에서 가져오기
+        signOptions: { expiresIn: '1h' },
+      }),
     }),
     DatabaseModule,
     ConfigModule,

@@ -11,7 +11,9 @@ import { ManageModule } from './manage/manage.module';
 @Module({
   imports: [
     TestingModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     DatabaseModule,
     DmModule,
     AuthModule,
