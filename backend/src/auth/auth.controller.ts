@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto, SignUpDto } from './dto/auth.dto';
-
+import { Response } from 'express';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -43,6 +43,7 @@ export class AuthController {
     return {
       message: 'Login Success',
       accessToken: result.token,
+      userId: result.userId,
     };
   }
 
@@ -52,8 +53,20 @@ export class AuthController {
   }
 
   @Get('confirm/:token')
-  async confirmEmail(@Param('token') token: string): Promise<any> {
-    return this.authService.confirmEmail(token);
+  async confirmEmail(
+    @Param('token') token: string,
+    @Res() res: Response,
+  ): Promise<any> {
+    try {
+      // 이메일 확인 처리
+      await this.authService.confirmEmail(token);
+
+      // 이메일 확인 후 리다이렉트
+      res.redirect('http://localhost:4200/auth'); // 성공 페이지로 리다이렉트
+    } catch (error) {
+      // 이메일 확인 실패 시 리다이렉트
+      res.redirect('http://localhost:4200/auth'); // 실패 페이지로 리다이렉트
+    }
   }
 
   @Get('kakao')
@@ -69,25 +82,14 @@ export class AuthController {
     const { user } = req;
 
     console.log(user);
+
     const accessToken = user.accessToken;
+    const refreshToken = user.refreshToken;
+    const userId = user.kakaoId;
 
-    res.cookie('kakaoId', user.kakaoId, {
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
-    });
-
-    res.cookie('accessToken', user.accessToken, {
-      secure: true,
-      maxAge: 15 * 60 * 1000, // 15분
-    });
-
-    res.cookie('refreshToken', user.refreshToken, {
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
-    });
-
-    res.redirect(`http://localhost:4200?token=${accessToken}`);
-    // return req.user;
+    res.redirect(
+      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}`,
+    );
   }
 
   @Get('google')
@@ -104,23 +106,12 @@ export class AuthController {
 
     console.log(user);
     const accessToken = user.accessToken;
+    const refreshToken = user.refreshToken;
+    const userId = user.googleId;
 
-    res.cookie('kakaoId', user.googleId, {
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
-    });
-
-    res.cookie('accessToken', user.accessToken, {
-      secure: true,
-      maxAge: 15 * 60 * 1000, // 15분
-    });
-
-    res.cookie('refreshToken', user.refreshToken, {
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
-    });
-
-    res.redirect(`http://localhost:4200?token=${accessToken}`);
+    res.redirect(
+      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}`,
+    );
 
     // return req.user;
   }

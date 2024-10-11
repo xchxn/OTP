@@ -111,8 +111,13 @@ export class AuthService {
         'Email not confirmed. Please check your email to confirm your account.',
       );
     }
+    console.log(login);
     const check = await bcrypt.compare(req.password, login.password);
-    if (check) return { token: login.accessToken };
+    if (check)
+      return {
+        token: login.accessToken,
+        userId: login.id,
+      };
     else throw new UnauthorizedException();
   }
 

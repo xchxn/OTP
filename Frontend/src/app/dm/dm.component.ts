@@ -47,7 +47,7 @@ export class DmComponent{
       message: this.formBuilder.control('', Validators.required)
     });
 
-    const idData = { senderId: this.cookieService.get('kakaoId')};
+    const idData = { senderId: this.cookieService.get('userId')};
 
     // DM 리스트 가져오기
     this.dmService.getReceivers(idData);
@@ -60,7 +60,7 @@ export class DmComponent{
     this.messageSubscription = this.dmService.onMessage().subscribe((message) => {
       this.messages.push(message); // 새 메시지 추가
 
-      this.dmService.fetchMessages(this.cookieService.get('kakaoId'), this.selectedReceiverId);
+      this.dmService.fetchMessages(this.cookieService.get('userId'), this.selectedReceiverId);
     });
   }
 
@@ -81,7 +81,7 @@ export class DmComponent{
   // receiverId: string
   selectDm(receiver: string): void {
     this.selectedReceiverId = receiver;
-    const senderId = this.cookieService.get('kakaoId');
+    const senderId = this.cookieService.get('userId');
 
     // 서버로부터 선택된 수신자와의 메시지 기록을 요청
     this.dmService.fetchMessages(senderId, this.selectedReceiverId);
@@ -100,7 +100,7 @@ export class DmComponent{
     }
 
     const message = { 
-      senderId: this.cookieService.get('kakaoId'),
+      senderId: this.cookieService.get('userId'),
       receiverId: this.selectedReceiverId,
       message: this.messageForm.value.message
     };

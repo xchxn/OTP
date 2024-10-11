@@ -88,16 +88,28 @@ export class AuthComponent {
     this.authservice.login(loginId, loginPassword).subscribe({
       next: (res) => {
         console.log('Logged in successfully!', res);
-        this.authservice.isLogin(res.accessToken);
-        this.router.navigate(['/'])
+        this.router.navigate([`/`],{
+          queryParams: { 
+            token: res.accessToken,
+            userId: res.userId
+            }
+        });
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if (err.status === 400) {
+          console.error('Bad Request: Invalid login credentials.');
+        } else if (err.status === 401) {
+          console.error('Unauthorized: Incorrect username or password.');
+        } else if (err.status === 500) {
+          console.error('Server Error: Please try again later.');
+        } else {
+          console.error('An unknown error occurred:', err.message);
+        }
+      },
       complete: () => {
-        console.log('login success')
+        console.log('login success');
       }
     });
-
-    
   }
 
   register(): void {
@@ -110,6 +122,9 @@ export class AuthComponent {
     this.authservice.register(registerBody).subscribe({
       next: (res) => {
         console.log('Register in successfully!', res);
+        // 이메일 인증 후 로그인 해주세요 팝업
+        alert('이메일 인증 후 진행해주세요');
+        this.router.navigate([`/`]);
       },
       error: (err) => console.error(err),
       complete: () => console.log('register success, please confirm email')
