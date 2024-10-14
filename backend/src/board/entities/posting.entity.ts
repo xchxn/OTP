@@ -19,7 +19,7 @@ export class PostingEntity {
   content: string;
 
   @Column({ length: 50 })
-  author: string;
+  username: string;
 
   @Column('json')
   objekts: { have: number[]; want: number[] }; // 숫자 배열을 JSON으로 저장

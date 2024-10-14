@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import { merge } from 'rxjs';
+import { BehaviorSubject, merge } from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 interface authInform {
@@ -53,6 +53,7 @@ export class AuthComponent {
   constructor (
     private authservice: AuthService,
     private formBuilder: FormBuilder,
+    private router: Router
   ) {
     // 이메일 입력 오류 컨트롤을 위한 merge
     // 오류 발생 구간
@@ -87,22 +88,43 @@ export class AuthComponent {
     this.authservice.login(loginId, loginPassword).subscribe({
       next: (res) => {
         console.log('Logged in successfully!', res);
+        this.router.navigate([`/`],{
+          queryParams: { 
+            token: res.accessToken,
+            userId: res.userId
+            }
+        });
       },
-      error: (err) => console.error(err),
-      complete: () => console.log('login success')
+      error: (err) => {
+        if (err.status === 400) {
+          console.error('Bad Request: Invalid login credentials.');
+        } else if (err.status === 401) {
+          console.error('Unauthorized: Incorrect username or password.');
+        } else if (err.status === 500) {
+          console.error('Server Error: Please try again later.');
+        } else {
+          console.error('An unknown error occurred:', err.message);
+        }
+      },
+      complete: () => {
+        console.log('login success');
+      }
     });
   }
 
   register(): void {
     const registerBody = {
-      registerId: this.registerForm.value.id,
-      registerUsername: this.registerForm.value.username,
-      registerEmail: this.registerForm.value.email,
-      registerPassword: this.registerForm.value.password
+      id: this.registerForm.value.id,
+      username: this.registerForm.value.username,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password
     }
     this.authservice.register(registerBody).subscribe({
       next: (res) => {
         console.log('Register in successfully!', res);
+        // 이메일 인증 후 로그인 해주세요 팝업
+        alert('회원가입이 완료 되었습니다. 이메일 인증 후 로그인 해주세요');
+        this.router.navigate([`/`]);
       },
       error: (err) => console.error(err),
       complete: () => console.log('register success, please confirm email')

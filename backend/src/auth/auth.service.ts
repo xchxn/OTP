@@ -54,6 +54,8 @@ export class AuthService {
       .insert()
       .values({
         id: req.id,
+        email: req.email,
+        username: req.username,
         password: await bcrypt.hash(req.password, this.saltOrRounds),
         accessToken: await this.jwtService.signAsync(payload),
         emailConfirmationToken: emailConfirmationToken,
@@ -69,7 +71,7 @@ export class AuthService {
   async sendEmail(to: string, subject: string, token: string): Promise<any> {
     // const url = `${token}`;
     const mailOptions = {
-      from: '"Example Team" <example@example.com>',
+      // from: '"Example Team" <example@example.com>',
       to: to,
       subject: subject,
       text: 'Please confirm your email for service.',
@@ -77,6 +79,7 @@ export class AuthService {
     };
 
     const info = await this.transporter.sendMail(mailOptions);
+
     console.log('Message sent: %s', info.messageId);
   }
 
@@ -102,7 +105,7 @@ export class AuthService {
       .where('id = :id', { id: req.id })
       .getOne();
     if (login === null) {
-      throw new Error('There is no login information, register firest please');
+      throw new Error('There is no login information, register first please');
     }
     if (!login.isEmailConfirmed) {
       throw new Error(
@@ -110,7 +113,11 @@ export class AuthService {
       );
     }
     const check = await bcrypt.compare(req.password, login.password);
-    if (check) return { token: login.accessToken };
+    if (check)
+      return {
+        token: login.accessToken,
+        userId: login.id,
+      };
     else throw new UnauthorizedException();
   }
 

@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { DmService } from './dm.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-dm',
@@ -17,9 +17,9 @@ import {MatDividerModule} from '@angular/material/divider';
   templateUrl: './dm.component.html',
   styleUrl: './dm.component.scss'
 })
-export class DmComponent{
+export class DmComponent {
   messageForm!: FormGroup;
-  @ViewChild('scrollMe') private messageContainer!: ElementRef;
+  // @ViewChild('scrollMe') private messageContainer!: ElementRef;
 
   // 대상 유저와의 메시지 기록
   messages: Array<{ senderId: string, message: string }> = [];
@@ -27,7 +27,9 @@ export class DmComponent{
   fetchMessagesSubscription!: Subscription;
 
   // 디엠 유저 목록
+  // dmList: Set<string> = new Set();
   dmList: any[] = [];
+  dmList$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   selectedReceiverId!: string;
 
@@ -41,47 +43,48 @@ export class DmComponent{
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.selectedReceiverId = params['user'];
+
+      // user query param이 존재하면 selectDm 자동 호출
+      if (this.selectedReceiverId) {
+        this.selectDm(this.selectedReceiverId);
+      }
     });
 
     this.messageForm = this.formBuilder.group({
       message: this.formBuilder.control('', Validators.required)
     });
 
-    const idData = { senderId: this.cookieService.get('kakaoId')};
+    const idData = { senderId: this.cookieService.get('userId') };
 
     // DM 리스트 가져오기
     this.dmService.getReceivers(idData);
 
     this.dmService.onReceivers().subscribe((receivers: string[]) => {
+      // this.dmList = new Set(receivers); // 배열을 Set으로 변환하여 할당
       this.dmList = receivers;
+      this.dmList$.next(Array.from(this.dmList));
     });
+
 
     // 새로운 메시지 수신 구독
     this.messageSubscription = this.dmService.onMessage().subscribe((message) => {
       this.messages.push(message); // 새 메시지 추가
 
-      this.dmService.fetchMessages(this.cookieService.get('kakaoId'), this.selectedReceiverId);
+      this.dmService.fetchMessages(this.cookieService.get('userId'), this.selectedReceiverId);
+
+      if (!this.dmList.includes(message.senderId)) {
+        this.dmList.push(message.senderId);
+        this.dmList$.next(Array.from(this.dmList));
+      }
     });
-  }
 
-  ngAfterViewInit() {
-    // DOM이 완전히 로드된 후에 스크롤을 하단으로 이동
-    this.scrollToBottom();
-  }
-
-  scrollToBottom(): void {
-    try {
-      this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
-    } catch(err) { 
-      console.log("get error");
-    }
   }
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
   selectDm(receiver: string): void {
     this.selectedReceiverId = receiver;
-    const senderId = this.cookieService.get('kakaoId');
+    const senderId = this.cookieService.get('userId');
 
     // 서버로부터 선택된 수신자와의 메시지 기록을 요청
     this.dmService.fetchMessages(senderId, this.selectedReceiverId);
@@ -90,8 +93,6 @@ export class DmComponent{
     this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe((messages) => {
       this.messages = messages; // 기존 메시지 기록으로 업데이트
     });
-
-    this.scrollToBottom();
   }
 
   send(): void {
@@ -99,8 +100,8 @@ export class DmComponent{
       return;
     }
 
-    const message = { 
-      senderId: this.cookieService.get('kakaoId'),
+    const message = {
+      senderId: this.cookieService.get('userId'),
       receiverId: this.selectedReceiverId,
       message: this.messageForm.value.message
     };
@@ -108,13 +109,21 @@ export class DmComponent{
     console.log(message);
     this.dmService.sendMessage(message);
 
+    // 메시지 보낸 후, dmList에 상대방이 없으면 추가
+    if (!this.dmList.includes(this.selectedReceiverId)) {
+      this.dmList.push(this.selectedReceiverId); // DM 리스트에 추가
+      this.dmList$.next(Array.from(this.dmList));
+    }
+
     this.messageForm.reset();
-    
-    this.scrollToBottom();
   }
 
   ngOnDestroy(): void {
-    // this.messageSubscription.unsubscribe();
-    // this.fetchMessagesSubscription.unsubscribe();
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+    if (this.fetchMessagesSubscription) {
+      this.fetchMessagesSubscription.unsubscribe();
+    }
   }
 }

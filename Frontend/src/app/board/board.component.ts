@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { DmService } from '../dm/dm.service';
 import { DmComponent } from '../dm/dm.component';
 
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
@@ -19,15 +20,15 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 interface Posting {
   posting_id: number;
   posting_title: string;
-  author: string;
+  username: string;
   posting_content: string;
   posting_objekts: {
     have: number[];
     want: number[];
   };
   thumbnails: {
-    have: string[];
-    want: string[];
+    have: any[];
+    want: any[];
   };
 }
 
@@ -43,7 +44,7 @@ interface objektFilter {
   selector: 'app-board',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule,
-    FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatSelectModule, MatInputModule],
+    FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatTooltipModule],
   providers: [CookieService],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
@@ -113,7 +114,7 @@ export class BoardComponent {
 
     this.postService.getTargetObjekt(objektFormValue).subscribe({
       next: (data) => {
-        console.log(data.id);
+        console.log(data);
 
         const haveArray = this.searchForm.get('objekt.have') as FormArray;
         haveArray.push(this.formBuilder.control(data.id));
@@ -135,8 +136,6 @@ export class BoardComponent {
 
         const wantArray = this.searchForm.get('objekt.want') as FormArray;
         wantArray.push(this.formBuilder.control(data.id));
-        
-        this.getThumbnail()
       },
       error: (err) => {
         console.error(err);
@@ -158,7 +157,8 @@ export class BoardComponent {
         this.postService.getThumbnail(haveValue).subscribe({
           next: (data) => {
             // 썸네일 주소 배열에 data 추가
-            posting.thumbnails.have.push(data.thumbnailImage);
+            console.log(data);
+            posting.thumbnails.have.push(data);
           },
           error: (err) => console.error(err),
           complete: () => console.log('Thumbnail loading complete')
@@ -172,7 +172,7 @@ export class BoardComponent {
         this.postService.getThumbnail(wantValue).subscribe({
           next: (data) => {
             // 썸네일 주소 배열에 data 추가
-            posting.thumbnails.want.push(data.thumbnailImage);
+            posting.thumbnails.want.push(data);
           },
           error: (err) => console.error(err),
           complete: () => console.log('Thumbnail loading complete')
@@ -222,7 +222,7 @@ export class BoardComponent {
     });
   }
 
-  goDM(author: string): void{
-    this.router.navigate(['/dm'], { queryParams: { user: author } })
+  goDM(username: string): void{
+    this.router.navigate(['/dm'], { queryParams: { user: username } })
   }
 }

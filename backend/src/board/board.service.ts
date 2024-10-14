@@ -16,7 +16,7 @@ export class BoardService {
   async getPostingList(): Promise<any> {
     const getPostingList = await this.postingRepository
       .createQueryBuilder('posting')
-      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.author')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
       .select([
         'posting.id',
         'posting.title',
@@ -25,9 +25,9 @@ export class BoardService {
         'posting.createdAt',
         'posting.updatedAt',
       ])
-      .addSelect('auth.id', 'author')
+      .addSelect('auth.id', 'username')
       .getRawMany();
-    console.log(getPostingList);
+    // console.log(getPostingList);
     return getPostingList;
   }
 
@@ -39,7 +39,7 @@ export class BoardService {
       .values({
         title: body.title,
         content: body.content,
-        author: body.author,
+        username: body.username,
         objekts: {
           have: body.objekt.have,
           want: body.objekt.want,
@@ -57,7 +57,7 @@ export class BoardService {
       .set({
         title: body.title,
         content: body.content,
-        author: body.author,
+        username: body.username,
         objekts: body.objekts,
       })
       .where('id = :id', { id: body.id })
@@ -128,12 +128,14 @@ export class BoardService {
   }
 
   async getThumbnail(body: any): Promise<any> {
-    console.log(body);
+    // console.log(body);
     const selectOption = await this.objektRepository
-      .createQueryBuilder()
-      .select('DISTINCT thumbnailImage', 'thumbnailImage')
+      .createQueryBuilder('')
+      // .select('DISTINCT thumbnailImage', 'thumbnailImage')
+      // .select()
       .where('id = :id', { id: body.id })
-      .getRawOne();
+      .getOne();
+    // console.log(selectOption);
     return selectOption;
   }
 }

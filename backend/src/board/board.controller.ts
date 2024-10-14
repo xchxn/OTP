@@ -16,7 +16,7 @@ export class BoardController {
     body: {
       title: string;
       content: string;
-      author: string;
+      username: string;
       objekt: {
         have: number[];
         want: number[];
@@ -32,7 +32,7 @@ export class BoardController {
     body: {
       user: string;
       content: string;
-      author: string;
+      username: string;
       objekts: string;
     },
   ): any {

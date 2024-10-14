@@ -2,7 +2,7 @@
   <div class="receiver-list">
     <h3>DM List</h3>
     <ul>
-      <button class="dmList" *ngFor="let receiver of dmList" (click)="selectDm(receiver)">
+      <button class="dmList" *ngFor="let receiver of dmList$ | async" (click)="selectDm(receiver)">
         {{ receiver }}
         <mat-divider />
       </button>
