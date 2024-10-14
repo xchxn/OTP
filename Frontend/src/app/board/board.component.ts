@@ -20,7 +20,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 interface Posting {
   posting_id: number;
   posting_title: string;
-  author: string;
+  username: string;
   posting_content: string;
   posting_objekts: {
     have: number[];
@@ -222,7 +222,7 @@ export class BoardComponent {
     });
   }
 
-  goDM(author: string): void{
-    this.router.navigate(['/dm'], { queryParams: { user: author } })
+  goDM(username: string): void{
+    this.router.navigate(['/dm'], { queryParams: { user: username } })
   }
 }

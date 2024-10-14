@@ -54,6 +54,8 @@ export class AuthService {
       .insert()
       .values({
         id: req.id,
+        email: req.email,
+        username: req.username,
         password: await bcrypt.hash(req.password, this.saltOrRounds),
         accessToken: await this.jwtService.signAsync(payload),
         emailConfirmationToken: emailConfirmationToken,
@@ -97,7 +99,6 @@ export class AuthService {
   }
 
   async login(req: any): Promise<any> {
-    console.log(req);
     const login = await this.authRepository
       .createQueryBuilder()
       .select()
@@ -111,7 +112,6 @@ export class AuthService {
         'Email not confirmed. Please check your email to confirm your account.',
       );
     }
-    console.log(login);
     const check = await bcrypt.compare(req.password, login.password);
     if (check)
       return {

@@ -123,7 +123,7 @@ export class AuthComponent {
       next: (res) => {
         console.log('Register in successfully!', res);
         // 이메일 인증 후 로그인 해주세요 팝업
-        alert('이메일 인증 후 진행해주세요');
+        alert('회원가입이 완료 되었습니다. 이메일 인증 후 로그인 해주세요');
         this.router.navigate([`/`]);
       },
       error: (err) => console.error(err),

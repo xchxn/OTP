@@ -86,9 +86,9 @@
 <div class="postingCards">
   <div class="postingCardTitle">{{ posting.posting_title }}</div>
   <div class="author">
-    <button mat-button [matMenuTriggerFor]="menu">{{ posting.author }}</button>
+    <button mat-button [matMenuTriggerFor]="menu">{{ posting.username }}</button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="goDM(posting.author)">DM</button>
+      <button mat-menu-item (click)="goDM(posting.username)">DM</button>
       <button mat-menu-item>Close</button>
     </mat-menu>
   </div>
