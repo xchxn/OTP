@@ -19,6 +19,17 @@
    width: 100%;
  }
 
+ .searchObjektArray{
+  display: flex;
+  flex-direction: row;
+  // overflow: auto;
+  flex-wrap: wrap;
+
+  img {
+    margin: 3px 6px;
+  }
+ }
+
  .searchButton {
    display: flex;
    justify-content: end;
@@ -59,6 +70,11 @@
      justify-content: center;
    }
 
+   .postingOption{
+    display: flex;
+    justify-content: flex-end;
+   }
+
    .author {
      display: flex;
      justify-content: end;
@@ -75,6 +91,7 @@
      flex-direction: row;
      margin: 1px 2px;
      font-family: "Noto Sans", sans-serif;
+     flex-wrap: wrap;
 
      p {
       margin: 6px 9px;

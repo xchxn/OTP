@@ -14,6 +14,7 @@ import { filter } from 'rxjs';
 })
 export class AppComponent {
   isLoggedIn = false;
+  userId: any;
 
   constructor(
     private authService: AuthService,
@@ -36,12 +37,12 @@ export class AppComponent {
 
     const token = localStorage.getItem('accessToken');
     const refreshtoken = localStorage.getItem('refreshtoken');
-    const userId = localStorage.getItem('userId');
+    this.userId = localStorage.getItem('userId');
 
     const data = {
       token : token,
       refreshtoken : refreshtoken,
-      userId : userId
+      userId : this.userId
     }
     if (token) {
       // JWT 토큰을 localStorage에 저장

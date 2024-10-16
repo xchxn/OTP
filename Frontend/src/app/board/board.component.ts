@@ -16,6 +16,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { AuthService } from '../auth/auth.service';
 
 interface Posting {
   posting_id: number;
@@ -50,6 +51,7 @@ interface objektFilter {
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
+  userId: string = '';
   postings: Posting[] = [];
   searchForm!: FormGroup;
   objektFilter!: objektFilter;
@@ -60,10 +62,16 @@ export class BoardComponent {
     private postService: PostService,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
+    private authService: AuthService, 
     private router: Router
   ) { this.loadData(); }
 
   ngOnInit() {
+    this.authService.currentUserId.subscribe(id => {
+      this.userId = id;
+      console.log(this.userId);
+    });
+
     this.searchForm = this.formBuilder.group({
       objekt: this.formBuilder.group({
         have: this.formBuilder.array([]),
@@ -114,10 +122,8 @@ export class BoardComponent {
 
     this.postService.getTargetObjekt(objektFormValue).subscribe({
       next: (data) => {
-        console.log(data);
-
         const haveArray = this.searchForm.get('objekt.have') as FormArray;
-        haveArray.push(this.formBuilder.control(data.id));
+        haveArray.push(this.formBuilder.control(data));
       },
       error: (err) => {
         console.error(err);
@@ -132,10 +138,8 @@ export class BoardComponent {
 
     this.postService.getTargetObjekt(objektFormValue).subscribe({
       next: (data) => {
-        console.log(data.id);
-
         const wantArray = this.searchForm.get('objekt.want') as FormArray;
-        wantArray.push(this.formBuilder.control(data.id));
+        wantArray.push(this.formBuilder.control(data));
       },
       error: (err) => {
         console.error(err);

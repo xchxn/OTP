@@ -113,14 +113,14 @@ export class BoardService {
   async getTargetObjekt(body: any): Promise<any> {
     const selectOption = await this.objektRepository
       .createQueryBuilder()
-      .select('DISTINCT id', 'id')
+      // .select('DISTINCT id', 'id')
       .where('season = :season', { season: body.season })
       .andWhere('member = :member', { member: body.member })
       .andWhere('collectionNo = :collectionNo', {
         collectionNo: body.collectionNo,
       })
       .andWhere('classes = :classes', { classes: body.classes })
-      .getRawOne();
+      .getOne();
     if (!selectOption) {
       throw new Error('No matching object found for the provided criteria.');
     }

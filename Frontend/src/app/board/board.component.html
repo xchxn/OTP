@@ -3,18 +3,12 @@
     <!-- 오브젝트 필터 -->
     <form class="objektFilterForm" [formGroup]="objektFilterForm" (ngSubmit)="getThumbnail()">
       <mat-form-field>
-        <!-- <select id="season" type="text" formControlName="season">
-        <option *ngFor="let season of objektFilter.season" [value]="season">{{ season }}</option>
-      </select> -->
         <mat-select formControlName="season" placeholder="Season">
           @for (season of objektFilter.season; track season) {
           <mat-option [value]="season">{{season}}</mat-option>
           }
         </mat-select>
       </mat-form-field>
-      <!-- <select id="member" type="text" formControlName="member">
-        <option *ngFor="let member of objektFilter.member" [value]="member">{{ member }}</option>
-      </select> -->
       <mat-form-field>
         <mat-select formControlName="member" placeholder="Member">
           @for (member of objektFilter.member; track member) {
@@ -22,9 +16,6 @@
           }
         </mat-select>
       </mat-form-field>
-      <!-- <select id="collectionNo" type="text" formControlName="collectionNo">
-        <option *ngFor="let collectionNo of objektFilter.collectionNo" [value]="collectionNo">{{ collectionNo }}</option>
-      </select> -->
       <mat-form-field>
         <mat-select formControlName="collectionNo" placeholder="collectionNo">
           @for (collectionNo of objektFilter.collectionNo; track collectionNo) {
@@ -32,9 +23,6 @@
           }
         </mat-select>
       </mat-form-field>
-      <!-- <select id="classes" type="text" formControlName="classes">
-        <option *ngFor="let classes of objektFilter.classes" [value]="classes">{{ classes }}</option>
-      </select> -->
       <mat-form-field>
         <mat-select formControlName="classes" placeholder="classes">
           @for (classes of objektFilter.classes; track classes) {
@@ -42,7 +30,6 @@
           }
         </mat-select>
       </mat-form-field>
-
       <div class="submitButton">
         <button type="button" (click)="addObjektToHaveArray()">Have 찾기</button>
         <button type="button" (click)="addObjektToWantArray()">Want 찾기</button>
@@ -53,15 +40,18 @@
   <!-- 필터로 검색해서 찾기 -->
   <div class="objektArrayContainer">
     <form class="objektArrayForm" [formGroup]="searchForm" (ngSubmit)="searchObjekt()">
-      <p>Have: </p>
-      <div *ngFor="let haveItem of searchForm.get('objekt.have')?.value; let i = index">
-        {{ haveItem }}
-        <!-- <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"> -->
+      <div class="searchObjektArray" *ngIf="searchForm.get('objekt.have')?.value.length > 0">
+        <p>Have </p>
+        <div *ngFor="let haveItem of searchForm.get('objekt.have')?.value; let i = index">
+          <img [src]="haveItem.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
+            [matTooltip]="haveItem.id" aria-label="Button that displays a tooltip when focused or hovered over">
+        </div>
       </div>
-      <p>Want:</p>
-      <div *ngFor="let wantItem of searchForm.get('objekt.want')?.value; let i = index">
-        {{ wantItem }}
-        <!-- <img [src]="thumb" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"> -->
+      <div class="searchObjektArray" *ngIf="searchForm.get('objekt.want')?.value.length > 0">
+        <p>Want </p>
+        <div *ngFor="let wantItem of searchForm.get('objekt.want')?.value; let i = index">
+          <img [src]="wantItem.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+        </div>
       </div>
       <div class="searchButton">
         <button type="submit">Search Objekt</button>
@@ -84,7 +74,18 @@
 <!-- 포스팅 목록 -->
 @for ( posting of postings; track posting.posting_id) {
 <div class="postingCards">
-  <div class="postingCardTitle">{{ posting.posting_title }}</div>
+  <div class="postingCardTitle">
+    {{ posting.posting_title }}
+  </div>
+  <div class="postingOption" *ngIf="userId === posting.username"> 
+    <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->
+    <button mat-button [matMenuTriggerFor]="menu"> ⁝ </button>
+    <mat-menu #menu="matMenu">
+      <!-- <button mat-menu-item (click)="">수정</button>
+    <button mat-menu-item (click)="">삭제</button> -->
+      <button mat-menu-item>Close</button>
+    </mat-menu>
+  </div>
   <div class="author">
     <button mat-button [matMenuTriggerFor]="menu">{{ posting.username }}</button>
     <mat-menu #menu="matMenu">
@@ -99,15 +100,13 @@
     <p>Have</p>
     <div *ngFor="let thumb of posting?.thumbnails?.have">
       <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-      [matTooltip]="thumb.id"
-      aria-label="Button that displays a tooltip when focused or hovered over">
+        [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
     </div>
 
     <p>Want</p>
     <div *ngFor="let thumb of posting?.thumbnails?.want">
       <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-      [matTooltip]="thumb.id"
-      aria-label="Button that displays a tooltip when focused or hovered over">
+        [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
     </div>
   </div>
 </div>
