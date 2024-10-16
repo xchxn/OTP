@@ -51,7 +51,7 @@ interface objektFilter {
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  userId: string = '';
+  userId: string | any = '';
   postings: Posting[] = [];
   searchForm!: FormGroup;
   objektFilter!: objektFilter;
@@ -67,10 +67,7 @@ export class BoardComponent {
   ) { this.loadData(); }
 
   ngOnInit() {
-    this.authService.currentUserId.subscribe(id => {
-      this.userId = id;
-      console.log(this.userId);
-    });
+    this.userId = localStorage.getItem('userId');
 
     this.searchForm = this.formBuilder.group({
       objekt: this.formBuilder.group({
@@ -224,6 +221,15 @@ export class BoardComponent {
       error: (err) => console.error(err),
       complete: () => console.log('Thumbnail loading complete')
     });
+  }
+
+  updatePosting(posting_id: any): void {
+    // html에서 해당 포스트 id 가져오기
+    // 해당 포스트 id로 update할 내용 전달
+  }
+  
+  deletePosting(posting_id: any): void {
+    // html에서 포스트 id 가져와서 전달하면 서버가 삭제
   }
 
   goDM(username: string): void{

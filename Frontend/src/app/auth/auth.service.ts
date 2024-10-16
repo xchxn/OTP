@@ -15,10 +15,7 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   // Observable로 로그인 상태를 구독할 수 있도록 제공
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
-
-  private userIdSource = new BehaviorSubject<string>(''); // 초기값 설정
-  currentUserId = this.userIdSource.asObservable();
-
+  
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
@@ -40,12 +37,10 @@ export class AuthService {
     localStorage.setItem('refreshtoken', data.refreshtoken);
     localStorage.setItem('userId', data.userId);
     this.cookieService.set('userId', data.userId);
-    this.userIdSource.next(data.userId);
     console.log(data);
     // this.cookieService.set('accessToken', token , 7 * 24 * 60 * 60 * 1000);
     this.isLoggedInSubject.next(true);
   }
-
   // 로그아웃 함수
   logout() {
     localStorage.removeItem('authToken');

@@ -81,8 +81,8 @@
     <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->
     <button mat-button [matMenuTriggerFor]="menu"> ⁝ </button>
     <mat-menu #menu="matMenu">
-      <!-- <button mat-menu-item (click)="">수정</button>
-    <button mat-menu-item (click)="">삭제</button> -->
+      <button mat-menu-item (click)="updatePosting(posting.posting_id)">Update</button>
+      <button mat-menu-item (click)="deletePosting(posting.posting_id)">Delete</button>
       <button mat-menu-item>Close</button>
     </mat-menu>
   </div>
