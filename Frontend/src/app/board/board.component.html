@@ -75,39 +75,57 @@
 @for ( posting of postings; track posting.posting_id) {
 <div class="postingCards">
   <div class="postingCardTitle">
-    {{ posting.posting_title }}
+    <ng-container *ngIf="updateMode; else viewTitle">
+      <input [(ngModel)]="posting.posting_title" placeholder="Enter title" />
+    </ng-container>
+    <ng-template #viewTitle>
+      {{ posting.posting_title }}
+    </ng-template>
   </div>
-  <div class="postingOption" *ngIf="userId === posting.username"> 
-    <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->
-    <button mat-button [matMenuTriggerFor]="menu"> ⁝ </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="updatePosting(posting.posting_id)">Update</button>
-      <button mat-menu-item (click)="deletePosting(posting.posting_id)">Delete</button>
-      <button mat-menu-item>Close</button>
-    </mat-menu>
-  </div>
-  <div class="author">
+  <div class="postingOption">
     <button mat-button [matMenuTriggerFor]="menu">{{ posting.username }}</button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="goDM(posting.username)">DM</button>
       <button mat-menu-item>Close</button>
     </mat-menu>
+    <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->
+    <button *ngIf="userId === posting.username" mat-button [matMenuTriggerFor]="postingOption"> ⁝ </button>
+    <mat-menu #postingOption="matMenu">
+      <button mat-menu-item (click)="changeUpdateMode()">Update</button>
+      <button mat-menu-item (click)="deletePosting(posting.posting_id)">Delete</button>
+      <button mat-menu-item>Close</button>
+    </mat-menu>
   </div>
   <div class="postingCardContent">
-    {{ posting.posting_content }}
+    <ng-container *ngIf="updateMode; else viewContent">
+      <textarea [(ngModel)]="posting.posting_content" placeholder="Enter content"></textarea>
+    </ng-container>
+    <ng-template #viewContent>
+      {{ posting.posting_content }}
+    </ng-template>
   </div>
   <div class="objektArray">
     <p>Have</p>
-    <div *ngFor="let thumb of posting?.thumbnails?.have">
-      <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
+    <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.have">
+      <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
-    </div>
+      <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.username && updateMode">
+        <i class="fa-solid fa-x"></i>
+      </button>
+      </div>
 
     <p>Want</p>
-    <div *ngFor="let thumb of posting?.thumbnails?.want">
-      <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
+    <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.want">
+      <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
+        <button class="pop-button" (click)="popWantObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.username && updateMode">
+          <i class="fa-solid fa-x"></i>
+        </button>
     </div>
+  </div>
+  <div class="updateModeButton" *ngIf="userId === posting.username && updateMode">
+    <button mat-menu-item (click)="updatePosting(posting.posting_id)">Update</button>
+    <button mat-menu-item (click)="changeUpdateMode()">Cancel</button>
   </div>
 </div>
 }

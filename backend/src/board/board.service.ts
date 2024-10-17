@@ -55,12 +55,11 @@ export class BoardService {
       .createQueryBuilder()
       .update()
       .set({
-        title: body.title,
-        content: body.content,
-        username: body.username,
-        objekts: body.objekts,
+        title: body.posting_title,
+        content: body.posting_content,
+        objekts: body.posting_objekts,
       })
-      .where('id = :id', { id: body.id })
+      .where('id = :id', { id: body.posting_id })
       .execute();
     return updateTicket;
   }
@@ -70,7 +69,7 @@ export class BoardService {
     const deleteTicket = await this.postingRepository
       .createQueryBuilder()
       .delete()
-      .where('id = :id', { id: body.id })
+      .where('id = :id', { id: body })
       .execute();
     return deleteTicket;
   }
