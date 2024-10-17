@@ -7,7 +7,7 @@
    border: 1px solid #000000;
    border-radius: 9px;
 
-   margin: 6px 9px;
+   margin: 12px 18px;
    padding: 6px 12px;
  }
 
@@ -61,13 +61,15 @@
    flex-direction: column;
    border: 1px solid #000000;
    border-radius: 9px;
-   margin: 6px 9px;
-   padding: 3px 6px;
+   margin: 12px 18px;
+   padding: 6px 12px;
 
    .postingCardTitle {
      display: flex;
      align-items: center;
      justify-content: center;
+     margin: 6px 9px;
+     font-weight: bolder;
    }
 
    .postingOption{
@@ -80,11 +82,11 @@
    .postingCardContent {
      display: flex;
      margin: 9px 12px;
+     border-bottom: 1px solid #000000;
    }
 
    .objektArray {
-     display: flex;
-     flex-direction: row;
+     display: inline-block;
      margin: 1px 2px;
      font-family: "Noto Sans", sans-serif;
      flex-wrap: wrap;

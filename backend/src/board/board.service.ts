@@ -19,6 +19,7 @@ export class BoardService {
       .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
       .select([
         'posting.id',
+        'posting.username',
         'posting.title',
         'posting.content',
         'posting.objekts',

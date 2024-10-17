@@ -62,9 +62,13 @@ export class SearchService {
 
     const ids = oneSearch.map((r) => r.id);
 
+    if (ids.length === 0) {
+      return []; // ids가 비어 있으면 빈 배열 반환
+    }
+
     const resPostingList = await this.postingRepository
       .createQueryBuilder('posting')
-      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.author')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
       .select([
         'posting.id',
         'posting.title',
@@ -73,7 +77,7 @@ export class SearchService {
         'posting.createdAt',
         'posting.updatedAt',
       ])
-      .addSelect('auth.username', 'author')
+      .addSelect('auth.username', 'username')
       .where('posting.id IN (:...ids)', { ids })
       .getRawMany();
     console.log(resPostingList);
@@ -88,7 +92,7 @@ export class SearchService {
     const getArr = await this.postingRepository
       .createQueryBuilder('posting')
       .select('JSON_EXTRACT(posting.objekts, "$.want")', 'wantArray')
-      .where('author = :author', { author: body.user })
+      .where('username = :username', { username: body.user })
       .getRawOne();
     console.log(getArr);
     // 위에서 가져온 want배열로 매칭
@@ -113,7 +117,7 @@ export class SearchService {
 
     const resPostingList = await this.postingRepository
       .createQueryBuilder('posting')
-      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.author')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
       .select([
         'posting.id',
         'posting.title',
@@ -122,7 +126,7 @@ export class SearchService {
         'posting.createdAt',
         'posting.updatedAt',
       ])
-      .addSelect('auth.username', 'author')
+      .addSelect('auth.username', 'username')
       .where('posting.id IN (:...ids)', { ids })
       .getRawMany();
     console.log(resPostingList);

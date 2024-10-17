@@ -36,6 +36,8 @@ export class AuthService {
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshtoken', data.refreshtoken);
     localStorage.setItem('userId', data.userId);
+    localStorage.setItem('username', data.username);
+    this.cookieService.set('username', data.username);
     this.cookieService.set('userId', data.userId);
     console.log(data);
     // this.cookieService.set('accessToken', token , 7 * 24 * 60 * 60 * 1000);
@@ -46,11 +48,13 @@ export class AuthService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('refreshtoken');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
 
     localStorage.clear()
     console.log("logout");
     // this.cookieService.delete('accessToken');
     this.cookieService.delete('userId');
+    this.cookieService.delete('username');
 
     this.isLoggedInSubject.next(false);
 

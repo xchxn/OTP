@@ -54,6 +54,7 @@
         </div>
       </div>
       <div class="searchButton">
+        <button type="button" (click)="resetOptions()">Reset</button>
         <button type="submit">Search Objekt</button>
       </div>
     </form>
@@ -111,9 +112,8 @@
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
       <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.username && updateMode">
         <i class="fa-solid fa-x"></i>
-      </button>
-      </div>
-
+      </button> 
+    </div>
     <p>Want</p>
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.want">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"

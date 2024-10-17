@@ -70,6 +70,7 @@ export class BoardComponent {
 
   ngOnInit() {
     this.userId = localStorage.getItem('userId');
+    this.updateMode = false;
 
     this.searchForm = this.formBuilder.group({
       objekt: this.formBuilder.group({
@@ -225,6 +226,11 @@ export class BoardComponent {
     });
   }
 
+  resetOptions(): void {
+    
+    this.loadData();
+  }
+
   updatePosting(posting_id: any): void {
     // html에서 해당 포스트 id 가져오기
     // 해당 포스트 id로 update할 내용 전달
@@ -251,7 +257,8 @@ export class BoardComponent {
         next: (response) => {
           console.log('Posting updated successfully:', response);
           this.changeUpdateMode(); // 업데이트 모드를 비활성화
-          window.location.reload();
+          // window.location.reload();
+          this.loadData();
         },
         error: (err) => {
           console.error('Error updating posting:', err);
@@ -261,7 +268,6 @@ export class BoardComponent {
         }
       });
     }
-
   }
 
   popHaveObjekt(posting_id: any, thumb: any): void {
@@ -321,7 +327,7 @@ export class BoardComponent {
   deletePosting(posting_id: any): void {
     // html에서 포스트 id 가져와서 전달하면 서버가 삭제
     this.boardService.deletePosting(posting_id).subscribe({
-      next: (data) => { },
+      next: (data) => {},
       error: (err) => console.error(err),
       complete: () => console.log('Delete complete')
     });
@@ -329,6 +335,9 @@ export class BoardComponent {
 
   changeUpdateMode() {
     this.updateMode = !this.updateMode;
+    if(!this.updateMode){
+      this.loadData();
+    }
   }
 
   goDM(username: string): void {
