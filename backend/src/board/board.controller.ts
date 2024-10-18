@@ -41,7 +41,7 @@ export class BoardController {
 
   @Post('delete')
   deletePosting(@Body() body: any): any {
-    return this.boardService.deletePosting(body);
+    return this.boardService.deletePosting(body.id);
   }
 
   @Get('option')

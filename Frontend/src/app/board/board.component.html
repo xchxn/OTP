@@ -50,7 +50,8 @@
       <div class="searchObjektArray" *ngIf="searchForm.get('objekt.want')?.value.length > 0">
         <p>Want </p>
         <div *ngFor="let wantItem of searchForm.get('objekt.want')?.value; let i = index">
-          <img [src]="wantItem.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;">
+          <img [src]="wantItem.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
+          [matTooltip]="wantItem.id" aria-label="Button that displays a tooltip when focused or hovered over">
         </div>
       </div>
       <div class="searchButton">

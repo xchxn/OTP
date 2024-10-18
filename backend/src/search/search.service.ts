@@ -31,6 +31,7 @@ export class SearchService {
   // 하나의 오브젝트로 여러개의 찾을 오브젝트 중 일치하는 것 찾기
   async manyToMany(body: any): Promise<any> {
     console.log(body);
+
     const queryBuilder = this.postingRepository
       .createQueryBuilder()
       .select('id');
@@ -38,17 +39,19 @@ export class SearchService {
     const haveArray = body.objekts.have;
     const wantArray = body.objekts.want;
 
-    if (Array.isArray(haveArray) && Array.isArray(wantArray)) {
-      // 배열로 들어온 have와 want의 모든 조합을 반복문으로 처리
+    const haveIds = body.objekts.have.map((obj) => obj.id);
+    const wantIds = body.objekts.want.map((obj) => obj.id);
+
+    if (Array.isArray(haveIds) && Array.isArray(wantIds)) {
       queryBuilder.where(
         new Brackets((qb) => {
-          haveArray.forEach((haveValue) => {
-            wantArray.forEach((wantValue) => {
+          haveIds.forEach((haveId) => {
+            wantIds.forEach((wantId) => {
               qb.orWhere(
-                "(JSON_CONTAINS(objekts->'$.want', :wantValue) AND JSON_CONTAINS(objekts->'$.have', :haveValue))",
+                "JSON_CONTAINS(objekts->'$.want', CAST(:haveId AS CHAR)) AND JSON_CONTAINS(objekts->'$.have', CAST(:wantId AS CHAR))",
                 {
-                  wantValue: JSON.stringify(haveValue),
-                  haveValue: JSON.stringify(wantValue),
+                  haveId: haveId.toString(), // JSON_CONTAINS expects string or raw JSON.
+                  wantId: wantId.toString(),
                 },
               );
             });
@@ -80,7 +83,7 @@ export class SearchService {
       .addSelect('auth.username', 'username')
       .where('posting.id IN (:...ids)', { ids })
       .getRawMany();
-    console.log(resPostingList);
+    // console.log(resPostingList);
 
     return resPostingList;
   }

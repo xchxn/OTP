@@ -188,6 +188,7 @@ export class BoardComponent {
   searchObjekt(): void {
     // 필터로 추가해서 찾기
     const target = this.searchForm.value.objekt;
+    console.log("target", target);
     this.boardService.searchObjekt(target).subscribe({
       next: (data) => {
         // 포스팅 배열 재생성
@@ -227,7 +228,12 @@ export class BoardComponent {
   }
 
   resetOptions(): void {
-    
+    const haveArray = this.searchForm.get('objekt.have') as FormArray;
+    const wantArray = this.searchForm.get('objekt.want') as FormArray;
+
+    wantArray.clear();
+    haveArray.clear();
+
     this.loadData();
   }
 
@@ -326,10 +332,18 @@ export class BoardComponent {
 
   deletePosting(posting_id: any): void {
     // html에서 포스트 id 가져와서 전달하면 서버가 삭제
-    this.boardService.deletePosting(posting_id).subscribe({
-      next: (data) => {},
+    const id = {
+      id: posting_id
+    }
+    this.boardService.deletePosting(id).subscribe({
+      next: (data) => {
+        console.log('Posting delete successfully:', data);
+      },
       error: (err) => console.error(err),
-      complete: () => console.log('Delete complete')
+      complete: () => {
+        console.log('Delete complete');
+        this.loadData();
+      }
     });
   }
 
