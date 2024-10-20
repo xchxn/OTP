@@ -91,7 +91,8 @@ export class AuthComponent {
         this.router.navigate([`/`],{
           queryParams: { 
             token: res.accessToken,
-            userId: res.userId
+            userId: res.userId,
+            username: res.username
             }
         });
       },

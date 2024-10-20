@@ -27,4 +27,13 @@ export class BoardService {
   searchWithPosting(body: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/search/posting`, { user: body } , this.httpOptions);
   }
+
+  updatePosting(body: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/board/update`, body, this.httpOptions);
+  }
+
+  deletePosting(body: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/board/delete`, body, this.httpOptions);
+  }
+
 }

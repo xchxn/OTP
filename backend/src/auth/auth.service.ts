@@ -117,6 +117,7 @@ export class AuthService {
       return {
         token: login.accessToken,
         userId: login.id,
+        username: login.username,
       };
     else throw new UnauthorizedException();
   }

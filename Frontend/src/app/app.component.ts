@@ -14,6 +14,8 @@ import { filter } from 'rxjs';
 })
 export class AppComponent {
   isLoggedIn = false;
+  userId: any;
+  username: any;
 
   constructor(
     private authService: AuthService,
@@ -36,12 +38,14 @@ export class AppComponent {
 
     const token = localStorage.getItem('accessToken');
     const refreshtoken = localStorage.getItem('refreshtoken');
-    const userId = localStorage.getItem('userId');
+    this.userId = localStorage.getItem('userId');
+    this.username = localStorage.getItem('username');
 
     const data = {
       token : token,
       refreshtoken : refreshtoken,
-      userId : userId
+      userId : this.userId,
+      username : this.username
     }
     if (token) {
       // JWT 토큰을 localStorage에 저장
@@ -84,11 +88,13 @@ export class AppComponent {
     const accessToken = urlParams.get('token');
     const refreshtoken = urlParams.get('refreshtoken');
     const userId = urlParams.get('userId');
+    const username = urlParams.get('username');
 
     return {
       accessToken: accessToken,
       refreshtoken: refreshtoken,
-      userId: userId
+      userId: userId,
+      username: username
     };
   }
 }

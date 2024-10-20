@@ -19,6 +19,7 @@ export class BoardService {
       .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
       .select([
         'posting.id',
+        'posting.username',
         'posting.title',
         'posting.content',
         'posting.objekts',
@@ -55,12 +56,11 @@ export class BoardService {
       .createQueryBuilder()
       .update()
       .set({
-        title: body.title,
-        content: body.content,
-        username: body.username,
-        objekts: body.objekts,
+        title: body.posting_title,
+        content: body.posting_content,
+        objekts: body.posting_objekts,
       })
-      .where('id = :id', { id: body.id })
+      .where('id = :id', { id: body.posting_id })
       .execute();
     return updateTicket;
   }
@@ -70,7 +70,7 @@ export class BoardService {
     const deleteTicket = await this.postingRepository
       .createQueryBuilder()
       .delete()
-      .where('id = :id', { id: body.id })
+      .where('id = :id', { id: body })
       .execute();
     return deleteTicket;
   }
@@ -113,14 +113,14 @@ export class BoardService {
   async getTargetObjekt(body: any): Promise<any> {
     const selectOption = await this.objektRepository
       .createQueryBuilder()
-      .select('DISTINCT id', 'id')
+      // .select('DISTINCT id', 'id')
       .where('season = :season', { season: body.season })
       .andWhere('member = :member', { member: body.member })
       .andWhere('collectionNo = :collectionNo', {
         collectionNo: body.collectionNo,
       })
       .andWhere('classes = :classes', { classes: body.classes })
-      .getRawOne();
+      .getOne();
     if (!selectOption) {
       throw new Error('No matching object found for the provided criteria.');
     }

@@ -12,6 +12,7 @@ export class SearchController {
 
   @Post('mtom')
   async manyToMany(@Body() req: any): Promise<any> {
+    console.log(req);
     return this.searchService.manyToMany(req);
   }
 

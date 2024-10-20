@@ -26,22 +26,22 @@ export class BoardController {
     return this.boardService.createPosting(body);
   }
 
-  @Post()
+  @Post('update')
   updatePosting(
     @Body()
     body: {
-      user: string;
-      content: string;
-      username: string;
-      objekts: string;
+      posting_id: string;
+      posting_title: string;
+      posting_content: string;
+      posting_objekts: string;
     },
   ): any {
     return this.boardService.updatePosting(body);
   }
 
-  @Post()
-  deletePosting(@Body() body: { id: string }): any {
-    return this.boardService.deletePosting(body);
+  @Post('delete')
+  deletePosting(@Body() body: any): any {
+    return this.boardService.deletePosting(body.id);
   }
 
   @Get('option')

@@ -44,6 +44,7 @@ export class AuthController {
       message: 'Login Success',
       accessToken: result.token,
       userId: result.userId,
+      username: result.username,
     };
   }
 
@@ -86,9 +87,9 @@ export class AuthController {
     const accessToken = user.accessToken;
     const refreshToken = user.refreshToken;
     const userId = user.kakaoId;
-
+    const username = user.username;
     res.redirect(
-      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}`,
+      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
     );
   }
 
@@ -108,9 +109,10 @@ export class AuthController {
     const accessToken = user.accessToken;
     const refreshToken = user.refreshToken;
     const userId = user.googleId;
+    const username = user.username;
 
     res.redirect(
-      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}`,
+      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
     );
 
     // return req.user;

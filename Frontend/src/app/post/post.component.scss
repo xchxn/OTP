@@ -43,7 +43,8 @@
   .objekt{
     display: flex;
     flex-direction: row;
-    
+    // overflow: auto;
+    flex-wrap: wrap;
     img {
       margin: 2px 2px;
     }

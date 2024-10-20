@@ -17,6 +17,12 @@
     <button *ngIf="isLoggedIn" (click)="logout()">
       Logout
     </button>
+
+    <div *ngIf="isLoggedIn">
+      <div class="userIdTable">
+        Hello, {{ username }}
+      </div>
+    </div>
   </nav>
 </div>
 

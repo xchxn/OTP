@@ -13,10 +13,9 @@ export class AuthService {
 
   // 로그인 상태를 관리하는 BehaviorSubject
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-  
   // Observable로 로그인 상태를 구독할 수 있도록 제공
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
-
+  
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
@@ -37,22 +36,25 @@ export class AuthService {
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshtoken', data.refreshtoken);
     localStorage.setItem('userId', data.userId);
+    localStorage.setItem('username', data.username);
+    this.cookieService.set('username', data.username);
     this.cookieService.set('userId', data.userId);
     console.log(data);
     // this.cookieService.set('accessToken', token , 7 * 24 * 60 * 60 * 1000);
     this.isLoggedInSubject.next(true);
   }
-
   // 로그아웃 함수
   logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('refreshtoken');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
 
     localStorage.clear()
     console.log("logout");
     // this.cookieService.delete('accessToken');
     this.cookieService.delete('userId');
+    this.cookieService.delete('username');
 
     this.isLoggedInSubject.next(false);
 
