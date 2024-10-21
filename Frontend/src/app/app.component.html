@@ -1,27 +1,26 @@
 <div class="navContainer">
   <nav>
-    <button routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
-      Home
-    </button>
-    <button routerLink="/board" routerLinkActive="active" ariaCurrentWhenActive="page">
-      Board
-    </button>
-    <button routerLink="/dm" routerLinkActive="active" ariaCurrentWhenActive="page">
-      Dm
-    </button>
+    <div class="buttonContainer">
+      <button routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
+        Home
+      </button>
+      <button routerLink="/board" routerLinkActive="active" ariaCurrentWhenActive="page">
+        Board
+      </button>
+      <button routerLink="/dm" routerLinkActive="active" ariaCurrentWhenActive="page">
+        Dm
+      </button>
 
-    <button *ngIf="!isLoggedIn" routerLink="/auth" routerLinkActive="active" ariaCurrentWhenActive="page">
-      Auth
-    </button>
+      <button *ngIf="!isLoggedIn" routerLink="/auth" routerLinkActive="active" ariaCurrentWhenActive="page">
+        Auth
+      </button>
 
-    <button *ngIf="isLoggedIn" (click)="logout()">
-      Logout
-    </button>
-
-    <div *ngIf="isLoggedIn">
-      <div class="userIdTable">
-        Hello, {{ username }}
-      </div>
+      <button *ngIf="isLoggedIn" (click)="logout()">
+        Logout
+      </button>
+    </div>
+    <div class="userIdTable" *ngIf="isLoggedIn">
+      Hello, {{ username }}
     </div>
   </nav>
 </div>

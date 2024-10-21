@@ -41,7 +41,13 @@ export class DMGateway {
   @SubscribeMessage('dm')
   async handleDirectMessage(
     @MessageBody()
-    data: { senderId: string; receiverId: string; message: string },
+    data: {
+      senderId: string;
+      senderUsername: string;
+      receiverId: string;
+      receiverUsername: string;
+      message: string;
+    },
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     const receiverSocketId = await this.redisClient.get(
@@ -54,6 +60,9 @@ export class DMGateway {
     await this.redisClient.rpush(
       messagesKey,
       JSON.stringify({
+        senderId: data.senderId,
+        senderUsername: data.senderUsername, // senderUsername 저장
+        receiverId: data.receiverId,
         message: data.message,
         timestamp: new Date().toISOString(),
       }),
@@ -61,12 +70,21 @@ export class DMGateway {
 
     // senderId와 receiverId 관계를 저장
     const senderReceiversKey = `senders:${data.senderId}:receivers`;
-    await this.redisClient.sadd(senderReceiversKey, data.receiverId);
+    await this.redisClient.sadd(
+      senderReceiversKey,
+      JSON.stringify({
+        userId: data.receiverId,
+        username: data.receiverUsername,
+      }),
+    );
 
     // 반대의 경우도 저장
     // 즉, 받는 사람 측에서도 dm목록을 조회할 수 이도록 redis Key로 저장
     const receiverSendersKey = `receivers:${data.receiverId}:senders`;
-    await this.redisClient.sadd(receiverSendersKey, data.senderId);
+    await this.redisClient.sadd(
+      receiverSendersKey,
+      JSON.stringify({ userId: data.senderId, username: data.senderUsername }),
+    );
 
     if (receiverSocketId) {
       this.server.to(receiverSocketId).emit('dm', data);
@@ -74,12 +92,14 @@ export class DMGateway {
       // console.log('Receiver is not connected');
 
       // 오프라인 유저의 메시지 저장
-      const messagesKey = `messages:pending:${data.receiverId}`;
+      const pendingMessagesKey = `messages:pending:${data.receiverId}`;
       await this.redisClient.rpush(
-        messagesKey,
+        pendingMessagesKey,
         JSON.stringify({
           senderId: data.senderId,
+          senderUsername: data.senderUsername,
           receiverId: data.receiverId,
+          receiverUsername: data.receiverUsername,
           message: data.message,
           timestamp: new Date().toISOString(),
         }),
@@ -147,13 +167,13 @@ export class DMGateway {
 
   @SubscribeMessage('connectUser')
   async handleConnect(
-    @MessageBody() userId: string,
+    @MessageBody() data: { userId: string; username: string },
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    await this.redisClient.set(`user:${userId}`, client.id);
+    await this.redisClient.set(`user:${data.userId}`, client.id);
 
     // 오프라인 유저를 위한 메시지 펜딩 기능
-    const messagesKey = `messages:pending:${userId}`;
+    const messagesKey = `messages:pending:${data.userId}`;
     const messages = await this.redisClient.lrange(messagesKey, 0, -1);
     console.log(messages);
     if (messages.length > 0) {
@@ -177,7 +197,9 @@ export class DMGateway {
     });
   }
 
-  async getReceiversForSender(senderId: string): Promise<string[]> {
+  async getReceiversForSender(
+    senderId: string,
+  ): Promise<Array<{ userId: string; username: string }>> {
     // 내가 메시지를 보낸 사람
     const receiverSetKey = `senders:${senderId}:receivers`;
     // 나에게 메시지를 보낸 사람
@@ -191,7 +213,7 @@ export class DMGateway {
 
     // Set 객체를 사용하여 중복을 제거하고 배열로 변환
     const uniqueContacts = new Set([...receivers, ...senders]);
-    return Array.from(uniqueContacts);
+    return Array.from(uniqueContacts).map((contact) => JSON.parse(contact));
     // return await this.redisClient.smembers(receiverSetKey);
   }
 }

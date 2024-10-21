@@ -22,16 +22,19 @@ export class DmComponent {
   // @ViewChild('scrollMe') private messageContainer!: ElementRef;
 
   // 대상 유저와의 메시지 기록
-  messages: Array<{ senderId: string, message: string }> = [];
+  messages: Array<{ senderId: string, senderUsername: string, message: string }> = [];
   messageSubscription!: Subscription;
   fetchMessagesSubscription!: Subscription;
 
   // 디엠 유저 목록
   // dmList: Set<string> = new Set();
-  dmList: any[] = [];
-  dmList$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  dmList: Array<{ userId: string, username: string }> = [];
+  dmList$: BehaviorSubject<Array<{ userId: string, username: string }>> = new BehaviorSubject<{ userId: string; username: string }[]>([]);
 
   selectedReceiverId!: string;
+  selectedReceiverUsername!: string;
+  userId!: string;
+  username!: string;
 
   constructor(
     private dmService: DmService,
@@ -41,12 +44,16 @@ export class DmComponent {
   ) { }
 
   ngOnInit() {
+    this.userId = this.cookieService.get('userId');
+    this.username = this.cookieService.get('username');
+
     this.route.queryParams.subscribe(params => {
       this.selectedReceiverId = params['user'];
+      this.selectedReceiverUsername = params['username'];
 
       // user query param이 존재하면 selectDm 자동 호출
       if (this.selectedReceiverId) {
-        this.selectDm(this.selectedReceiverId);
+        this.selectDm(this.selectedReceiverId, this.selectedReceiverUsername);
       }
     });
 
@@ -59,10 +66,10 @@ export class DmComponent {
     // DM 리스트 가져오기
     this.dmService.getReceivers(idData);
 
-    this.dmService.onReceivers().subscribe((receivers: string[]) => {
+    this.dmService.onReceivers().subscribe((receivers: Array<{ userId: string, username: string }>) => {
       // this.dmList = new Set(receivers); // 배열을 Set으로 변환하여 할당
       this.dmList = receivers;
-      this.dmList$.next(Array.from(this.dmList));
+      this.dmList$.next(this.dmList);
     });
 
 
@@ -70,11 +77,15 @@ export class DmComponent {
     this.messageSubscription = this.dmService.onMessage().subscribe((message) => {
       this.messages.push(message); // 새 메시지 추가
 
-      this.dmService.fetchMessages(this.cookieService.get('userId'), this.selectedReceiverId);
+      this.dmService.fetchMessages(this.userId, this.selectedReceiverId);
 
-      if (!this.dmList.includes(message.senderId)) {
-        this.dmList.push(message.senderId);
-        this.dmList$.next(Array.from(this.dmList));
+      // if (!this.dmList.includes(message.senderId)) {
+      //   this.dmList.push(message.senderId);
+      //   this.dmList$.next(Array.from(this.dmList));
+      // }
+      if (!this.dmList.find(dm => dm.userId === message.senderId)) {
+        this.dmList.push({ userId: message.senderId, username: message.senderUsername });
+        this.dmList$.next(this.dmList);
       }
     });
 
@@ -82,12 +93,14 @@ export class DmComponent {
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
-  selectDm(receiver: string): void {
+  selectDm(receiver: string, receiverUsername: string): void {
     this.selectedReceiverId = receiver;
-    const senderId = this.cookieService.get('userId');
+    this.selectedReceiverUsername = receiverUsername;
+
+    // const senderId = this.cookieService.get('userId');
 
     // 서버로부터 선택된 수신자와의 메시지 기록을 요청
-    this.dmService.fetchMessages(senderId, this.selectedReceiverId);
+    this.dmService.fetchMessages(this.userId, this.selectedReceiverId);
 
     // 서버로부터 받은 메시지 기록 구독
     this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe((messages) => {
@@ -101,8 +114,10 @@ export class DmComponent {
     }
 
     const message = {
-      senderId: this.cookieService.get('userId'),
+      senderId: this.userId,
+      senderUsername: this.username,
       receiverId: this.selectedReceiverId,
+      receiverUsername: this.selectedReceiverUsername,
       message: this.messageForm.value.message
     };
 
@@ -110,10 +125,15 @@ export class DmComponent {
     this.dmService.sendMessage(message);
 
     // 메시지 보낸 후, dmList에 상대방이 없으면 추가
-    if (!this.dmList.includes(this.selectedReceiverId)) {
-      this.dmList.push(this.selectedReceiverId); // DM 리스트에 추가
-      this.dmList$.next(Array.from(this.dmList));
+    // if (!this.dmList.includes(this.selectedReceiverId)) {
+    //   this.dmList.push(this.selectedReceiverId); // DM 리스트에 추가
+    //   this.dmList$.next(Array.from(this.dmList));
+    // }
+    if (!this.dmList.find(dm => dm.userId === this.selectedReceiverId)) {
+      this.dmList.push({ userId: this.selectedReceiverId, username: this.selectedReceiverUsername });
+      this.dmList$.next(this.dmList);
     }
+
 
     this.messageForm.reset();
   }

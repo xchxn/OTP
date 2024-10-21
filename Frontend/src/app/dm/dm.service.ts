@@ -17,7 +17,7 @@ export class DmService {
     private http: HttpClient,
     private cookieService: CookieService,
   ) {
-    this.connect(this.cookieService.get('kakaoId'));
+    this.connect(this.cookieService.get('userId'));
   }
 
   private connect(userId: string): void {
@@ -54,22 +54,22 @@ export class DmService {
   }
   
   // 서버로부터 수신자 목록 수신
-  onReceivers(): Observable<string[]> {
+  onReceivers(): Observable<Array<{ userId: string, username: string }>> {
     return new Observable((observer) => {
-      this.socket.on('receivers', (receivers: string[]) => {
+      this.socket.on('receivers', (receivers: Array<{ userId: string, username: string }>) => {
         observer.next(receivers);
       });
     });
   }
 
   // 메시지 보내기
-  sendMessage(message: { senderId: string, receiverId: string, message: string }): void {
+  sendMessage(message: { senderId: string, senderUsername: string, receiverId: string, message: string }): void {
     this.socket.emit('dm', message);
   }
 
   // 메시지 수신 대기
-  onMessage(): Observable<{ senderId: string, message: string }> {
-    return new Observable<{ senderId: string, message: string }>(observer => {
+  onMessage(): Observable<{ senderId: string, senderUsername: string, message: string }> {
+    return new Observable<{ senderId: string, senderUsername: string, message: string }>(observer => {
       this.socket.on('dm', (data) => {
         observer.next(data);
       });

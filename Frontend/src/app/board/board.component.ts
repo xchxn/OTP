@@ -21,7 +21,7 @@ import { AuthService } from '../auth/auth.service';
 interface Posting {
   posting_id: number;
   posting_title: string;
-  username: string;
+  posting_username: string;
   posting_content: string;
   posting_objekts: {
     have: number[];
