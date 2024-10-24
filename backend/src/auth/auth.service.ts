@@ -156,11 +156,6 @@ export class AuthService {
         .execute();
       console.log(newUser);
     }
-    // 예시: 유저가 없다면 DB에 생성
-    // const existingUser = await this.usersService.findByKakaoId(id);
-    // if (!existingUser) {
-    //   return await this.usersService.create(user);
-    // }
     return user;
   }
 
@@ -197,12 +192,14 @@ export class AuthService {
         .execute();
       console.log(newUser);
     }
-
-    // 예시: 유저가 없다면 DB에 생성
-    // const existingUser = await this.usersService.findByGoogleId(id);
-    // if (!existingUser) {
-    //   return await this.usersService.create(user);
-    // }
     return user;
+  }
+
+  async validateOAuthLogin(
+    thirdPartyId: string,
+    provider: string,
+  ): Promise<string> {
+    const payload = { thirdPartyId, provider };
+    return this.jwtService.signAsync(payload);
   }
 }

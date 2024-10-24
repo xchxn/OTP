@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { BoardService } from './board.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('board')
 export class BoardController {
@@ -10,6 +11,7 @@ export class BoardController {
     return this.boardService.getPostingList();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   createPosting(
     @Body()
@@ -17,6 +19,7 @@ export class BoardController {
       title: string;
       content: string;
       username: string;
+      userId: string;
       objekt: {
         have: number[];
         want: number[];
@@ -26,6 +29,7 @@ export class BoardController {
     return this.boardService.createPosting(body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('update')
   updatePosting(
     @Body()
@@ -39,6 +43,7 @@ export class BoardController {
     return this.boardService.updatePosting(body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('delete')
   deletePosting(@Body() body: any): any {
     return this.boardService.deletePosting(body.id);

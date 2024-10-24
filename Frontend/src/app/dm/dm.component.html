@@ -1,12 +1,12 @@
 <div class="dmContainer">
   <div class="receiver-list">
     <h3>DM List</h3>
-    <ul>
+    <div>
       <button class="dmList" *ngFor="let receiver of dmList$ | async" (click)="selectDm(receiver.userId, receiver.username)">
         {{ receiver.username }}
         <mat-divider />
       </button>
-    </ul>
+    </div>
   </div>
   
   <div class="nowDmContainer">
@@ -20,11 +20,11 @@
       </div>
     </div>
     <form [formGroup]="messageForm" (ngSubmit)="send()">
-      <div>
-        <label for="message">message:</label>
+      <div >
+        <!-- <label for="message">message:</label> -->
         <input id="message" formControlName="message">
+        <button class="sendDm" type="submit">Send Message</button>
       </div>
-      <button type="submit">Send Message</button>
     </form>
   </div>
   <!-- <button type="submit" (click)="selectDm(selectedReceiverId)">Fetch</button> -->

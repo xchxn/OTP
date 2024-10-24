@@ -22,6 +22,7 @@ import {
   ApiProduces,
   ApiConsumes,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('인증 API')
 @Controller('auth')

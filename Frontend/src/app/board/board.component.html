@@ -91,7 +91,7 @@
       <button mat-menu-item>Close</button>
     </mat-menu>
     <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->
-    <button *ngIf="userId === posting.posting_username" mat-button [matMenuTriggerFor]="postingOption"> ⁝ </button>
+    <button *ngIf="userId === posting.posting_userId" mat-button [matMenuTriggerFor]="postingOption"> ⁝ </button>
     <mat-menu #postingOption="matMenu">
       <button mat-menu-item (click)="changeUpdateMode()">Update</button>
       <button mat-menu-item (click)="deletePosting(posting.posting_id)">Delete</button>

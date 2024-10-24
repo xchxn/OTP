@@ -1,9 +1,10 @@
 // KakaoStrategy
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-kakao';
 import { AuthService } from '../auth.service';
+import { VerifyCallback } from 'passport-google-oauth20';
 
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
@@ -17,36 +18,17 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     });
   }
 
-  // async validate(
-  //   accessToken: string,
-  //   refreshToken: string,
-  //   profile: any,
-  //   done: any,
-  // ) {
-  //   const profileJson = profile._json;
-  //   const kakaoId = profileJson.id;
-  //   try {
-  //     const user: {
-  //       accessToken: string;
-  //       kakaoId: string;
-  //       refreshToken: string;
-  //     } = {
-  //       accessToken,
-  //       refreshToken,
-  //       kakaoId,
-  //     };
-  //     done(null, user);
-  //   } catch (error) {
-  //     done(error);
-  //   }
-  // }
-
   async validate(
     accessToken: string,
     refreshToken: string,
     profile: Profile,
-    done: Function,
+    done: VerifyCallback,
   ): Promise<any> {
+    const { id } = profile;
+    const user = await this.authService.validateOAuthLogin(id, 'kakao');
+    if (!user) {
+      throw new UnauthorizedException();
+    }
     try {
       const user = await this.authService.kakaoValidateUser({
         profile,
