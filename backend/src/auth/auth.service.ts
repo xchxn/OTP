@@ -115,7 +115,8 @@ export class AuthService {
     const check = await bcrypt.compare(req.password, login.password);
     if (check)
       return {
-        token: login.accessToken,
+        accessToken: login.accessToken,
+        refreshToken: login.refreshToken,
         userId: login.id,
         username: login.username,
       };
@@ -201,5 +202,21 @@ export class AuthService {
   ): Promise<string> {
     const payload = { thirdPartyId, provider };
     return this.jwtService.signAsync(payload);
+  }
+
+  async refreshToken(token: string) {
+    try {
+      const decoded = this.jwtService.verify(token); // 리프레시 토큰 검증
+      const user = await this.authRepository.findOne(decoded.id);
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+      const payload = { sub: user.id, username: user.username };
+      return {
+        accessToken: this.jwtService.sign(payload), // 새 액세스 토큰 발급
+      };
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
   }
 }

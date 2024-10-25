@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -43,7 +44,8 @@ export class AuthController {
 
     return {
       message: 'Login Success',
-      accessToken: result.token,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
       userId: result.userId,
       username: result.username,
     };
@@ -90,7 +92,7 @@ export class AuthController {
     const userId = user.kakaoId;
     const username = user.username;
     res.redirect(
-      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
+      `http://localhost:4200?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
     );
   }
 
@@ -113,9 +115,26 @@ export class AuthController {
     const username = user.username;
 
     res.redirect(
-      `http://localhost:4200?token=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
+      `http://localhost:4200?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
     );
 
     // return req.user;
+  }
+
+  // JWT Token Refresh
+  // @UseGuards(JwtAuthGuard) // Optional: Use this if you require the user to be initially authenticated
+  @Post('refresh')
+  async refreshAccessToken(
+    @Body() body: { refreshToken: string },
+    @Res() res: Response,
+  ) {
+    try {
+      const newAccessToken = await this.authService.refreshToken(
+        body.refreshToken,
+      );
+      res.json({ accessToken: newAccessToken });
+    } catch (error) {
+      throw new UnauthorizedException('Failed to refresh access token');
+    }
   }
 }

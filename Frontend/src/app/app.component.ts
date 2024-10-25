@@ -36,18 +36,18 @@ export class AppComponent {
       this.isLoggedIn = status;
     });
 
-    const token = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
     const refreshtoken = localStorage.getItem('refreshtoken');
     this.userId = localStorage.getItem('userId');
     this.username = localStorage.getItem('username');
 
     const data = {
-      token : token,
+      accessToken : accessToken,
       refreshtoken : refreshtoken,
       userId : this.userId,
       username : this.username
     }
-    if (token) {
+    if (accessToken) {
       // JWT 토큰을 localStorage에 저장
       this.authService.isLogin(data);
       // this.router.navigate(['/board']);
@@ -85,7 +85,7 @@ export class AppComponent {
   getTokenFromUrl(): any {
     const urlParams = new URLSearchParams(window.location.search);
 
-    const accessToken = urlParams.get('token');
+    const accessToken = urlParams.get('accessToken');
     const refreshtoken = urlParams.get('refreshtoken');
     const userId = urlParams.get('userId');
     const username = urlParams.get('username');
