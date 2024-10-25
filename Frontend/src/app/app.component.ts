@@ -14,8 +14,8 @@ import { filter } from 'rxjs';
 })
 export class AppComponent {
   isLoggedIn = false;
-  userId: any;
-  username: any;
+  userId!: any;
+  username!: any;
 
   constructor(
     private authService: AuthService,
@@ -60,7 +60,7 @@ export class AppComponent {
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
-        filter((event: NavigationEnd) => event.url.startsWith('/?token'))
+        filter((event: NavigationEnd) => event.url.startsWith('/?accessToken'))
     )
       .subscribe((event: NavigationEnd) => {
         console.log('Route changed, do something:', event.url);

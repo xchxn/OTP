@@ -12,6 +12,7 @@ export class BoardService {
 
   httpOptions = {
     headers: new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
       'Content-Type': 'application/json'
     })
   };

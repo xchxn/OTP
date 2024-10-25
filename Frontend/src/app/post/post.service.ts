@@ -80,12 +80,4 @@ export class PostService {
       }),
     );
   }
-
-  updatePosting(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/api/option`);
-  }
-
-  deletePosting(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/api/option`);
-  }
 }

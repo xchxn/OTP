@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config';
 import { SignUpDto } from './dto/auth.dto';
 import { randomBytes } from 'crypto';
 import * as nodemailer from 'nodemailer';
-
 @Injectable()
 export class AuthService {
   private transporter: nodemailer.Transporter;
@@ -45,7 +44,6 @@ export class AuthService {
       throw new BadRequestException('ID already in use.');
     }
 
-    const payload = { sub: req.id, username: req.username };
     const emailConfirmationToken = randomBytes(16).toString('hex');
 
     // JWT 인증 토큰 발급 추가
@@ -57,7 +55,6 @@ export class AuthService {
         email: req.email,
         username: req.username,
         password: await bcrypt.hash(req.password, this.saltOrRounds),
-        accessToken: await this.jwtService.signAsync(payload),
         emailConfirmationToken: emailConfirmationToken,
       })
       .execute();
@@ -113,14 +110,24 @@ export class AuthService {
       );
     }
     const check = await bcrypt.compare(req.password, login.password);
-    if (check)
+    if (check) {
+      // JWT 인증 토큰 발급 추가
+      const payload = { sub: login.id, username: login.username };
+
+      login.accessToken = await this.jwtService.signAsync(payload);
+      login.refreshToken = await this.jwtService.signAsync(payload, {
+        expiresIn: '7d',
+      });
+
+      await this.authRepository.save(login);
+
       return {
         accessToken: login.accessToken,
         refreshToken: login.refreshToken,
         userId: login.id,
         username: login.username,
       };
-    else throw new UnauthorizedException();
+    } else throw new UnauthorizedException();
   }
 
   async kakaoValidateUser({
@@ -204,9 +211,11 @@ export class AuthService {
     return this.jwtService.signAsync(payload);
   }
 
-  async refreshToken(token: string) {
+  async refreshToken(refreshToken: string) {
     try {
-      const decoded = this.jwtService.verify(token); // 리프레시 토큰 검증
+      const decoded = this.jwtService.verify(refreshToken); // 리프레시 토큰 검증
+      console.log('토큰 검사 완료', decoded);
+
       const user = await this.authRepository.findOne(decoded.id);
       if (!user) {
         throw new UnauthorizedException();

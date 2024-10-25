@@ -6,12 +6,21 @@
   margin-left: 8px;
   padding: 12px 9px;
 
+  background-color: #eaeaea;
   border: 1px solid #000000;
   border-radius: 9px;
+  min-width: 320px;
   width: 50%;
 
+  p {
+    font-size: xx-large;
+    font-weight: 900;
+    margin: 12px 12px;
+    padding: 12px 12px;
+  }
+
   mat-form-field {
-    width: 256px;
+    min-width: 256px;
   }
 
   .buttonContainer {
@@ -34,8 +43,8 @@
 
 .socialAuthContatiner {
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  flex-shrink: 1;
+
   justify-content: center;
   align-items: center;
 }
@@ -48,7 +57,7 @@
   cursor: pointer;
   border: none;
   height: 40px;
-
+  margin: 12px 12px;
   // &:hover {
   //   background-color: #0056b3;
   // }
@@ -62,6 +71,7 @@
   height: 40px;
   line-height: 40px;
   font-size: 16px;
+  margin: 12px 12px;
   cursor: pointer;
   border: none;
 }

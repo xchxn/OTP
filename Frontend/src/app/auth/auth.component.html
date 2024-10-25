@@ -1,6 +1,7 @@
 <!-- 기본 화면 로그인 폼 -->
 <div class="example-container">
-  <form *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="login()">
+  <form class="loginForm" *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="login()">
+    <p> Login </p>
     <mat-form-field>
       <mat-label for="id">ID:</mat-label>
       <input matInput id="id" formControlName="id" required>
@@ -18,19 +19,20 @@
       <button mat-flat-button type="submit" [disabled]="!loginForm.valid">Login</button>
       <button mat-flat-button type="button" (click)="toggleForm()">Register</button>
     </div>
+
+    <div class="socialAuthContainer">
+      <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
+      </button>
+      <button class="googleLoginButton" (click)="onGoogleGetCode()">
+      </button>
+    </div>
   </form>
-  <div class="socialAuthContainer">
-    <button class="kakaoLoginButton" (click)="onKakaoGetCode()">
-    </button>
-    <button class="googleLoginButton" (click)="onGoogleGetCode()">
-    </button>
-  </div>
 </div>
 
 <!-- 회원가입 폼으로 전환 -->
 <div class="example-container">
   <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="register()">
-
+    <p> Register </p>
     <mat-form-field>
       <mat-label for="id">ID</mat-label>
       <input matInput id="id" formControlName="id" required>
@@ -40,6 +42,8 @@
       <mat-label for="email">Email</mat-label>
       <input id="email" formControlName="email" required matInput placeholder="pat@example.com"
         [formGroup]="registerForm" (blur)="updateErrorMessage()" required />
+        <mat-hint>
+          "A verification email will be sent."</mat-hint>
       @if (registerForm.invalid) {
       <mat-error>{{errorMessage()}}</mat-error>
       }
@@ -55,7 +59,7 @@
       <input matInput [type]="hide() ? 'password' : 'text'" id="password" formControlName="password" minlength="6"
         required />
       <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide()">
+        [attr.aria-pressed]="hide()" >
         <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
     </mat-form-field>
