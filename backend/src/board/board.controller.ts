@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CustomAuthGuard } from 'src/auth/custom-auth.guard';
 
 @Controller('board')
 export class BoardController {
@@ -11,7 +12,7 @@ export class BoardController {
     return this.boardService.getPostingList();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CustomAuthGuard)
   @Post('create')
   createPosting(
     @Body()
