@@ -3,7 +3,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { DmService } from './dm.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -33,22 +33,32 @@ export class DmComponent {
 
   selectedReceiverId!: string;
   selectedReceiverUsername!: string;
-  userId!: string;
-  username!: string;
+  userId!: any;
+  username!: any;
 
   constructor(
     private dmService: DmService,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
     private route: ActivatedRoute,
+    private router: Router,
+
   ) { }
 
   ngOnInit() {
-    this.userId = this.cookieService.get('userId');
-    this.username = this.cookieService.get('username');
+    // this.userId = this.cookieService.get('userId');
+    this.userId = localStorage.getItem('userId');
+    console.log(this.userId);
+    // this.username = this.cookieService.get('username');
+    this.username = localStorage.getItem('username');
+
+    // if(!this.userId) {
+    //   alert("Please Login!");
+    //   this.router.navigate([`/auth`]);
+    // }
 
     this.route.queryParams.subscribe(params => {
-      this.selectedReceiverId = params['user'];
+      this.selectedReceiverId = params['userId'];
       this.selectedReceiverUsername = params['username'];
 
       // user query param이 존재하면 selectDm 자동 호출
@@ -61,7 +71,7 @@ export class DmComponent {
       message: this.formBuilder.control('', Validators.required)
     });
 
-    const idData = { senderId: this.cookieService.get('userId') };
+    const idData = { senderId: this.userId };
 
     // DM 리스트 가져오기
     this.dmService.getReceivers(idData);

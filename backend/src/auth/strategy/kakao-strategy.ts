@@ -14,7 +14,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   ) {
     super({
       clientID: configService.get<string>('KAKAO_CLIENT_ID'),
-      callbackURL: 'http://localhost:3000/auth/kakao/callback',
+      callbackURL: configService.get<string>('KAKAO_CALLBACK_URL'),
     });
   }
 
@@ -24,11 +24,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     profile: Profile,
     done: VerifyCallback,
   ): Promise<any> {
-    const { id } = profile;
-    const user = await this.authService.validateOAuthLogin(id, 'kakao');
-    if (!user) {
-      throw new UnauthorizedException();
-    }
     try {
       const user = await this.authService.kakaoValidateUser({
         profile,

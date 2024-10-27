@@ -87,7 +87,7 @@
   <div class="postingOption">
     <button mat-button [matMenuTriggerFor]="menu">{{ posting.posting_username }}</button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="goDM(posting.posting_username)">DM</button>
+      <button mat-menu-item (click)="goDM(posting.posting_userId, posting.posting_username)">DM</button>
       <button mat-menu-item>Close</button>
     </mat-menu>
     <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->

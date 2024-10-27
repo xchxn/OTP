@@ -136,35 +136,43 @@ export class AuthService {
     kakaoRefreshToken,
   }: any): Promise<any> {
     // 카카오 프로필 정보를 통해 유저 검증 및 DB에 저장하거나 불러옵니다.
-    const { id, username } = profile;
-    const user = {
-      kakaoId: id,
-      username: username,
-      accessToken: kakaoAccessToken,
-      refreshToken: kakaoRefreshToken,
-    };
 
     const existingUser = await this.authRepository.findOne({
       where: { id: profile.id },
     });
 
     if (existingUser) {
-      return user;
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
+      existingUser.accessToken = jwtAccessToken;
+      existingUser.refreshToken = jwtRefreshToken;
+
+      await this.authRepository.save(existingUser);
+      return existingUser;
     } else {
       // TypeORM으로 DB에 유저 추가
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
       const newUser = await this.authRepository
         .createQueryBuilder()
         .insert()
         .values({
           id: profile.id,
           username: profile.username,
-          accessToken: kakaoAccessToken,
-          refreshToken: kakaoRefreshToken,
+          accessToken: jwtAccessToken,
+          refreshToken: jwtRefreshToken,
+          kakaoAccessToken: kakaoAccessToken,
+          kakaoRefreshToken: kakaoRefreshToken,
+          isEmailConfirmed: true,
         })
         .execute();
       console.log(newUser);
+      return newUser;
     }
-    return user;
   }
 
   async googleValidateUser({
@@ -173,34 +181,43 @@ export class AuthService {
     googleRefreshToken,
   }: any): Promise<any> {
     // 구글 프로필 정보를 통해 유저 검증 및 DB에 저장하거나 불러옵니다.
-    const { id, emails, displayName } = profile;
-    const user = {
-      googleId: id,
-      email: emails[0].value,
-      username: displayName,
-    };
-
+    console.log('google Login Profile', profile);
     const existingUser = await this.authRepository.findOne({
       where: { id: profile.id },
     });
 
     if (existingUser) {
-      return user;
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
+      existingUser.accessToken = jwtAccessToken;
+      existingUser.refreshToken = jwtRefreshToken;
+
+      await this.authRepository.save(existingUser);
+      return existingUser;
     } else {
       // TypeORM으로 DB에 유저 추가
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
       const newUser = await this.authRepository
         .createQueryBuilder()
         .insert()
         .values({
           id: profile.id,
-          username: profile.username,
-          accessToken: googleAccessToken,
-          refreshToken: googleRefreshToken,
+          username: profile.displayName,
+          accessToken: jwtAccessToken,
+          refreshToken: jwtRefreshToken,
+          googleAccessToken: googleAccessToken,
+          googleRefreshToken: googleRefreshToken,
+          isEmailConfirmed: true,
         })
         .execute();
       console.log(newUser);
+      return newUser;
     }
-    return user;
   }
 
   async validateOAuthLogin(

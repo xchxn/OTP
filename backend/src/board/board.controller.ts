@@ -12,7 +12,7 @@ export class BoardController {
     return this.boardService.getPostingList();
   }
 
-  @UseGuards(CustomAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   createPosting(
     @Body()

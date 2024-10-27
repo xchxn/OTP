@@ -355,7 +355,7 @@ export class BoardComponent {
     }
   }
 
-  goDM(username: string): void {
-    this.router.navigate(['/dm'], { queryParams: { user: username } })
+  goDM(userId: string, username: string): void {
+    this.router.navigate(['/dm'], { queryParams: { userId: userId, username: username } })
   }
 }

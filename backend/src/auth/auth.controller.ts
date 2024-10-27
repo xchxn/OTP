@@ -89,7 +89,7 @@ export class AuthController {
 
     const accessToken = user.accessToken;
     const refreshToken = user.refreshToken;
-    const userId = user.kakaoId;
+    const userId = user.id;
     const username = user.username;
     res.redirect(
       `http://localhost:4200?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
@@ -111,7 +111,7 @@ export class AuthController {
     console.log(user);
     const accessToken = user.accessToken;
     const refreshToken = user.refreshToken;
-    const userId = user.googleId;
+    const userId = user.id;
     const username = user.username;
 
     res.redirect(

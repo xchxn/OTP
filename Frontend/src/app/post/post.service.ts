@@ -51,7 +51,8 @@ export class PostService {
       })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) { //  && error.error.message === 'jwt expired'
+          console.log(error.error.message);
+          if (error.status === 401 && error.error.message === 'jwt expired' ) { //  && error.error.message === 'jwt expired'
             // 토큰 만료 에러가 발생했을 경우, 토큰 갱신을 시도
             console.log("토큰 갱신");
             return this.handleTokenExpiration().pipe(
