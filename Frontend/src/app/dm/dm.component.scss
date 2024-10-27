@@ -10,18 +10,18 @@
 .receiver-list {
   display: flex;
   flex-direction: column;
+  background-color: #e9e9e9;
   width: 40%;
-  padding: 6px 12px;
+  padding: 6px 6px;
   margin: 6px 9px;
-  justify-content: center;
-  align-items: center;
+
+  // justify-content: center;
+  // align-items: center;
 
   .dmList{
     display: flex;
     flex-direction: column;
-    justify-content: baseline;
     border: transparent;
-    align-items: center;
     border-radius: 12px;
     padding: 6px 6px;
     margin: 6px 6px;
@@ -36,7 +36,9 @@
   display: flex;
   flex-direction: column;
   width: 40%;
+  min-width: 128px;
   align-items: center;
+  flex-wrap: wrap;
 
   justify-content: end;
   border: 1px solid #999999;
@@ -49,6 +51,7 @@
 
 .messageListContainer {
   flex-grow: 1;
+  min-width: 256px;
   margin-bottom: 5px;
   max-height: 200px;
   overflow-y: auto;
@@ -56,4 +59,22 @@
 
 .messageContainer{
   margin-bottom: 5px;
+}
+
+
+.sendDm {
+  font-size: large;
+  font-weight: bold;
+  color: #5974ff;
+  background-color: transparent;
+  border: transparent;
+  border-radius: 9px;
+  transition: background-color 0.3s ease;
+  margin: 6px 9px;
+  padding: 6px 12px;
+  min-width: auto;
+  width: auto;
+  &:hover {
+    background-color: #d6d6d6
+  }
 }

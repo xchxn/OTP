@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config';
 import { SignUpDto } from './dto/auth.dto';
 import { randomBytes } from 'crypto';
 import * as nodemailer from 'nodemailer';
-
 @Injectable()
 export class AuthService {
   private transporter: nodemailer.Transporter;
@@ -45,7 +44,6 @@ export class AuthService {
       throw new BadRequestException('ID already in use.');
     }
 
-    const payload = { sub: req.id, username: req.username };
     const emailConfirmationToken = randomBytes(16).toString('hex');
 
     // JWT 인증 토큰 발급 추가
@@ -57,7 +55,6 @@ export class AuthService {
         email: req.email,
         username: req.username,
         password: await bcrypt.hash(req.password, this.saltOrRounds),
-        accessToken: await this.jwtService.signAsync(payload),
         emailConfirmationToken: emailConfirmationToken,
       })
       .execute();
@@ -113,13 +110,24 @@ export class AuthService {
       );
     }
     const check = await bcrypt.compare(req.password, login.password);
-    if (check)
+    if (check) {
+      // JWT 인증 토큰 발급 추가
+      const payload = { sub: login.id, username: login.username };
+
+      login.accessToken = await this.jwtService.signAsync(payload);
+      login.refreshToken = await this.jwtService.signAsync(payload, {
+        expiresIn: '7d',
+      });
+
+      await this.authRepository.save(login);
+
       return {
-        token: login.accessToken,
+        accessToken: login.accessToken,
+        refreshToken: login.refreshToken,
         userId: login.id,
         username: login.username,
       };
-    else throw new UnauthorizedException();
+    } else throw new UnauthorizedException();
   }
 
   async kakaoValidateUser({
@@ -128,40 +136,43 @@ export class AuthService {
     kakaoRefreshToken,
   }: any): Promise<any> {
     // 카카오 프로필 정보를 통해 유저 검증 및 DB에 저장하거나 불러옵니다.
-    const { id, username } = profile;
-    const user = {
-      kakaoId: id,
-      username: username,
-      accessToken: kakaoAccessToken,
-      refreshToken: kakaoRefreshToken,
-    };
 
     const existingUser = await this.authRepository.findOne({
       where: { id: profile.id },
     });
 
     if (existingUser) {
-      return user;
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
+      existingUser.accessToken = jwtAccessToken;
+      existingUser.refreshToken = jwtRefreshToken;
+
+      await this.authRepository.save(existingUser);
+      return existingUser;
     } else {
       // TypeORM으로 DB에 유저 추가
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
       const newUser = await this.authRepository
         .createQueryBuilder()
         .insert()
         .values({
           id: profile.id,
           username: profile.username,
-          accessToken: kakaoAccessToken,
-          refreshToken: kakaoRefreshToken,
+          accessToken: jwtAccessToken,
+          refreshToken: jwtRefreshToken,
+          kakaoAccessToken: kakaoAccessToken,
+          kakaoRefreshToken: kakaoRefreshToken,
+          isEmailConfirmed: true,
         })
         .execute();
       console.log(newUser);
+      return newUser;
     }
-    // 예시: 유저가 없다면 DB에 생성
-    // const existingUser = await this.usersService.findByKakaoId(id);
-    // if (!existingUser) {
-    //   return await this.usersService.create(user);
-    // }
-    return user;
   }
 
   async googleValidateUser({
@@ -170,39 +181,68 @@ export class AuthService {
     googleRefreshToken,
   }: any): Promise<any> {
     // 구글 프로필 정보를 통해 유저 검증 및 DB에 저장하거나 불러옵니다.
-    const { id, emails, displayName } = profile;
-    const user = {
-      googleId: id,
-      email: emails[0].value,
-      username: displayName,
-    };
-
+    console.log('google Login Profile', profile);
     const existingUser = await this.authRepository.findOne({
       where: { id: profile.id },
     });
 
     if (existingUser) {
-      return user;
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
+      existingUser.accessToken = jwtAccessToken;
+      existingUser.refreshToken = jwtRefreshToken;
+
+      await this.authRepository.save(existingUser);
+      return existingUser;
     } else {
       // TypeORM으로 DB에 유저 추가
+      const payload = { sub: profile.id, username: profile.username };
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      const jwtRefreshToken = await this.jwtService.signAsync(payload);
+
       const newUser = await this.authRepository
         .createQueryBuilder()
         .insert()
         .values({
           id: profile.id,
-          username: profile.username,
-          accessToken: googleAccessToken,
-          refreshToken: googleRefreshToken,
+          username: profile.displayName,
+          accessToken: jwtAccessToken,
+          refreshToken: jwtRefreshToken,
+          googleAccessToken: googleAccessToken,
+          googleRefreshToken: googleRefreshToken,
+          isEmailConfirmed: true,
         })
         .execute();
       console.log(newUser);
+      return newUser;
     }
+  }
 
-    // 예시: 유저가 없다면 DB에 생성
-    // const existingUser = await this.usersService.findByGoogleId(id);
-    // if (!existingUser) {
-    //   return await this.usersService.create(user);
-    // }
-    return user;
+  async validateOAuthLogin(
+    thirdPartyId: string,
+    provider: string,
+  ): Promise<string> {
+    const payload = { thirdPartyId, provider };
+    return this.jwtService.signAsync(payload);
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const decoded = this.jwtService.verify(refreshToken); // 리프레시 토큰 검증
+      console.log('토큰 검사 완료', decoded);
+
+      const user = await this.authRepository.findOne(decoded.id);
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+      const payload = { sub: user.id, username: user.username };
+      return {
+        accessToken: this.jwtService.sign(payload), // 새 액세스 토큰 발급
+      };
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
   }
 }

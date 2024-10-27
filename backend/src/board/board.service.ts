@@ -20,6 +20,7 @@ export class BoardService {
       .select([
         'posting.id',
         'posting.username',
+        'posting.userId',
         'posting.title',
         'posting.content',
         'posting.objekts',
@@ -41,6 +42,7 @@ export class BoardService {
         title: body.title,
         content: body.content,
         username: body.username,
+        userId: body.userId,
         objekts: {
           have: body.objekt.have,
           want: body.objekt.want,

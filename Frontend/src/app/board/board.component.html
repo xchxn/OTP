@@ -85,13 +85,13 @@
     </ng-template>
   </div>
   <div class="postingOption">
-    <button mat-button [matMenuTriggerFor]="menu">{{ posting.username }}</button>
+    <button mat-button [matMenuTriggerFor]="menu">{{ posting.posting_username }}</button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="goDM(posting.username)">DM</button>
+      <button mat-menu-item (click)="goDM(posting.posting_userId, posting.posting_username)">DM</button>
       <button mat-menu-item>Close</button>
     </mat-menu>
     <!-- 로그인 사용자와 username이 일치하는지 확인하는 로직 추가 -->
-    <button *ngIf="userId === posting.username" mat-button [matMenuTriggerFor]="postingOption"> ⁝ </button>
+    <button *ngIf="userId === posting.posting_userId" mat-button [matMenuTriggerFor]="postingOption"> ⁝ </button>
     <mat-menu #postingOption="matMenu">
       <button mat-menu-item (click)="changeUpdateMode()">Update</button>
       <button mat-menu-item (click)="deletePosting(posting.posting_id)">Delete</button>
@@ -111,7 +111,7 @@
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.have">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
-      <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.username && updateMode">
+      <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_username && updateMode">
         <i class="fa-solid fa-x"></i>
       </button> 
     </div>
@@ -119,12 +119,12 @@
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.want">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
-        <button class="pop-button" (click)="popWantObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.username && updateMode">
+        <button class="pop-button" (click)="popWantObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_username && updateMode">
           <i class="fa-solid fa-x"></i>
         </button>
     </div>
   </div>
-  <div class="updateModeButton" *ngIf="userId === posting.username && updateMode">
+  <div class="updateModeButton" *ngIf="userId === posting.posting_username && updateMode">
     <button mat-menu-item (click)="updatePosting(posting.posting_id)">Update</button>
     <button mat-menu-item (click)="changeUpdateMode()">Cancel</button>
   </div>

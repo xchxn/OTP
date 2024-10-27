@@ -18,6 +18,9 @@ export class PostingEntity {
   @Column('text')
   content: string;
 
+  @Column({ length: 100 })
+  userId: string;
+
   @Column({ length: 50 })
   username: string;
 

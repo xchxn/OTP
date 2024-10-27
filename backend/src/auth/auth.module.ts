@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
 import { authProviders } from './auth.providers';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -23,7 +24,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     DatabaseModule,
     ConfigModule,
   ],
-  providers: [...authProviders, AuthService, KakaoStrategy, GoogleStrategy],
+  providers: [
+    ...authProviders,
+    AuthService,
+    KakaoStrategy,
+    GoogleStrategy,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

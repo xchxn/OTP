@@ -18,6 +18,7 @@
       padding: 9px 6px;
       margin: 12px;
       transition: font-size 0.1s ease;
+
       // border: 1px solid #000000;
       // border-radius: 9px;
       &:hover {
@@ -46,4 +47,34 @@ router-outlet {
   a {
     margin: 3px 3px;
   }
+}
+
+.navContainer nav {
+  display: flex; /* Flexbox로 자식 요소 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: space-between; /* 버튼들은 중앙, userIdTable은 우측 */
+  width: 100%; /* 전체 너비를 차지하도록 설정 */
+  position: relative;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 버튼들을 중앙에 정렬 */
+  flex: 1; /* 중앙에 위치하게 만듦 */
+}
+
+.userIdTable {
+  margin-left: auto; /* userIdTable을 오른쪽 끝으로 밀기 */
+
+  color: #ffffff;
+  font-size: large;
+  font-weight: bold;
+  border: transparent;
+  background: transparent;
+  height: 100%;
+  padding: 9px 6px;
+  margin: 12px;
+  width: auto;
+  min-width: auto;
 }

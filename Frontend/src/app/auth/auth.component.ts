@@ -90,7 +90,8 @@ export class AuthComponent {
         console.log('Logged in successfully!', res);
         this.router.navigate([`/`],{
           queryParams: { 
-            token: res.accessToken,
+            accessToken: res.accessToken,
+            refreshToken: res.refreshToken,
             userId: res.userId,
             username: res.username
             }
