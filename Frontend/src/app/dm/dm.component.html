@@ -14,8 +14,9 @@
     <!-- 해당 메시지 목록에 스크롤 추가하기  -->
     <!-- Max-height 추가 -->
     <div class="messageListContainer" #scrollMe>
-      <div class="messageContainer" *ngFor="let msg of messages">
-        <strong>{{ msg.senderUsername }}:</strong>
+      <div class="messageContainer" *ngFor="let msg of messages"
+      [ngClass]="{'myMessage': msg.senderUsername === username, 'otherMessage': msg.senderUsername !== username}">
+        <strong *ngIf="msg.senderUsername !== username">{{ msg.senderUsername }}:</strong>
         {{ msg.message }}
       </div>
     </div>

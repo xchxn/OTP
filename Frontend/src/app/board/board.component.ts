@@ -209,7 +209,7 @@ export class BoardComponent {
   }
 
   searchWithPosting(): void {
-    const user = this.cookieService.get('kakaoId')
+    const user = localStorage.getItem('userId');
     this.boardService.searchWithPosting(user).subscribe({
       next: (data) => {
         // 포스팅 배열 재생성

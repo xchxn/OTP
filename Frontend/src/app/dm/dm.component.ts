@@ -52,10 +52,10 @@ export class DmComponent {
     // this.username = this.cookieService.get('username');
     this.username = localStorage.getItem('username');
 
-    // if(!this.userId) {
-    //   alert("Please Login!");
-    //   this.router.navigate([`/auth`]);
-    // }
+    if(!this.userId) {
+      alert("Please Login!");
+      this.router.navigate([`/auth`]);
+    }
 
     this.route.queryParams.subscribe(params => {
       this.selectedReceiverId = params['userId'];

@@ -95,7 +95,7 @@ export class SearchService {
     const getArr = await this.postingRepository
       .createQueryBuilder('posting')
       .select('JSON_EXTRACT(posting.objekts, "$.want")', 'wantArray')
-      .where('username = :username', { username: body.user })
+      .where('userId = :userId', { userId: body.user })
       .getRawOne();
     console.log(getArr);
     // 위에서 가져온 want배열로 매칭
