@@ -77,7 +77,7 @@
 @for ( posting of postings; track posting.posting_id) {
 <div class="postingCards">
   <div class="postingCardTitle">
-    <ng-container *ngIf="updateMode; else viewTitle">
+    <ng-container *ngIf="updateMode && userId === posting.posting_userId; else viewTitle">
       <input [(ngModel)]="posting.posting_title" placeholder="Enter title" />
     </ng-container>
     <ng-template #viewTitle>
@@ -99,7 +99,7 @@
     </mat-menu>
   </div>
   <div class="postingCardContent">
-    <ng-container *ngIf="updateMode; else viewContent">
+    <ng-container *ngIf="updateMode && userId === posting.posting_userId; else viewContent">
       <textarea [(ngModel)]="posting.posting_content" placeholder="Enter content"></textarea>
     </ng-container>
     <ng-template #viewContent>
@@ -111,7 +111,7 @@
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.have">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
-      <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_username && updateMode">
+      <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_userId && updateMode">
         <i class="fa-solid fa-x"></i>
       </button> 
     </div>
@@ -119,12 +119,12 @@
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.want">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
-        <button class="pop-button" (click)="popWantObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_username && updateMode">
+        <button class="pop-button" (click)="popWantObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_userId && updateMode">
           <i class="fa-solid fa-x"></i>
         </button>
     </div>
   </div>
-  <div class="updateModeButton" *ngIf="userId === posting.posting_username && updateMode">
+  <div class="updateModeButton" *ngIf="userId === posting.posting_userId && updateMode">
     <button mat-menu-item (click)="updatePosting(posting.posting_id)">Update</button>
     <button mat-menu-item (click)="changeUpdateMode()">Cancel</button>
   </div>
