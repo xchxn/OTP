@@ -37,6 +37,7 @@
   flex-direction: column;
   width: 40%;
   min-width: 128px;
+  min-height: 384px;
   align-items: center;
   flex-wrap: wrap;
 
@@ -58,8 +59,14 @@
 }
 
 .messageContainer{
-  min-width: 384px;
+  min-width: 320px;
   margin-bottom: 5px;
+
+  padding: 3px 3px;
+  margin: 3px;
+  // border: 1px solid #999999;
+  border-radius: 12px;
+  overflow-x: auto;
 }
 
 /* 현재 사용자의 메시지: 우측 정렬 */

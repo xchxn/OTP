@@ -19,8 +19,7 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class DmComponent {
   messageForm!: FormGroup;
-  // @ViewChild('scrollMe') private messageContainer!: ElementRef;
-
+  
   // 대상 유저와의 메시지 기록
   messages: Array<{ senderId: string, senderUsername: string, message: string }> = [];
   messageSubscription!: Subscription;
