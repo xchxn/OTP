@@ -61,7 +61,6 @@ export class AuthService {
 
     // 이메일 전송 후 토큰 확인 로직까지 추가 요망
     await this.sendEmail(req.email, req.username, emailConfirmationToken);
-    console.log(register);
     return true;
   }
 

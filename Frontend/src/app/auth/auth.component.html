@@ -27,11 +27,8 @@
       </button>
     </div>
   </form>
-</div>
 
-<!-- 회원가입 폼으로 전환 -->
-<div class="example-container">
-  <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="register()">
+  <form class="registerForm" *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="register()">
     <p> Register </p>
     <mat-form-field>
       <mat-label for="id">ID</mat-label>
@@ -69,8 +66,10 @@
       <input matInput id="passwordCheck" formControlName="passwordCheck" required>
     </mat-form-field>
 
-    <button mat-flat-button type="submit" [disabled]="!registerForm.valid">Register</button>
-    <button mat-flat-button type="button" (click)="toggleForm()">Back to Login</button> <!-- 로그인 폼으로 전환 -->
+    <div class="buttonContainer">
+      <button mat-flat-button type="submit" [disabled]="!registerForm.valid">Register</button>
+      <button mat-flat-button type="button" (click)="toggleForm()">Back to Login</button> <!-- 로그인 폼으로 전환 -->
+    </div>
   </form>
 </div>
 
