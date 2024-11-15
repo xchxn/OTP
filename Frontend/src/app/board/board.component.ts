@@ -118,6 +118,25 @@ export class BoardComponent {
     });
   }
 
+  getMyPost(): void {
+    const user = localStorage.getItem('userId');
+
+    this.boardService.getMyPost(user).subscribe({
+      next: (data) => {
+        this.postings = data.map((posting: any) => ({
+          ...posting,
+          thumbnails: {
+            have: [],
+            want: []
+          }
+        }));
+        this.getThumbnail();
+      },
+      error: (err) => console.error(err),
+      complete: () => console.log('Data loading complete')
+    });
+  }
+
   addObjektToHaveArray(): void {
     const objektFormValue = this.objektFilterForm.value;
 
