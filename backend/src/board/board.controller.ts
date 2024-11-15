@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CustomAuthGuard } from 'src/auth/custom-auth.guard';
+// import { CustomAuthGuard } from 'src/auth/custom-auth.guard';
 
 @Controller('board')
 export class BoardController {
@@ -10,6 +10,11 @@ export class BoardController {
   @Get('list')
   getBoardList(): any {
     return this.boardService.getPostingList();
+  }
+
+  @Post('myPost')
+  getMyPost(@Body() body: any): any {
+    return this.boardService.getMyPost(body);
   }
 
   @UseGuards(JwtAuthGuard)
