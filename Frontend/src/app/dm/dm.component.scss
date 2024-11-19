@@ -1,94 +1,227 @@
+// .dmContainer {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+//   align-items: center;
+
+//   height: auto;
+// }
+
+// .receiver-list {
+//   display: flex;
+//   flex-direction: column;
+//   background-color: #e9e9e9;
+//   width: 40%;
+//   padding: 6px 6px;
+//   margin: 6px 9px;
+
+//   // justify-content: center;
+//   // align-items: center;
+
+//   .dmList{
+//     display: flex;
+//     flex-direction: column;
+//     border: transparent;
+//     border-radius: 12px;
+//     padding: 6px 6px;
+//     margin: 6px 6px;
+
+//     &:hover {
+//       background-color: #888888;
+//     }
+//   }
+// }
+
+// .nowDmContainer{
+//   display: flex;
+//   flex-direction: column;
+//   width: 40%;
+//   min-width: 128px;
+//   min-height: 384px;
+//   align-items: center;
+//   flex-wrap: wrap;
+
+//   justify-content: end;
+//   border: 1px solid #999999;
+//   border-radius: 12px;
+//   box-sizing: border-box; 
+
+//   padding: 6px 12px;
+//   margin: 6px 9px;
+// }
+
+// .messageListContainer {
+//   flex-grow: 1;
+//   min-width: 256px;
+//   margin-bottom: 5px;
+//   max-height: 200px;
+//   overflow-y: auto;
+// }
+
+// .messageContainer{
+//   min-width: 320px;
+//   margin-bottom: 5px;
+
+//   padding: 3px 3px;
+//   margin: 3px;
+//   // border: 1px solid #999999;
+//   border-radius: 12px;
+//   overflow-x: auto;
+// }
+
+// /* 현재 사용자의 메시지: 우측 정렬 */
+// .myMessage {
+//   background-color: #daf8cb;
+//   align-self: flex-end;
+//   text-align: right;
+// }
+
+// /* 다른 사용자의 메시지: 좌측 정렬 */
+// .otherMessage {
+//   background-color: #f1f0f0;
+//   align-self: flex-start;
+//   text-align: left;
+// }
+
+// .sendDm {
+//   font-size: large;
+//   font-weight: bold;
+//   color: #5974ff;
+//   background-color: transparent;
+//   border: transparent;
+//   border-radius: 9px;
+//   transition: background-color 0.3s ease;
+//   margin: 6px 9px;
+//   padding: 6px 12px;
+//   min-width: auto;
+//   width: auto;
+//   &:hover {
+//     background-color: #d6d6d6
+//   }
+// }
+
+
 .dmContainer {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  height: auto;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #F0F2F5;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
 .receiver-list {
+  width: 25%;
+  max-width: 300px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  background-color: #e9e9e9;
-  width: 40%;
-  padding: 6px 6px;
-  margin: 6px 9px;
 
-  // justify-content: center;
-  // align-items: center;
+  h3 {
+    font-size: 18px;
+    margin-bottom: 1rem;
+    color: #333;
+  }
 
-  .dmList{
+  .dmList {
     display: flex;
-    flex-direction: column;
-    border: transparent;
-    border-radius: 12px;
-    padding: 6px 6px;
-    margin: 6px 6px;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    width: 100%;
+    white-space: nowrap;  // 텍스트 줄바꿈 방지
+    overflow: hidden;     // 텍스트가 너무 길 때 생략 처리
+    text-overflow: ellipsis;
+    padding: 0.5rem;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s;
 
     &:hover {
-      background-color: #888888;
+      background-color: #f5f5f5;
+    }
+
+    &.active {
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+
+    mat-divider {
+      width: 100%;
+      color: #E0E0E0;
     }
   }
 }
 
-.nowDmContainer{
+.nowDmContainer {
+  flex-grow: 1;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  width: 40%;
-  min-width: 128px;
-  align-items: center;
-  flex-wrap: wrap;
-
-  justify-content: end;
-  border: 1px solid #999999;
-  border-radius: 12px;
-  box-sizing: border-box; 
-
-  padding: 6px 12px;
-  margin: 6px 9px;
+  padding: 1rem;
 }
 
 .messageListContainer {
   flex-grow: 1;
-  min-width: 256px;
-  margin-bottom: 5px;
-  max-height: 200px;
+  max-height: 70vh;
   overflow-y: auto;
+  padding-right: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.messageContainer{
-  min-width: 384px;
-  margin-bottom: 5px;
+.messageContainer {
+  padding: 0.5rem;
+  border-radius: 8px;
+  max-width: 70%;
+  word-wrap: break-word;
+
+  &.myMessage {
+    background-color: #DCF8C6;
+    align-self: flex-end;
+  }
+
+  &.otherMessage {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+  }
 }
 
-/* 현재 사용자의 메시지: 우측 정렬 */
-.myMessage {
-  background-color: #daf8cb;
-  align-self: flex-end;
-  text-align: right;
-}
+form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
 
-/* 다른 사용자의 메시지: 좌측 정렬 */
-.otherMessage {
-  background-color: #f1f0f0;
-  align-self: flex-start;
-  text-align: left;
-}
+  input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+  }
 
-.sendDm {
-  font-size: large;
-  font-weight: bold;
-  color: #5974ff;
-  background-color: transparent;
-  border: transparent;
-  border-radius: 9px;
-  transition: background-color 0.3s ease;
-  margin: 6px 9px;
-  padding: 6px 12px;
-  min-width: auto;
-  width: auto;
-  &:hover {
-    background-color: #d6d6d6
+  .sendDm {
+    background-color: #2E3B55;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #1f2a40;
+    }
   }
 }

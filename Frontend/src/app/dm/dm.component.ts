@@ -19,8 +19,7 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class DmComponent {
   messageForm!: FormGroup;
-  // @ViewChild('scrollMe') private messageContainer!: ElementRef;
-
+  
   // 대상 유저와의 메시지 기록
   messages: Array<{ senderId: string, senderUsername: string, message: string }> = [];
   messageSubscription!: Subscription;
@@ -35,6 +34,8 @@ export class DmComponent {
   selectedReceiverUsername!: string;
   userId!: any;
   username!: any;
+
+  @ViewChild('messageListContainer') messageListContainer!: ElementRef;
 
   constructor(
     private dmService: DmService,
@@ -82,7 +83,6 @@ export class DmComponent {
       this.dmList$.next(this.dmList);
     });
 
-
     // 새로운 메시지 수신 구독
     this.messageSubscription = this.dmService.onMessage().subscribe((message) => {
       this.messages.push(message); // 새 메시지 추가
@@ -98,7 +98,19 @@ export class DmComponent {
         this.dmList$.next(this.dmList);
       }
     });
+  }
 
+  ngAfterViewInit() {
+    this.scrollToBottom(); // 컴포넌트 초기 로딩 시 스크롤 이동
+  }
+
+  // 스크롤을 가장 아래로 이동시키는 함수
+  scrollToBottom(): void {
+    try {
+      this.messageListContainer.nativeElement.scrollTop = this.messageListContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Scroll to bottom failed', err);
+    }
   }
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
@@ -116,6 +128,8 @@ export class DmComponent {
     this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe((messages) => {
       this.messages = messages; // 기존 메시지 기록으로 업데이트
     });
+
+    this.scrollToBottom(); // 수신자 변경 시 스크롤을 가장 아래로 이동
   }
 
   send(): void {
