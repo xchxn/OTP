@@ -21,6 +21,10 @@ export class BoardService {
     return this.http.get<any>(`${this.apiUrl}/board/list`, this.httpOptions);
   }
 
+  getMyPost(body: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/board/myPost`, { userId: body },this.httpOptions);
+  }
+
   searchObjekt(body: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/search/mtom`, { objekts: body }, this.httpOptions);
   }

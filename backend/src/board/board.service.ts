@@ -16,7 +16,6 @@ export class BoardService {
   async getPostingList(): Promise<any> {
     const getPostingList = await this.postingRepository
       .createQueryBuilder('posting')
-      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
       .select([
         'posting.id',
         'posting.username',
@@ -27,10 +26,28 @@ export class BoardService {
         'posting.createdAt',
         'posting.updatedAt',
       ])
-      .addSelect('auth.id', 'username')
       .getRawMany();
     // console.log(getPostingList);
     return getPostingList;
+  }
+
+  async getMyPost(body: any): Promise<any> {
+    const myPost = await this.postingRepository
+      .createQueryBuilder('posting')
+      .select([
+        'posting.id',
+        'posting.username',
+        'posting.userId',
+        'posting.title',
+        'posting.content',
+        'posting.objekts',
+        'posting.createdAt',
+        'posting.updatedAt',
+      ])
+      .where('userId = :userId', { userId: body.userId })
+      .getRawMany();
+    console.log(myPost);
+    return myPost;
   }
 
   // 포스팅 생성

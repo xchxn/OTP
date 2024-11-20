@@ -266,20 +266,28 @@ $icon-background: #999999;
 .postingCards {
   display: flex;
   flex-direction: column;
-  border: 1px solid $text-color;
+  border: 1px solid darken($text-color, 10%); // 더 진한 테두리로 대비 증가
   border-radius: 9px;
   margin: 12px 18px;
   padding: 12px;
-  background-color: $card-background;
+  background-color: lighten($card-background, 3%); // 카드 배경색을 더 밝게
+  
+   // Hover Effect for Card
+   transition: box-shadow 0.3s, transform 0.3s;
+   &:hover {
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); // 카드에 그림자 추가로 강조
+     transform: scale(1.01); // 미세한 확대 효과
+   }
 
   .postingCardTitle {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 6px 0;
-    font-size: 18px;
+    margin: 8px 0;
+    font-size: 20px; // 폰트 크기 증가
     font-weight: bold;
-    color: $primary-color;
+    color: darken($primary-color, 15%); // 타이틀 색상 대비 증가
+    text-align: center;
   }
 
   .postingOption {
@@ -287,32 +295,42 @@ $icon-background: #999999;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    padding: 8px 0; // 간격 추가로 분리감 생성
   }
 
   .postingCardContent {
     display: flex;
-    margin: 9px 12px;
-    border-bottom: 1px solid $text-color;
+    margin: 12px 0; // 간격 증가
+    padding-bottom: 8px; // 아래 여백 추가
+    border-bottom: 1px solid lighten($text-color, 30%); // 더 연한 색으로 하단 경계선
+
+    font-size: 16px; // 텍스트 크기 증가로 가독성 향상
+    line-height: 1.5; // 줄 간격 조정으로 가독성 개선
+    color: darken($text-color, 10%); // 텍스트 색상 대비 증가
   }
 
   .objektArray {
     display: inline-block;
     flex-wrap: wrap;
+    margin-top: 12px; // 상단 여백 추가로 구분감 제공
 
     p {
       margin: 6px 9px;
       font-weight: bold;
+      font-size: 14px; // 텍스트 크기 증가
+      color: $primary-color; // 제목 색상 강조
     }
 
     img {
-      margin: 3px;
-      max-width: 150px;
-      max-height: 150px;
-      border-radius: 4px;
-      transition: transform 0.3s;
+      margin: 4px;
+      max-width: 140px;
+      max-height: 140px;
+      border-radius: 6px; // 더 부드러운 모서리
+      transition: transform 0.3s, box-shadow 0.3s; // 호버 효과 애니메이션 추가
 
       &:hover {
-        transform: scale(1.05);
+        transform: scale(1.08); // 확대 효과로 클릭 가능성 강조
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // 호버 시 그림자 추가로 강조
       }
     }
   }
