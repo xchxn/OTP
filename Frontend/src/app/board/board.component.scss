@@ -190,6 +190,7 @@ $icon-background: #999999;
 .searchFormContainer {
   display: flex;
   flex-direction: column;
+  // width: 75%;
   border: 1px solid $text-color;
   border-radius: 9px;
   margin: 12px 18px;
@@ -271,6 +272,7 @@ $icon-background: #999999;
 .postingCards {
   display: flex;
   flex-direction: column;
+  // width: 50%;
   border: 1px solid darken($text-color, 10%); // 더 진한 테두리로 대비 증가
   border-radius: 9px;
   margin: 12px 18px;
@@ -307,8 +309,8 @@ $icon-background: #999999;
       color: $primary-color;
       padding: 4px 8px;
       border: none;
-    border-radius: 9px;
-    margin: 6px 9px;
+      border-radius: 9px;
+      margin: 6px 9px;
 
       &:hover {
         background-color: lighten($primary-color, 30%);
@@ -397,7 +399,7 @@ $icon-background: #999999;
   margin: 12px 9px;
 
   mat-form-field {
-    width: 48%;
+    width: 16%;
     min-width: 200px;
     margin: 6px;
   }
