@@ -156,6 +156,34 @@ export class PostComponent {
     });
   }
 
+  // 추가중인 오브젝트 배열 초기화
+  resetObjektArray(): void {
+    // 썸네일 배열도 초기화
+    const haveArray = this.postingForm.get('objekt.have') as FormArray;
+    const wantArray = this.postingForm.get('objekt.want') as FormArray;
+
+    this.haveObjektThumbnail = [];
+    this.wantObjektThumbnail = [];
+
+    haveArray.clear();
+    wantArray.clear();
+  }
+
+  // 배열에서 타겟 오브젝트 제거
+  popHaveObjekt(id: any): void {
+    // haveObjektThumbnail 배열과 haveArray에서 해당 요소 삭제
+    this.haveObjektThumbnail = this.haveObjektThumbnail.filter((item: any) => item.id !== id);
+    const haveArray = this.postingForm.get('objekt.have') as FormArray;
+    haveArray.removeAt(haveArray.controls.findIndex((control: any) => control.value === id));
+  }
+
+  popWantObjekt(id: any): void {
+    // wantObjektThumbnail 배열과 wantArray에서 해당 요소 삭제
+    this.wantObjektThumbnail = this.wantObjektThumbnail.filter((item: any) => item.id !== id);
+    const wantArray = this.postingForm.get('objekt.want') as FormArray;
+    wantArray.removeAt(wantArray.controls.findIndex((control: any) => control.value === id));
+  }
+
   // 포스팅 보내기
   createPosting (): void {
     const postData = this.postingForm.value;

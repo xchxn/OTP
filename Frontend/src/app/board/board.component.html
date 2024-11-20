@@ -44,14 +44,14 @@
         <p>Have </p>
         <div *ngFor="let haveItem of searchForm.get('objekt.have')?.value; let i = index">
           <img [src]="haveItem.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-            [matTooltip]="haveItem.id" aria-label="Button that displays a tooltip when focused or hovered over">
+            [matTooltip]="haveItem.collectionId" aria-label="Button that displays a tooltip when focused or hovered over">
         </div>
       </div>
       <div class="searchObjektArray" *ngIf="searchForm.get('objekt.want')?.value.length > 0">
         <p>Want </p>
         <div *ngFor="let wantItem of searchForm.get('objekt.want')?.value; let i = index">
           <img [src]="wantItem.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-          [matTooltip]="wantItem.id" aria-label="Button that displays a tooltip when focused or hovered over">
+          [matTooltip]="wantItem.collectionId" aria-label="Button that displays a tooltip when focused or hovered over">
         </div>
       </div>
       <div class="searchButton">
@@ -115,7 +115,7 @@
     <p>Have</p>
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.have">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-        [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
+        [matTooltip]="thumb.collectionId" aria-label="Button that displays a tooltip when focused or hovered over">
       <button class="pop-button" (click)="popHaveObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_userId && updateMode">
         <i class="fa-solid fa-x"></i>
       </button> 
@@ -123,7 +123,7 @@
     <p>Want</p>
     <div class="objekt-container" *ngFor="let thumb of posting?.thumbnails?.want">
       <img class="objekt-img" [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-        [matTooltip]="thumb.id" aria-label="Button that displays a tooltip when focused or hovered over">
+        [matTooltip]="thumb.collectionId" aria-label="Button that displays a tooltip when focused or hovered over">
         <button class="pop-button" (click)="popWantObjekt(posting.posting_id, thumb)" *ngIf="userId === posting.posting_userId && updateMode">
           <i class="fa-solid fa-x"></i>
         </button>

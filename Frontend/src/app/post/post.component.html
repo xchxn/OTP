@@ -41,6 +41,7 @@
       </mat-form-field>
       <button mat-button type="button" (click)="addObjektToHaveArray()">Have 가져오기</button>
       <button mat-button type="button" (click)="addObjektToWantArray()">Want 가져오기</button>
+      <button type="button" (click)="resetObjektArray()">Reset</button>
     </form>
   </div>
 
@@ -51,19 +52,24 @@
       <p>Have</p>
       <div *ngFor="let thumb of haveObjektThumbnail">
         <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-        [matTooltip]="thumb.id"
+        [matTooltip]="thumb.collectionId"
         aria-label="Button that displays a tooltip when focused or hovered over">
+        <button class="pop-button"  (click)="popHaveObjekt(thumb.id)">
+          <i class="fa-solid fa-x"></i>
+        </button>
       </div>
     </div>
     <div class="objekt" *ngIf="wantObjektThumbnail.length > 0">
       <p>Want</p>
-      <div *ngFor="let thumb of wantObjektThumbnail">
+      <div *ngFor="let thumb of wantObjektThumbnail" (click)="popWantObjekt(thumb.id)">
         <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-        [matTooltip]="thumb.id"
+        [matTooltip]="thumb.collectionId"
         aria-label="Button that displays a tooltip when focused or hovered over"
         >
+        <button class="pop-button"  (click)="popWantObjekt(thumb.id)">
+          <i class="fa-solid fa-x"></i>
+        </button>
       </div>
     </div>
   </div>
-
 </div>
