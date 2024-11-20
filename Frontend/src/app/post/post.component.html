@@ -54,21 +54,21 @@
         <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.collectionId"
         aria-label="Button that displays a tooltip when focused or hovered over">
-        <button class="pop-button"  (click)="popHaveObjekt(thumb.id)">
+        <!-- <button class="pop-button" (click)="popHaveObjekt(thumb.id)">
           <i class="fa-solid fa-x"></i>
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="objekt" *ngIf="wantObjektThumbnail.length > 0">
       <p>Want</p>
-      <div *ngFor="let thumb of wantObjektThumbnail" (click)="popWantObjekt(thumb.id)">
+      <div *ngFor="let thumb of wantObjektThumbnail">
         <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
         [matTooltip]="thumb.collectionId"
         aria-label="Button that displays a tooltip when focused or hovered over"
         >
-        <button class="pop-button"  (click)="popWantObjekt(thumb.id)">
+        <!-- <button class="pop-button" (click)="popWantObjekt(thumb.id)">
           <i class="fa-solid fa-x"></i>
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

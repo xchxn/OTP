@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component,ViewEncapsulation } from '@angular/core';
 import { BoardService } from './board.service';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PostService } from '../post/post.service';
@@ -49,7 +49,8 @@ interface objektFilter {
     FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatTooltipModule],
   providers: [CookieService],
   templateUrl: './board.component.html',
-  styleUrl: './board.component.scss'
+  styleUrl: './board.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class BoardComponent {
   userId: string | any = '';

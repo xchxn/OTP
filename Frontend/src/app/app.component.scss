@@ -83,29 +83,19 @@
 $primary-color: #2E3B55;
 $secondary-color: #F9FAFB;
 $accent-color: #FFC107;
+$home-color: #ffde00;
 $text-color: #333;
 
 // Layout
-.navContainer {
-  width: 100vw;
-  margin: 0;
-  padding: 1rem 0;
-  background-color: $primary-color;
-  color: $secondary-color;
-
   nav {
-    display: flex;
-    align-items: center;
-    max-width: 1200px;
+    padding: 1rem 0;
+    background-color: $primary-color;
+    color: $secondary-color;
+    align-items: baseline;
     margin: 0 auto;
-    padding: 0 1rem;
-    justify-content: space-between;
-  }
-}
-
-.buttonContainer {
-  display: flex;
-  gap: 1rem;
+    // justify-content: space-between;
+    display: flex;
+    gap: 1rem;
 
   button {
     background: none;
@@ -124,11 +114,30 @@ $text-color: #333;
       color: $accent-color;
     }
   }
-}
+  }
 
 .userIdTable {
   font-size: 14px;
   color: $accent-color;
+  margin-left: auto;
+
+  button {
+    background: none;
+    border: none;
+    color: $secondary-color;
+    font-size: 14px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: lighten($secondary-color, 20%);
+    }
+
+    &.active {
+      color: $accent-color;
+    }
+  }
 }
 
 // Footer

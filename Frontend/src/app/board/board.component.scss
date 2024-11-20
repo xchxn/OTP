@@ -201,7 +201,7 @@ $icon-background: #999999;
   display: flex;
 }
 
-.objektArrayForm {
+.objektArrayForm {  
   width: 100%;
 }
 
@@ -232,7 +232,9 @@ $icon-background: #999999;
     background-color: $primary-color;
     color: #FFFFFF;
     padding: 6px 12px;
-    border-radius: 4px;
+    border: none;
+    border-radius: 9px;
+    margin: 6px 9px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -252,9 +254,12 @@ $icon-background: #999999;
     background-color: $accent-color;
     color: #FFFFFF;
     padding: 6px 12px;
-    border-radius: 4px;
+    border: none;
+    border-radius: 9px;
+    margin: 6px 9px;
     font-size: 14px;
     cursor: pointer;
+    
 
     &:hover {
       background-color: lighten($accent-color, 10%);
@@ -296,6 +301,19 @@ $icon-background: #999999;
     align-items: center;
     width: 100%;
     padding: 8px 0; // 간격 추가로 분리감 생성
+
+    button {
+      font-size: 13px; // 버튼 크기를 작게 조정
+      color: $primary-color;
+      padding: 4px 8px;
+      border: none;
+    border-radius: 9px;
+    margin: 6px 9px;
+
+      &:hover {
+        background-color: lighten($primary-color, 30%);
+      }
+    }
   }
 
   .postingCardContent {
@@ -364,6 +382,10 @@ $icon-background: #999999;
   justify-content: center;
   font-size: 8px;
   padding: 0;
+
+  &:hover {
+    background-color: darken(#d32f2f, 10%);
+  }
 }
 
 // Filter Form
@@ -389,11 +411,15 @@ $icon-background: #999999;
 
   button {
     background-color: $primary-color;
+    
     color: #FFFFFF;
     padding: 4px 8px;
-    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+
+    border: none;
+    border-radius: 9px;
+    margin: 6px 9px;
 
     &:hover {
       background-color: darken($primary-color, 10%);
@@ -402,18 +428,50 @@ $icon-background: #999999;
 }
 
 // Global Button Styling
-button {
-  font-size: 14px;
-  font-weight: bold;
-  color: $accent-color;
-  background-color: transparent;
-  border: none;
-  border-radius: 9px;
-  transition: background-color 0.3s ease;
-  margin: 6px 9px;
-  padding: 6px 12px;
+// button {
+//   font-size: 14px;
+//   font-weight: bold;
+//   color: $accent-color;
+//   background-color: transparent;
+  // border: none;
+  // border-radius: 9px;
+  // transition: background-color 0.3s ease;
+  // margin: 6px 9px;
+  // padding: 6px 12px;
 
-  &:hover {
-    background-color: #d6d6d6;
-  }
+//   &:hover {
+//     background-color: #d6d6d6;
+//   }
+// }
+
+/* mat-menu 스타일링 */
+::ng-deep mat-menu {
+  background-color: #2c3e50; /* 메뉴 배경색 */
+  color: #ecf0f1;            /* 메뉴 텍스트 색상 */
+  border-radius: 8px;        /* 모서리 둥글게 */
+}
+
+/* mat-menu-item 스타일링 */
+::ng-deep mat-menu-item {
+  font-family: 'Noto Sans KR', sans-serif; /* 폰트 설정 */
+  font-size: 14px;                         /* 폰트 크기 */
+  padding: 10px 20px;                      /* 패딩 */
+  margin: 3px 6px;
+}
+
+/* mat-menu-item 호버 효과 */
+::ng-deep mat-menu-item:hover {
+  background-color: #34495e; /* 호버 시 배경색 변경 */
+}
+
+/* mat-menu-item 활성 상태 */
+::ng-deep mat-menu-item.mat-active {
+  background-color: #1abc9c; /* 활성화된 아이템 배경색 */
+  color: #fff;               /* 텍스트 색상 */
+}
+
+/* mat-menu 아이콘 스타일링 (필요한 경우) */
+::ng-deep mat-menu-item .mat-icon {
+  margin-right: 10px;        /* 아이콘과 텍스트 간격 */
+  color: #ecf0f1;            /* 아이콘 색상 */
 }

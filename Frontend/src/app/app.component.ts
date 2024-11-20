@@ -72,6 +72,8 @@ export class AppComponent {
         if (data) {
           // JWT 토큰을 localStorage에 저장
           this.authService.isLogin(data);
+    this.username = localStorage.getItem('username');
+
           // 인증된 사용자가 갈 수 있는 경로로 리다이렉트
           this.router.navigate(['/board']);
         } else {
