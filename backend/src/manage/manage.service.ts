@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { ObjektEntity } from 'src/board/entities/objekt.entity';
 import { Repository } from 'typeorm';
+import Redis from 'ioredis';
 
 @Injectable()
 export class ManageService {
@@ -12,13 +13,15 @@ export class ManageService {
     private readonly httpService: HttpService,
   ) {}
 
+  redis = new Redis();
+
   async getObjekt(): Promise<boolean> {
     const url = `https://api.cosmo.fans/objekt/v1/token`;
     const datas: Set<string> = new Set(); // 중복된 collectionId를 확인하기 위한 Set
 
     const requests = []; // 모든 요청을 담을 배열
 
-    for (let i = 3990000; i < 4000050; i++) {
+    for (let i = 80000; i < 100000; i++) {
       requests.push(this.fetchAndSaveObjekt(url, i, datas));
     }
 
@@ -48,8 +51,14 @@ export class ManageService {
           member: response.data.objekt.member,
           collectionNo: response.data.objekt.collectionNo,
           classes: response.data.objekt.class,
+          artists: response.data.objekt.artists[0],
           thumbnailImage: response.data.objekt.thumbnailImage,
         };
+
+        await this.redis.sadd('seasons', data.season);
+        await this.redis.sadd('members', data.member);
+        await this.redis.sadd('collectionNos', data.collectionNo);
+        await this.redis.sadd('classes', data.classes);
 
         await this.objektRepository
           .createQueryBuilder()
