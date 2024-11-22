@@ -4,7 +4,7 @@ import { AuthService } from './auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { filter } from 'rxjs';
-
+import { ThemeService } from './theme/theme.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -16,12 +16,16 @@ export class AppComponent {
   isLoggedIn = false;
   userId!: any;
   username!: any;
+  isDarkMode = false;
 
   constructor(
     private authService: AuthService,
     private cookieService: CookieService,
-    private router: Router
+    private router: Router,
+    private themeService: ThemeService
   ) {
+    this.themeService.loadTheme();
+  this.isDarkMode = this.themeService.isDarkMode();
   }
   // 로그아웃 함수
   logout() {
@@ -98,5 +102,10 @@ export class AppComponent {
       userId: userId,
       username: username
     };
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+    this.isDarkMode = this.themeService.isDarkMode();
   }
 }

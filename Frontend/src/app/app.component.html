@@ -20,6 +20,9 @@
         <button *ngIf="isLoggedIn" (click)="logout()">
           Logout
         </button>
+        <button (click)="toggleTheme()">
+          {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+        </button>
       </div>
   </nav>
 <router-outlet></router-outlet>

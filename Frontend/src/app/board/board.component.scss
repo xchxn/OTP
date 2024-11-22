@@ -191,8 +191,10 @@ $icon-background: #999999;
   display: flex;
   flex-direction: column;
   // width: 75%;
-  border: 1px solid $text-color;
-  border-radius: 9px;
+  // border: 1px solid $text-color;
+  // border-radius: 9px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 12px 18px;
   padding: 12px;
   background-color: $card-background;
@@ -273,8 +275,10 @@ $icon-background: #999999;
   display: flex;
   flex-direction: column;
   // width: 50%;
-  border: 1px solid darken($text-color, 10%); // 더 진한 테두리로 대비 증가
-  border-radius: 9px;
+  // border: 1px solid darken($text-color, 10%); // 더 진한 테두리로 대비 증가
+  // border-radius: 9px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 12px 18px;
   padding: 12px;
   background-color: lighten($card-background, 3%); // 카드 배경색을 더 밝게
@@ -305,11 +309,13 @@ $icon-background: #999999;
     padding: 8px 0; // 간격 추가로 분리감 생성
 
     button {
-      font-size: 13px; // 버튼 크기를 작게 조정
-      color: $primary-color;
+      font-size: large; // 버튼 크기를 작게 조정
+      color: #2c3e50;
+      background-color: #ecf0f1;
       padding: 4px 8px;
       border: none;
-      border-radius: 9px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       margin: 6px 9px;
 
       &:hover {
