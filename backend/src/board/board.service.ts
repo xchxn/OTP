@@ -107,6 +107,7 @@ export class BoardService {
     const collectionNO = await this.objektRepository
       .createQueryBuilder()
       .select('DISTINCT collectionNO', 'collectionNO')
+      .orderBy('collectionNO', 'ASC')
       .getRawMany();
     const getClass = await this.objektRepository
       .createQueryBuilder()

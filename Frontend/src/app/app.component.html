@@ -1,6 +1,4 @@
-<div class="navContainer">
   <nav>
-    <div class="buttonContainer">
       <button routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
         Home
       </button>
@@ -10,23 +8,24 @@
       <button routerLink="/dm" routerLinkActive="active" ariaCurrentWhenActive="page">
         Dm
       </button>
-
       <button *ngIf="!isLoggedIn" routerLink="/auth" routerLinkActive="active" ariaCurrentWhenActive="page">
         Auth
       </button>
-
-      <button *ngIf="isLoggedIn" (click)="logout()">
-        Logout
+      <button *ngIf="isLoggedIn"
+          routerLink="/mypage" routerLinkActive="active" ariaCurrentWhenActive="page">
+        My Page
       </button>
-    </div>
-    <div class="userIdTable" *ngIf="isLoggedIn">
-      Hello, {{ username }}
-    </div>
+      <div class="userIdTable" *ngIf="isLoggedIn">
+        Hello,{{ username }}
+        <button *ngIf="isLoggedIn" (click)="logout()">
+          Logout
+        </button>
+        <button (click)="toggleTheme()">
+          {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+        </button>
+      </div>
   </nav>
-</div>
-
 <router-outlet></router-outlet>
-
 <footer>
   <div class="footerContainer">
     <div class="license">

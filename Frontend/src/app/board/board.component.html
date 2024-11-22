@@ -17,16 +17,16 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-select formControlName="collectionNo" placeholder="collectionNo">
-          @for (collectionNo of objektFilter.collectionNo; track collectionNo) {
-          <mat-option [value]="collectionNo">{{collectionNo}}</mat-option>
+        <mat-select formControlName="classes" placeholder="classes">
+          @for (classes of objektFilter.classes; track classes) {
+          <mat-option [value]="classes">{{classes}}</mat-option>
           }
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-select formControlName="classes" placeholder="classes">
-          @for (classes of objektFilter.classes; track classes) {
-          <mat-option [value]="classes">{{classes}}</mat-option>
+        <mat-select formControlName="collectionNo" placeholder="collectionNo">
+          @for (collectionNo of objektFilter.collectionNo; track collectionNo) {
+          <mat-option [value]="collectionNo">{{collectionNo}}</mat-option>
           }
         </mat-select>
       </mat-form-field>
