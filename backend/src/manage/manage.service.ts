@@ -81,7 +81,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { ObjektEntity } from 'src/board/entities/objekt.entity';
 import { Repository } from 'typeorm';
-import Redis from 'ioredis';
 
 @Injectable()
 export class ManageService {
@@ -91,10 +90,9 @@ export class ManageService {
     private readonly httpService: HttpService,
   ) {}
 
-  private readonly redis = new Redis();
   private readonly MAX_CONCURRENT_REQUESTS = 100; // 시스템에 맞게 조절하세요
-  private readonly START_ID = 550000;
-  private readonly END_ID = 600000;
+  private readonly START_ID = 1500001;
+  private readonly END_ID = 2000000;
 
   async getObjekt(): Promise<boolean> {
     const url = `https://api.cosmo.fans/objekt/v1/token`;
