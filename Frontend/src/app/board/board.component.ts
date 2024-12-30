@@ -46,7 +46,7 @@ interface objektFilter {
   selector: 'app-board',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule,
-    FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatTooltipModule],
+    FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, MatInputModule, MatTooltipModule],
   providers: [CookieService],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',

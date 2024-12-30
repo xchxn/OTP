@@ -11,17 +11,12 @@
       <button *ngIf="!isLoggedIn" routerLink="/auth" routerLinkActive="active" ariaCurrentWhenActive="page">
         Auth
       </button>
-      <button *ngIf="isLoggedIn"
-          routerLink="/mypage" routerLinkActive="active" ariaCurrentWhenActive="page">
-        My Page
-      </button>
-      <div class="userIdTable" *ngIf="isLoggedIn">
-        Hello,{{ username }}
+      <div class="userIdTable">
         <button *ngIf="isLoggedIn" (click)="logout()">
           Logout
         </button>
         <button (click)="toggleTheme()">
-          {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+          {{ isDarkMode ? '☀' : '🌜' }}
         </button>
       </div>
   </nav>

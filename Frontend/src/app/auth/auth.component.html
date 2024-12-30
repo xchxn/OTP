@@ -1,5 +1,4 @@
-<!-- 기본 화면 로그인 폼 -->
-<div class="example-container">
+<!-- <div class="example-container">
   <form class="loginForm" *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="login()">
     <p> Login </p>
     <mat-form-field>
@@ -68,15 +67,80 @@
 
     <div class="buttonContainer">
       <button mat-flat-button type="submit" [disabled]="!registerForm.valid">Register</button>
-      <button mat-flat-button type="button" (click)="toggleForm()">Back to Login</button> <!-- 로그인 폼으로 전환 -->
+      <button mat-flat-button type="button" (click)="toggleForm()">Back to Login</button>
+    </div>
+  </form>
+</div> -->
+
+<!-- 기본 화면 로그인 폼 -->
+<div class="container">
+  <form class="loginForm" *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="login()">
+    <h2>Login</h2>
+    
+    <div class="form-group">
+      <label for="id">ID:</label>
+      <input type="text" id="id" formControlName="id" required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <div class="password-input">
+        <input [type]="hide() ? 'password' : 'text'" id="password" formControlName="password" required>
+        <button type="button" class="toggle-password" (click)="clickEvent($event)">
+          <i class="icon">{{hide() ? '👁️' : '👁️‍🗨️'}}</i>
+        </button>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button type="submit" [disabled]="!loginForm.valid" class="btn-primary">Login</button>
+      <button type="button" (click)="toggleForm()" class="btn-secondary">Register</button>
+    </div>
+
+    <div class="social-auth-container">
+      <button type="button" class="kakao-login-button" (click)="onKakaoGetCode()"></button>
+      <button type="button" class="google-login-button" (click)="onGoogleGetCode()"></button>
+    </div>
+  </form>
+
+  <form class="registerForm" *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="register()">
+    <h2>Register</h2>
+
+    <div class="form-group">
+      <label for="id">ID:</label>
+      <input type="text" id="id" formControlName="id" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" 
+             id="email" 
+             formControlName="email" 
+             placeholder="pat@example.com"
+             (blur)="updateErrorMessage()" 
+             required>
+      <small class="hint">A verification email will be sent.</small>
+      <small class="error" *ngIf="registerForm.invalid">{{errorMessage()}}</small>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" formControlName="username" required>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <div class="password-input">
+        <input [type]="hide() ? 'password' : 'text'" id="registerPassword" formControlName="password" required>
+        <button type="button" class="toggle-password" (click)="clickEvent($event)">
+          <i class="icon">{{hide() ? '👁️' : '👁️‍🗨️'}}</i>
+        </button>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button type="submit" [disabled]="!registerForm.valid" class="btn-primary">Register</button>
+      <button type="button" (click)="toggleForm()" class="btn-secondary">Back to Login</button>
     </div>
   </form>
 </div>
-
-<!-- Validator 검사 실패 시 에러문 작성 -->
-<!-- <div class="socialAuthContatiner">
-<button class="kakaoLoginButton" (click)="onKakaoGetCode()">
-</button>
-<button class="googleLoginButton" (click)="onGoogleGetCode()">
-</button>
-</div> -->

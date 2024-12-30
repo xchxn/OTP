@@ -1,74 +1,76 @@
 <div class="postContainer">
   <form class="postingFormContainer" [formGroup]="postingForm" (ngSubmit)="createPosting()">
     <div class="postingForm">
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" appearance="outline">
         <mat-label for="title">Title:</mat-label>
         <input matInput placeholder="Title" id="title" formControlName="title">
       </mat-form-field>
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="example-full-width" appearance="outline">
         <mat-label for="content">Content:</mat-label>
         <textarea matInput placeholder="Content" id="content" formControlName="content">
         </textarea>
       </mat-form-field>
     </div>
     <div class="submitButton">
-      <button mat-button type="submit">Submit Post</button>
+      <button type="submit">Submit Post</button>
     </div>
   </form>
   <div>
-    <p>오브젝트 추가하기</p>
     <form class="objektFilterForm" [formGroup]="objektFilterForm" (ngSubmit)="getThumbnail()">
-      <mat-form-field>
-        <mat-select id="season" type="text" formControlName="season" placeholder="Season">
+      <mat-form-field appearance="outline">
+        <mat-label>Season</mat-label>
+        <mat-select formControlName="season">
           <mat-option *ngFor="let season of objektFilter.season" [value]="season">{{ season }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Member</mat-label>
         <mat-select id="member" type="text" formControlName="member" placeholder="Member">
           <mat-option *ngFor="let member of objektFilter.member" [value]="member">{{ member }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Classes</mat-label>
         <mat-select id="classes" type="text" formControlName="classes" placeholder="Class">
           <mat-option *ngFor="let classes of objektFilter.classes" [value]="classes">{{ classes }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Collection No</mat-label>
         <mat-select id="collectionNo" type="text" formControlName="collectionNo" placeholder="CollectionNo">
           <mat-option *ngFor="let collectionNo of objektFilter.collectionNo" [value]="collectionNo">{{ collectionNo
             }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button mat-button type="button" (click)="addObjektToHaveArray()">Have 가져오기</button>
-      <button mat-button type="button" (click)="addObjektToWantArray()">Want 가져오기</button>
-      <button mat-button type="button" (click)="resetObjektArray()">Reset</button>
-    </form>
-  </div>
-
-  <div class="postingValues">
-    <!-- 추후에 오브젝트 아래에 별칭을 보일 수 있도록 수정-->
-    <!-- 혹은 마우스 호버 시 툴팁으로 오브젝트 정보 제공 -->
-    <div class="objekt" *ngIf="haveObjektThumbnail.length > 0">
-      <p>Have</p>
-      <div *ngFor="let thumb of haveObjektThumbnail">
-        <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-        [matTooltip]="thumb.collectionId"
-        aria-label="Button that displays a tooltip when focused or hovered over">
-        <!-- <button class="pop-button" (click)="popHaveObjekt(thumb.id)">
-          <i class="fa-solid fa-x"></i>
-        </button> -->
+      <div class="button-group end">
+        <button type="button" class="primary" (click)="addObjektToHaveArray()">Have 가져오기</button>
+        <button type="button" class="primary" (click)="addObjektToWantArray()">Want 가져오기</button>
+        <button type="button" class="warning" (click)="resetObjektArray()">Reset</button>
       </div>
-    </div>
-    <div class="objekt" *ngIf="wantObjektThumbnail.length > 0">
-      <p>Want</p>
-      <div *ngFor="let thumb of wantObjektThumbnail">
-        <img [src]="thumb.thumbnailImage" alt="Thumbnail" style="max-width: 150px; max-height: 150px;"
-        [matTooltip]="thumb.collectionId"
-        aria-label="Button that displays a tooltip when focused or hovered over"
-        >
-        <!-- <button class="pop-button" (click)="popWantObjekt(thumb.id)">
-          <i class="fa-solid fa-x"></i>
-        </button> -->
+    </form>
+
+    <div class="postingValues">
+      <!-- 추후에 오브젝트 아래에 별칭을 보일 수 있도록 수정-->
+      <!-- 혹은 마우스 호버 시 툴팁으로 오브젝트 정보 제공 -->
+      <div class="objekt" *ngIf="haveObjektThumbnail.length > 0">
+        <p>Have</p>
+        <div class="objekt-grid">
+          <img *ngFor="let thumb of haveObjektThumbnail"
+               [src]="thumb.thumbnailImage" 
+               [alt]="'Collection ' + thumb.collectionId"
+               [matTooltip]="thumb.collectionId"
+               matTooltipPosition="above">
+        </div>
+      </div>
+      <div class="objekt" *ngIf="wantObjektThumbnail.length > 0">
+        <p>Want</p>
+        <div class="objekt-grid">
+          <img *ngFor="let thumb of wantObjektThumbnail"
+               [src]="thumb.thumbnailImage" 
+               [alt]="'Collection ' + thumb.collectionId"
+               [matTooltip]="thumb.collectionId"
+               matTooltipPosition="above">
+        </div>
       </div>
     </div>
   </div>
