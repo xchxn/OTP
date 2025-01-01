@@ -4,29 +4,23 @@
     <div>
       <button class="dmList" *ngFor="let receiver of dmList$ | async" (click)="selectDm(receiver.userId, receiver.username)">
         {{ receiver.username }}
-        <mat-divider />
       </button>
     </div>
   </div>
   
   <div class="nowDmContainer">
     <p> DM Now {{ selectedReceiverUsername }}</p>
-    <!-- 해당 메시지 목록에 스크롤 추가하기  -->
-    <!-- Max-height 추가 -->
     <div class="messageListContainer" #messageListContainer>
       <div class="messageContainer" *ngFor="let msg of messages"
       [ngClass]="{'myMessage': msg.senderUsername === username, 'otherMessage': msg.senderUsername !== username}">
-        <strong *ngIf="msg.senderUsername !== username">{{ msg.senderUsername }}:</strong>
         {{ msg.message }}
       </div>
     </div>
     <form [formGroup]="messageForm" (ngSubmit)="send()">
-      <div >
-        <!-- <label for="message">message:</label> -->
+      <div>
         <input id="message" formControlName="message">
         <button class="sendDm" type="submit">Send Message</button>
       </div>
     </form>
   </div>
-  <!-- <button type="submit" (click)="selectDm(selectedReceiverId)">Fetch</button> -->
 </div>

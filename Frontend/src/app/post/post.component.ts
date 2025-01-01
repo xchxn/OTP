@@ -5,12 +5,6 @@ import { PostService } from './post.service';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSelectModule} from '@angular/material/select';
-
 interface objektFilter {
   season: Array<string>;
   member: Array<string>;
@@ -22,8 +16,7 @@ interface objektFilter {
   selector: 'app-post',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    FormsModule, RouterOutlet, RouterLink, RouterLinkActive, MatInputModule,
-    MatFormFieldModule, MatButtonModule, MatSelectModule, MatTooltipModule],
+    FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
   providers: [CookieService],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
