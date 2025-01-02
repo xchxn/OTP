@@ -35,7 +35,7 @@
             }
           </select>
         </div>
-        <div class="button-group">
+        <div class="button-group end">
           <button type="button" class="btn secondary" (click)="addObjektToHaveArray()" aria-label="Find Have items">Have
             찾기</button>
           <button type="button" class="btn primary" (click)="addObjektToWantArray()" aria-label="Find Want items">Want
@@ -135,10 +135,10 @@
         </button>
         <div class="menu" *ngIf="showMenuId === posting.posting_id">
           <button type="button" (click)="goDM(posting.posting_userId, posting.posting_username)">
-            <i class="fa-solid fa-chat"></i>
+            <i class="fa-solid fa-message"></i>
             <span>DM</span>
           </button>
-          <button type="button">
+          <button type="button" (click)="showMenu(posting)">
             <i class="fa-solid fa-close"></i>
             <span>Close</span>
           </button>
@@ -147,7 +147,7 @@
 
       <div class="post-actions" *ngIf="userId === posting.posting_userId">
         <button type="button" class="more-button" (click)="showPostActions(posting)">
-          <i class="fa-solid fa-more-vertical"></i>
+          More
         </button>
         <div class="post-actions-menu" *ngIf="showPostActionsId === posting.posting_id">
           <button type="button" (click)="changeUpdateMode()">
@@ -157,6 +157,10 @@
           <button type="button" (click)="deletePosting(posting)">
             <i class="fa-solid fa-trash"></i>
             <span>Delete</span>
+          </button>
+          <button type="button"(click)="showPostActions(posting)">
+            <i class="fa-solid fa-close"></i>
+            <span>Close</span>
           </button>
         </div>
       </div>
