@@ -19,7 +19,6 @@ import { MypageModule } from './mypage/mypage.module';
     BoardModule,
     SearchModule,
     ManageModule,
-    AuthModule,
     MypageModule,
   ],
   controllers: [],
