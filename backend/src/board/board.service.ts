@@ -10,21 +10,24 @@ export class BoardService {
     private postingRepository: Repository<PostingEntity>,
     @Inject('OBJEKT_REPOSITORY')
     private objektRepository: Repository<ObjektEntity>,
+    // @Inject('AUTH_REPOSITORY')
+    // private authRepository: Repository<AuthEntity>,
   ) {}
 
   // 모든 포스팅 목록, 보드 채우기
   async getPostingList(): Promise<any> {
     const getPostingList = await this.postingRepository
       .createQueryBuilder('posting')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.userId')
       .select([
         'posting.id',
-        'posting.username',
         'posting.userId',
         'posting.title',
         'posting.content',
         'posting.objekts',
         'posting.createdAt',
         'posting.updatedAt',
+        'auth.username',
       ])
       .getRawMany();
     // console.log(getPostingList);
@@ -36,7 +39,6 @@ export class BoardService {
       .createQueryBuilder('posting')
       .select([
         'posting.id',
-        'posting.username',
         'posting.userId',
         'posting.title',
         'posting.content',
@@ -58,7 +60,6 @@ export class BoardService {
       .values({
         title: body.title,
         content: body.content,
-        username: body.username,
         userId: body.userId,
         objekts: {
           have: body.objekt.have,

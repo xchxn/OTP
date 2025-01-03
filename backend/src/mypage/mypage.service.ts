@@ -11,13 +11,14 @@ export class MypageService {
 
   async getMyInfo(body: any): Promise<any> {
     const myInfo = await this.authRepository
-      .createQueryBuilder('auth')
+      .createQueryBuilder()
       .select([
-        'auth.username',
-        'auth.email',
+        'username',
+        'email',
       ])
-      .where('id = :id', { id: body.id })
+      .where('id = :id', { id: body.userId })
       .getRawOne();
+    console.log(myInfo);
     return myInfo;
   }
 
@@ -25,9 +26,10 @@ export class MypageService {
     const updateMyInfo = await this.authRepository
       .createQueryBuilder()
       .update()
-      .set({ username: body.username, email: body.email })
-      .where('id = :id', { id: body.id })
+      .set({ username: body.username })
+      .where('id = :id', { id: body.userId })
       .execute();
+    console.log(updateMyInfo);
     return updateMyInfo;
   }
 
@@ -35,7 +37,7 @@ export class MypageService {
     const deleteMyInfo = await this.authRepository
       .createQueryBuilder()
       .delete()
-      .where('id = :id', { id: body.id })
+      .where('id = :id', { id: body.userId })
       .execute();
     return deleteMyInfo;
   }
