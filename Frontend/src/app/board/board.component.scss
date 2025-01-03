@@ -1,10 +1,3 @@
-// // Board Component Styles
-// :host {
-//   display: block;
-//   padding: 2rem;
-//   max-width: 1200px;
-//   margin: 0 auto;
-// }
 
 // Main Container
 .mainContainer {
@@ -22,18 +15,17 @@
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 2rem;
-  margin-bottom: 2rem;
 
   .filterFormContainer {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 }
 
 // Object Filter Form
 .objektFilterForm {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
 
   .form-group {
     label {
@@ -115,7 +107,7 @@
 .button-group {
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 
   &.end {
     justify-content: flex-end;
@@ -159,24 +151,24 @@
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-color);
-    margin: 1.5rem 0 1rem;
+    margin: 0.5rem 0 1rem;
   }
 
   .objekt-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .objekt-container {
     position: relative;
     width: auto;
     height: 150px;
-    background-color: var(--form-background);
+    // background-color: var(--form-background);
     border-radius: 12px;
     display: inline-block;
-    margin: 0 1rem 1rem 0;
+    // margin: 0 1rem 1rem 0;
 
     &:hover {
       .custom-tooltip {
@@ -237,14 +229,14 @@
     }
 
     .objekt-img {
-      width: 100%;
+      width: auto;
       height: 100%;
       object-fit: contain;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s ease;
-      background-color: var(--form-background);
-      padding: 0.5rem;
+      // background-color: var(--form-background);
+      // padding: 0.5rem;
     }
   }
 }
@@ -255,7 +247,6 @@
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 1rem 2rem;
-  margin-bottom: 0.5rem;
   transition: transform 0.2s ease;
 
   &:hover {
@@ -263,7 +254,7 @@
   }
 
   .postingCardTitle {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 
     h2 {
       font-size: 1.5rem;
@@ -298,7 +289,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 
     .user-actions {
       position: relative;
@@ -434,7 +425,7 @@
   }
 
   .postingContent {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     
     p {
       color: var(--text-color);
@@ -443,6 +434,25 @@
     }
 
     .form-group {
+      input {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 1.25rem;
+        font-weight: 500;
+        border: 1.5px solid var(--border-color);
+        border-radius: 12px;
+        background-color: var(--form-background);
+        color: var(--text-color);
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: var(--accent-color);
+          background-color: var(--card-background);
+          box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+      }
+
       textarea {
         width: 100%;
         min-height: 120px;
@@ -471,7 +481,7 @@
     // margin-top: 1.5rem;
 
     .array-section {
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
 
       h4 {
         font-size: 1.1rem;
@@ -482,18 +492,16 @@
 
       .objekt-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.5rem;
       }
 
       .objekt-container {
         position: relative;
         width: auto;
         height: 150px;
-        background-color: var(--form-background);
         border-radius: 12px;
         display: inline-block;
-        // margin: 0 1rem 1rem 0;
 
         &:hover {
           .custom-tooltip {
@@ -554,14 +562,12 @@
         }
 
         .objekt-img {
-          width: 100%;
+          // width: auto;
           height: 100%;
           object-fit: contain;
           border-radius: 12px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           transition: transform 0.2s ease;
-          background-color: var(--form-background);
-          padding: 0.5rem;
         }
 
         .pop-button {
@@ -638,5 +644,5 @@
 
 // Action Buttons Container
 .action-buttons {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }

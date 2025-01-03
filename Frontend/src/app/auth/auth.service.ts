@@ -90,4 +90,16 @@ export class AuthService {
   private getRefreshToken(): any {
     return localStorage.getItem('refreshToken');
   }
+
+  // Request new access token
+  requestAccessToken(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/refresh`, {
+      refreshToken: this.getRefreshToken(),
+    }).pipe(
+      switchMap((response) => {
+        this.storeAccessToken(response.accessToken); // 갱신된 토큰을 저장
+        return of(response);
+      })
+    );
+  }
 }

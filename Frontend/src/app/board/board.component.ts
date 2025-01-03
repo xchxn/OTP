@@ -13,7 +13,7 @@ interface Posting {
   posting_id: number;
   posting_title: string;
   posting_userId: string;
-  posting_username: string;
+  auth_username: string;
   posting_content: string;
   posting_objekts: {
     have: number[];

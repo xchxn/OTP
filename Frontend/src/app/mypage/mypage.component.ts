@@ -32,13 +32,14 @@ export class MypageComponent {
 
     this.updateForm = this.formBuilder.group({
       username: [''],
-      email: [''],
     });
+
+    this.loadData();
   }
 
   loadData(): void {
     this.userId = localStorage.getItem('userId');
-    this.mypageService.getMyInfo(this.userId).subscribe({
+    this.mypageService.getMyInfo(JSON.stringify({ userId: this.userId })).subscribe({
       next: (data) => {
         this.updateForm.patchValue(data);
       },
@@ -50,7 +51,7 @@ export class MypageComponent {
   updateMyinfo(): void {
     const updateFormValue = this.updateForm.value;
 
-    this.mypageService.updateMyInfo(updateFormValue).subscribe({
+    this.mypageService.updateMyInfo(JSON.stringify({ userId: this.userId, ...updateFormValue })).subscribe({
       next: (data) => {
         console.log(data);
       },

@@ -18,14 +18,14 @@ export class MypageService {
   };
 
   getMyInfo(body: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/mypage/getMyinfo`, body, this.httpOptions);
+    return this.http.post<any>(`${this.apiUrl}/mypage/myInfo`, body, this.httpOptions);
   }
 
   updateMyInfo(body: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/mypage/updateMyinfo`, body, this.httpOptions);
+    return this.http.post<any>(`${this.apiUrl}/mypage/myUpdate`, body, this.httpOptions);
   }
 
   deleteMyInfo(body: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/mypage/deleteMyinfo`, body, this.httpOptions);
+    return this.http.post<any>(`${this.apiUrl}/mypage/myDelete`, body, this.httpOptions);
   }
 }

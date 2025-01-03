@@ -35,13 +35,13 @@
             }
           </select>
         </div>
-        <div class="button-group end">
-          <button type="button" class="btn secondary" (click)="addObjektToHaveArray()" aria-label="Find Have items">Have
-            찾기</button>
-          <button type="button" class="btn primary" (click)="addObjektToWantArray()" aria-label="Find Want items">Want
-            찾기</button>
-        </div>
       </form>
+      <div class="button-group end">
+        <button type="button" class="btn secondary" (click)="addObjektToHaveArray()" aria-label="Find Have items">Have
+          찾기</button>
+        <button type="button" class="btn primary" (click)="addObjektToWantArray()" aria-label="Find Want items">Want
+          찾기</button>
+      </div>
     </div>
 
     <!-- 필터로 검색해서 찾기 -->
@@ -131,10 +131,10 @@
     <div class="postingOption">
       <div class="user-actions">
         <button type="button" class="username-button" (click)="showMenu(posting)">
-          {{ posting.posting_username }}
+          {{ posting.auth_username }}
         </button>
         <div class="menu" *ngIf="showMenuId === posting.posting_id">
-          <button type="button" (click)="goDM(posting.posting_userId, posting.posting_username)">
+          <button type="button" (click)="goDM(posting.posting_userId, posting.auth_username)">
             <i class="fa-solid fa-message"></i>
             <span>DM</span>
           </button>
@@ -166,12 +166,12 @@
       </div>
     </div>
 
-    <div class="postingCardContent">
+    <div class="postingContent">
       <ng-container *ngIf="updateMode && userId === posting.posting_userId; else viewContent">
         <div class="form-group">
           <label for="content-{{posting.posting_id}}">Content</label>
-          <textarea id="content-{{posting.posting_id}}" class="form-control" [(ngModel)]="posting.posting_content"
-            placeholder="Enter content"></textarea>
+          <input type="text" id="content-{{posting.posting_id}}" class="form-control" [(ngModel)]="posting.posting_content"
+            placeholder="Enter content" />
         </div>
       </ng-container>
       <ng-template #viewContent>
