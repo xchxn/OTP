@@ -1,4 +1,3 @@
-// src/gateways/chat.gateway.ts
 import {
   WebSocketGateway,
   SubscribeMessage,
@@ -7,8 +6,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import Redis from 'ioredis';
-// import { createClient } from 'redis';
 import { Server, Socket } from 'socket.io';
+import { AuthService } from 'src/auth/auth.service';
+
+interface Receiver {
+  userId: string;
+  username?: string;
+}
 
 @WebSocketGateway({
   cors: {
@@ -22,8 +26,9 @@ export class DMGateway {
   private connectedUsers = new Map<string, string>();
   private redisClient;
 
-  constructor() {
-    // this.redisClient = createClient({ url: 'redis://localhost:6379' });
+  constructor(
+    private readonly authService: AuthService,
+  ) {
     this.redisClient = new Redis({
       host: 'localhost',
       port: 6379,
@@ -43,9 +48,7 @@ export class DMGateway {
     @MessageBody()
     data: {
       senderId: string;
-      senderUsername: string;
       receiverId: string;
-      receiverUsername: string;
       message: string;
     },
     @ConnectedSocket() client: Socket,
@@ -61,7 +64,6 @@ export class DMGateway {
       messagesKey,
       JSON.stringify({
         senderId: data.senderId,
-        senderUsername: data.senderUsername, // senderUsername 저장
         receiverId: data.receiverId,
         message: data.message,
         timestamp: new Date().toISOString(),
@@ -74,7 +76,6 @@ export class DMGateway {
       senderReceiversKey,
       JSON.stringify({
         userId: data.receiverId,
-        username: data.receiverUsername,
       }),
     );
 
@@ -83,7 +84,7 @@ export class DMGateway {
     const receiverSendersKey = `receivers:${data.receiverId}:senders`;
     await this.redisClient.sadd(
       receiverSendersKey,
-      JSON.stringify({ userId: data.senderId, username: data.senderUsername }),
+      JSON.stringify({ userId: data.senderId }),
     );
 
     if (receiverSocketId) {
@@ -97,9 +98,7 @@ export class DMGateway {
         pendingMessagesKey,
         JSON.stringify({
           senderId: data.senderId,
-          senderUsername: data.senderUsername,
           receiverId: data.receiverId,
-          receiverUsername: data.receiverUsername,
           message: data.message,
           timestamp: new Date().toISOString(),
         }),
@@ -111,8 +110,16 @@ export class DMGateway {
   async handleGetReceivers(
     @MessageBody() data: { senderId: string },
     @ConnectedSocket() client: Socket,
-  ): Promise<void> {
-    const receivers = await this.getReceiversForSender(data.senderId);
+  ): Promise<any> {
+    const receivers: Receiver[] = await this.getReceiversForSender(data.senderId);
+
+    // receivers id로 닉네임도 찾아서 반환
+    const receiverIds = receivers.map((receiver) => receiver.userId);
+    const receiverNames = await this.authService.getUsernames(receiverIds);
+    receivers.forEach((receiver, index) => {
+      receiver.username = receiverNames[index]?.username || 'Unknown';
+    });
+
     client.emit('receivers', receivers);
   }
 
@@ -167,7 +174,7 @@ export class DMGateway {
 
   @SubscribeMessage('connectUser')
   async handleConnect(
-    @MessageBody() data: { userId: string; username: string },
+    @MessageBody() data: { userId: string; },
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     await this.redisClient.set(`user:${data.userId}`, client.id);
@@ -199,7 +206,7 @@ export class DMGateway {
 
   async getReceiversForSender(
     senderId: string,
-  ): Promise<Array<{ userId: string; username: string }>> {
+  ): Promise<Array<{ userId: string; }>> {
     // 내가 메시지를 보낸 사람
     const receiverSetKey = `senders:${senderId}:receivers`;
     // 나에게 메시지를 보낸 사람
@@ -214,9 +221,9 @@ export class DMGateway {
     // Set 객체를 사용하여 중복을 제거하고 배열로 변환
     const uniqueContacts = new Set([...receivers, ...senders]);
     return Array.from(uniqueContacts).map((contact) => JSON.parse(contact));
-    // return await this.redisClient.smembers(receiverSetKey);
   }
 }
+
 function safeDateParse(dateString: string): Date {
   const date = new Date(dateString);
   return isNaN(date.getTime()) ? new Date(0) : date; // 유효하지 않은 날짜는 기본값으로 처리

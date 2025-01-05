@@ -244,4 +244,17 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
+
+  async getUsernames(userIds: string[]): Promise<any> {
+    // userIds의 순서 유지해서 반환
+    const users = await this.authRepository
+      .createQueryBuilder('auth')
+      .select(['auth.id as id', 'auth.username as username']) // alias 지정
+      .where('auth.id IN (:...userIds)', { userIds }) // 문자열 배열 처리
+      .getRawMany();
+
+      // userIds 순서에 맞게 결과 재정렬
+    const userMap = new Map(users.map(user => [user.id, user]));
+    return userIds.map(id => userMap.get(id) || { id, username: 'Unknown' });
+  }
 }
