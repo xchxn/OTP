@@ -23,6 +23,16 @@ export class MypageService {
   }
 
   async updateMyInfo(body: any): Promise<any> {
+    const duplication = await this.authRepository
+      .createQueryBuilder()
+      .select('username')
+      .where('username = :username', { username: body.username })
+      .getRawMany();
+
+    if (duplication.length > 0) {
+      return false;
+    }
+    
     const updateMyInfo = await this.authRepository
       .createQueryBuilder()
       .update()
