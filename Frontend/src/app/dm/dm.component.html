@@ -2,17 +2,16 @@
   <div class="receiver-list">
     <h3>DM List</h3>
     <div>
-      <button class="dmList" *ngFor="let receiver of dmList$ | async" (click)="selectDm(receiver.userId, receiver.username)">
+      <button class="dmList" *ngFor="let receiver of dmList$ | async" (click)="selectDm(receiver.userId)">
         {{ receiver.username }}
       </button>
     </div>
   </div>
   
   <div class="nowDmContainer">
-    <p> DM Now {{ selectedReceiverUsername }}</p>
     <div class="messageListContainer" #messageListContainer>
       <div class="messageContainer" *ngFor="let msg of messages"
-      [ngClass]="{'myMessage': msg.senderUsername === username, 'otherMessage': msg.senderUsername !== username}">
+      [ngClass]="{'myMessage': msg.senderId === userId, 'otherMessage': msg.senderId !== userId}">
         {{ msg.message }}
       </div>
     </div>

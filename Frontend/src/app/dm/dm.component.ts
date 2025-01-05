@@ -21,19 +21,17 @@ export class DmComponent {
   messageForm!: FormGroup;
 
   // 대상 유저와의 메시지 기록
-  messages: Array<{ senderId: string, senderUsername: string, message: string }> = [];
+  messages: Array<{ senderId: string, message: string }> = [];
   messageSubscription!: Subscription;
   fetchMessagesSubscription!: Subscription;
 
   // 디엠 유저 목록
   // dmList: Set<string> = new Set();
-  dmList: Array<{ userId: string, username: string }> = [];
-  dmList$: BehaviorSubject<Array<{ userId: string, username: string }>> = new BehaviorSubject<{ userId: string; username: string }[]>([]);
+  dmList: Array<{ userId: string, username?: string }> = [];
+  dmList$: BehaviorSubject<Array<{ userId: string, username?: string }>> = new BehaviorSubject<{ userId: string; username?: string; }[]>([]);
 
   selectedReceiverId!: string;
-  selectedReceiverUsername!: string;
   userId!: any;
-  username!: any;
 
   isInitialLoad: boolean = true;
 
@@ -52,8 +50,6 @@ export class DmComponent {
     // this.userId = this.cookieService.get('userId');
     this.userId = localStorage.getItem('userId');
     console.log(this.userId);
-    // this.username = this.cookieService.get('username');
-    this.username = localStorage.getItem('username');
 
     if (!this.userId) {
       alert("Please Login!");
@@ -62,11 +58,10 @@ export class DmComponent {
 
     this.route.queryParams.subscribe(params => {
       this.selectedReceiverId = params['userId'];
-      this.selectedReceiverUsername = params['username']
 
       // user query param이 존재하면 selectDm 자동 호출
       if (this.selectedReceiverId) {
-        this.selectDm(this.selectedReceiverId, this.selectedReceiverUsername);
+        this.selectDm(this.selectedReceiverId);
       }
     });
 
@@ -79,7 +74,7 @@ export class DmComponent {
     // DM 리스트 가져오기
     this.dmService.getReceivers(idData);
 
-    this.dmService.onReceivers().subscribe((receivers: Array<{ userId: string, username: string }>) => {
+    this.dmService.onReceivers().subscribe((receivers: Array<{ userId: string }>) => {
       // this.dmList = new Set(receivers); // 배열을 Set으로 변환하여 할당
       this.dmList = receivers;
       this.dmList$.next(this.dmList);
@@ -91,12 +86,8 @@ export class DmComponent {
 
       this.dmService.fetchMessages(this.userId, this.selectedReceiverId);
 
-      // if (!this.dmList.includes(message.senderId)) {
-      //   this.dmList.push(message.senderId);
-      //   this.dmList$.next(Array.from(this.dmList));
-      // }
       if (!this.dmList.find(dm => dm.userId === message.senderId)) {
-        this.dmList.push({ userId: message.senderId, username: message.senderUsername });
+        this.dmList.push({ userId: message.senderId });
         this.dmList$.next(this.dmList);
       }
     });
@@ -104,10 +95,9 @@ export class DmComponent {
 
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
-  selectDm(receiver: string, receiverUsername: string): void {
+  selectDm(receiver: string): void {
     this.isInitialLoad = true;
     this.selectedReceiverId = receiver;
-    this.selectedReceiverUsername = receiverUsername;
 
     // 기존 구독 해제
     if (this.fetchMessagesSubscription) {
@@ -151,9 +141,7 @@ export class DmComponent {
 
     const message = {
       senderId: this.userId,
-      senderUsername: this.username,
       receiverId: this.selectedReceiverId,
-      receiverUsername: this.selectedReceiverUsername,
       message: this.messageForm.value.message
     };
 
