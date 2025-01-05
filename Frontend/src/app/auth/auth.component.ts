@@ -4,11 +4,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+
 import { BehaviorSubject, merge } from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
@@ -29,8 +25,7 @@ interface registerInform {
   selector: 'app-auth',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule,
-    MatButtonModule],
+    FormsModule],
   providers: [CookieService],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',

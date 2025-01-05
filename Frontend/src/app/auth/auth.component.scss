@@ -1,200 +1,165 @@
-// .example-container form {
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   margin-left: 8px;
-//   padding: 12px 9px;
-
-//   background-color: #eaeaea;
-//   border: 1px solid #000000;
-//   border-radius: 9px;
-//   min-width: 320px;
-//   width: 50%;
-
-//   p {
-//     font-size: xx-large;
-//     font-weight: 900;
-//     margin: 12px 12px;
-//     padding: 12px 12px;
-//   }
-
-//   mat-form-field {
-//     min-width: 256px;
-//   }
-
-//   .buttonContainer {
-//     flex-direction: row;
-//     button {
-//       justify-self: center;
-//       margin: 6px 6px;
-//     }
-//   }
-// }
-
-// .example-container {
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-
-//   margin: 12px 12px;
-// }
-
-// .socialAuthContatiner {
-//   display: flex;
-//   flex-shrink: 1;
-
-//   justify-content: center;
-//   align-items: center;
-// }
-
-// .kakaoLoginButton {
-//   background: url('C:/otp/Frontend/public/kakaoLoginButton.png') no-repeat;
-//   background-size: contain; // 아이콘 크기 조정
-//   display: inline-block;
-//   width: 200px;
-//   cursor: pointer;
-//   border: none;
-//   height: 40px;
-//   margin: 12px 12px;
-//   // &:hover {
-//   //   background-color: #0056b3;
-//   // }
-// }
-
-// .googleLoginButton {
-//   background-image: url('C:/otp/Frontend/public/googleLoginButton.svg');
-//   background-repeat: no-repeat;
-//   display: inline-block;
-//   width: 200px;
-//   height: 40px;
-//   line-height: 40px;
-//   font-size: 16px;
-//   margin: 12px 12px;
-//   cursor: pointer;
-//   border: none;
-// }
-
-// Variables
-$primary-color: #2E3B55;
-$accent-color: #FFC107;
-$background-color: #F0F4F8;
-$error-color: #D32F2F;
-$card-background: #FFFFFF;
-
-// Layout
-.example-container {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: $background-color;
-}
-
-.loginForm, .registerForm {
-  width: 100%;
-  max-width: 400px;
   padding: 2rem;
-  border-radius: 8px;
-  background-color: $card-background;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  animation: fade 0.5s ease-in-out;
-  position: relative;
+  background-color: var(--background-color);
 }
 
-@keyframes fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-// Form Title
-p {
-  font-size: 20px;
-  font-weight: bold;
-  color: $primary-color;
-  text-align: center;
-  margin: 0 0 1rem 0;
-}
-
-// Form Fields
-mat-form-field {
+.loginForm,
+.registerForm {
   width: 100%;
-  margin-bottom: 1rem;
+  max-width: 420px;
+  padding: 2.5rem;
+  background-color: var(--card-background);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-  mat-label {
-    font-size: 14px;
-  }
-  
-  input {
-    font-size: 14px;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
 
-  mat-error {
-    font-size: 12px;
-    color: $error-color;
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    text-align: center;
   }
 }
 
-// Button Styles
-.buttonContainer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-  
-  button {
-    background-color: $primary-color;
-    color: #FFFFFF;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 14px;
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--subtle-color);
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--form-background);
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background-color: var(--card-background);
+      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+    }
+
+    &:hover:not(:focus) {
+      border-color: var(--subtle-color);
+    }
+  }
+
+  .hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--subtle-color);
+    margin-top: 0.5rem;
+  }
+}
+
+.password-input {
+  position: relative;
+
+  .toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0.25rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    color: var(--subtle-color);
+    transition: color 0.2s ease;
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      color: var(--accent-color);
+    }
+
+    .icon {
+      font-size: 1.25rem;
     }
   }
 }
 
-.socialAuthContainer {
+.button-container {
   display: flex;
-  justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
-  
-  .kakaoLoginButton, .googleLoginButton {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-size: cover;
+  margin-top: 2rem;
+
+  button {
+    flex: 1;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.btn-primary {
+      background-color: var(--accent-color);
+      color: white;
+
+      &:hover:not(:disabled) {
+        background-color: darken(#007AFF, 5%);
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    &.btn-secondary {
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+
+      &:hover {
+        background-color: darken(#F5F5F7, 5%);
+      }
+    }
+  }
+}
+
+.social-auth-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--separator-color);
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
     transition: transform 0.2s ease;
 
     &:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
-  }
 
-  .kakaoLoginButton {
-    background: url('C:/otp/Frontend/public/kakaoLoginButton.png') center center no-repeat;
-
-    // background: url('/Frontend/src/assets/images/kakao-icon.png') center center no-repeat;
-  }
-
-  .googleLoginButton {
-    background: url('C:/otp/Frontend/public/googleLoginButton.png') center center no-repeat;
-    // background: url('/Frontend/src/assets/images/google-icon.svg') center center no-repeat;
-  }
-}
-
-// Toggle Form Button
-button[type="button"] {
-  background-color: $accent-color;
-  color: $primary-color;
-  font-weight: bold;
-
-  &:hover {
-    background-color: lighten($accent-color, 10%);
+    img {
+      width: 180px;
+      height: auto;
+      border-radius: 8px;
+    }
   }
 }

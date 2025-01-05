@@ -16,25 +16,46 @@ nav, footer {
 
 /* Global Theme Variables */
 :root {
-  /* 라이트 모드 */
-  --background-color: #ffffff;
-  --text-color: #333333;
-  --primary-color: #2E3B55;
-  --secondary-color: #F9FAFB;
-  --accent-color: #FFC107;
-  --error-color: #D32F2F;
+  /* Light mode - Apple Design System Colors */
+  --background-color: #FFFFFF;
+  --text-color: #1D1D1F;
+  --primary-color: #0066CC;
+  --secondary-color: #F5F5F7;
+  --accent-color: #007AFF;
+  --error-color: #FF3B30;
+  --success-color: #34C759;
+  --warning-color: #FF9500;
+  --border-color: #D2D2D7;
+  --subtle-color: #86868B;
+  
+  /* Additional UI Colors */
+  --card-background: #FFFFFF;
+  --icon-background: rgba(60, 60, 67, 0.3);
+  --hover-background: rgba(0, 122, 255, 0.1);
+  --separator-color: rgba(60, 60, 67, 0.1);
+  --form-background: #F5F5F7;
 }
 
 .dark-mode {
-  /* 다크 모드 */
-  --background-color: #121212;
-  --text-color: #ffffff;
-  --primary-color: #1F2937;
-  --secondary-color: #2D3748;
-  --accent-color: #FFA726;
-  --error-color: #EF5350;
+  /* Dark mode - Apple Design System Colors */
+  --background-color: #000000;
+  --text-color: #F5F5F7;
+  --primary-color: #0A84FF;
+  --secondary-color: #1C1C1E;
+  --accent-color: #0A84FF;
+  --error-color: #FF453A;
+  --success-color: #32D74B;
+  --warning-color: #FF9F0A;
+  --border-color: #424245;
+  --subtle-color: #98989D;
+  
+  /* Additional UI Colors - Dark Mode */
+  --card-background: #1C1C1E;
+  --icon-background: rgba(235, 235, 245, 0.3);
+  --hover-background: rgba(10, 132, 255, 0.1);
+  --separator-color: rgba(235, 235, 245, 0.1);
+  --form-background: #2C2C2E;
 }
-
 
 *, *::before, *::after {
   box-sizing: inherit;

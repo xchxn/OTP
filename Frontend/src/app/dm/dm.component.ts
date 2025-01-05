@@ -19,21 +19,21 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class DmComponent {
   messageForm!: FormGroup;
-  
+
   // 대상 유저와의 메시지 기록
-  messages: Array<{ senderId: string, senderUsername: string, message: string }> = [];
+  messages: Array<{ senderId: string, message: string }> = [];
   messageSubscription!: Subscription;
   fetchMessagesSubscription!: Subscription;
 
   // 디엠 유저 목록
   // dmList: Set<string> = new Set();
-  dmList: Array<{ userId: string, username: string }> = [];
-  dmList$: BehaviorSubject<Array<{ userId: string, username: string }>> = new BehaviorSubject<{ userId: string; username: string }[]>([]);
+  dmList: Array<{ userId: string, username?: string }> = [];
+  dmList$: BehaviorSubject<Array<{ userId: string, username?: string }>> = new BehaviorSubject<{ userId: string; username?: string; }[]>([]);
 
   selectedReceiverId!: string;
-  selectedReceiverUsername!: string;
   userId!: any;
-  username!: any;
+
+  isInitialLoad: boolean = true;
 
   @ViewChild('messageListContainer') messageListContainer!: ElementRef;
 
@@ -50,21 +50,18 @@ export class DmComponent {
     // this.userId = this.cookieService.get('userId');
     this.userId = localStorage.getItem('userId');
     console.log(this.userId);
-    // this.username = this.cookieService.get('username');
-    this.username = localStorage.getItem('username');
 
-    if(!this.userId) {
+    if (!this.userId) {
       alert("Please Login!");
       this.router.navigate([`/auth`]);
     }
 
     this.route.queryParams.subscribe(params => {
       this.selectedReceiverId = params['userId'];
-      this.selectedReceiverUsername = params['username'];
 
       // user query param이 존재하면 selectDm 자동 호출
       if (this.selectedReceiverId) {
-        this.selectDm(this.selectedReceiverId, this.selectedReceiverUsername);
+        this.selectDm(this.selectedReceiverId);
       }
     });
 
@@ -77,7 +74,7 @@ export class DmComponent {
     // DM 리스트 가져오기
     this.dmService.getReceivers(idData);
 
-    this.dmService.onReceivers().subscribe((receivers: Array<{ userId: string, username: string }>) => {
+    this.dmService.onReceivers().subscribe((receivers: Array<{ userId: string }>) => {
       // this.dmList = new Set(receivers); // 배열을 Set으로 변환하여 할당
       this.dmList = receivers;
       this.dmList$.next(this.dmList);
@@ -89,77 +86,73 @@ export class DmComponent {
 
       this.dmService.fetchMessages(this.userId, this.selectedReceiverId);
 
-      // if (!this.dmList.includes(message.senderId)) {
-      //   this.dmList.push(message.senderId);
-      //   this.dmList$.next(Array.from(this.dmList));
-      // }
       if (!this.dmList.find(dm => dm.userId === message.senderId)) {
-        this.dmList.push({ userId: message.senderId, username: message.senderUsername });
+        this.dmList.push({ userId: message.senderId });
         this.dmList$.next(this.dmList);
       }
     });
   }
 
-  ngAfterViewInit() {
-    this.scrollToBottom(); // 컴포넌트 초기 로딩 시 스크롤 이동
-  }
-
-  // 스크롤을 가장 아래로 이동시키는 함수
-  scrollToBottom(): void {
-    try {
-      this.messageListContainer.nativeElement.scrollTop = this.messageListContainer.nativeElement.scrollHeight;
-    } catch (err) {
-      console.error('Scroll to bottom failed', err);
-    }
-  }
-
   // Dm리스트에서 하나를 선택했을 때 소켓 연결?
   // receiverId: string
-  selectDm(receiver: string, receiverUsername: string): void {
+  selectDm(receiver: string): void {
+    this.isInitialLoad = true;
     this.selectedReceiverId = receiver;
-    this.selectedReceiverUsername = receiverUsername;
 
-    // const senderId = this.cookieService.get('userId');
+    // 기존 구독 해제
+    if (this.fetchMessagesSubscription) {
+      this.fetchMessagesSubscription.unsubscribe();
+    }
 
     // 서버로부터 선택된 수신자와의 메시지 기록을 요청
     this.dmService.fetchMessages(this.userId, this.selectedReceiverId);
 
     // 서버로부터 받은 메시지 기록 구독
-    this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe((messages) => {
-      this.messages = messages; // 기존 메시지 기록으로 업데이트
+    this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe({
+      next: (messages) => {
+        console.log('Received messages:', messages);
+        this.messages = messages; // 기존 메시지 기록으로 업데이트
+        
+        // Only scroll to bottom on initial load
+        if (this.isInitialLoad) {
+          setTimeout(() => {
+            this.scrollToBottom();
+            this.isInitialLoad = false;
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching messages:', error);
+      }
     });
+  }
 
-    this.scrollToBottom(); // 수신자 변경 시 스크롤을 가장 아래로 이동
+  private scrollToBottom(): void {
+    if (this.messageListContainer) {
+      const element = this.messageListContainer.nativeElement;
+      element.scrollTop = element.scrollHeight;
+    }
   }
 
   send(): void {
-    if (this.messageForm.invalid) {
+    if (this.messageForm.invalid || !this.selectedReceiverId) {
       return;
     }
 
     const message = {
       senderId: this.userId,
-      senderUsername: this.username,
       receiverId: this.selectedReceiverId,
-      receiverUsername: this.selectedReceiverUsername,
       message: this.messageForm.value.message
     };
 
-    console.log(message);
     this.dmService.sendMessage(message);
-
-    // 메시지 보낸 후, dmList에 상대방이 없으면 추가
-    // if (!this.dmList.includes(this.selectedReceiverId)) {
-    //   this.dmList.push(this.selectedReceiverId); // DM 리스트에 추가
-    //   this.dmList$.next(Array.from(this.dmList));
-    // }
-    if (!this.dmList.find(dm => dm.userId === this.selectedReceiverId)) {
-      this.dmList.push({ userId: this.selectedReceiverId, username: this.selectedReceiverUsername });
-      this.dmList$.next(this.dmList);
-    }
-
-
     this.messageForm.reset();
+
+    // 새 메시지를 보낸 후 메시지 목록을 다시 가져옴
+    setTimeout(() => {
+      this.dmService.fetchMessages(this.userId, this.selectedReceiverId);
+      this.scrollToBottom(); // Scroll to bottom after sending a new message
+    }, 100);
   }
 
   ngOnDestroy(): void {

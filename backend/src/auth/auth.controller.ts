@@ -137,4 +137,9 @@ export class AuthController {
       throw new UnauthorizedException('Failed to refresh access token');
     }
   }
+
+  // @Post('getUsernames')
+  // async getUsernames(@Body() body: { userIds: string[] }): Promise<any> {
+  //   return this.authService.getUsernames(body.userIds);
+  // }
 }

@@ -21,9 +21,6 @@ export class PostingEntity {
   @Column({ length: 100 })
   userId: string;
 
-  @Column({ length: 50 })
-  username: string;
-
   @Column('json')
   objekts: { have: number[]; want: number[] }; // 숫자 배열을 JSON으로 저장
 

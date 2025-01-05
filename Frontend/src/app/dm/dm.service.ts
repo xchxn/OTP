@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -19,6 +19,13 @@ export class DmService {
   ) {
     this.connect(this.cookieService.get('userId'));
   }
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+      'Content-Type': 'application/json'
+    })
+  };
 
   private connect(userId: string): void {
     this.socket = io(this.apiUrl, { autoConnect: false, transports: [ "websocket" ] });
@@ -54,25 +61,29 @@ export class DmService {
   }
   
   // 서버로부터 수신자 목록 수신
-  onReceivers(): Observable<Array<{ userId: string, username: string }>> {
+  onReceivers(): Observable<Array<{ userId: string }>> {
     return new Observable((observer) => {
-      this.socket.on('receivers', (receivers: Array<{ userId: string, username: string }>) => {
+      this.socket.on('receivers', (receivers: Array<{ userId: string }>) => {
         observer.next(receivers);
       });
     });
   }
 
   // 메시지 보내기
-  sendMessage(message: { senderId: string, senderUsername: string, receiverId: string, message: string }): void {
+  sendMessage(message: { senderId: string, receiverId: string, message: string }): void {
     this.socket.emit('dm', message);
   }
 
   // 메시지 수신 대기
-  onMessage(): Observable<{ senderId: string, senderUsername: string, message: string }> {
-    return new Observable<{ senderId: string, senderUsername: string, message: string }>(observer => {
+  onMessage(): Observable<{ senderId: string, message: string }> {
+    return new Observable<{ senderId: string, message: string }>(observer => {
       this.socket.on('dm', (data) => {
         observer.next(data);
       });
     });
   }
+
+  // getUsernames(userIds: string[]): Observable<any> {
+  //   return this.http.post<any>(`${this.apiUrl}/auth/getUsernames`, { userIds } ,this.httpOptions);
+  // }
 }
