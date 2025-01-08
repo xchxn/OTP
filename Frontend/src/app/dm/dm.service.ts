@@ -10,7 +10,6 @@ import { environment } from '../../environments/environments';
 })
 export class DmService {
   private socket!: Socket;
-  private url = 'http://localhost:3000';  // WebSocket 서버 URL
   apiUrl = environment.apiUrl;
   
   constructor(
@@ -82,8 +81,4 @@ export class DmService {
       });
     });
   }
-
-  // getUsernames(userIds: string[]): Observable<any> {
-  //   return this.http.post<any>(`${this.apiUrl}/auth/getUsernames`, { userIds } ,this.httpOptions);
-  // }
 }

@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 import { BehaviorSubject, merge } from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { environment } from '../../environments/environments';
 
 interface authInform {
   id: string;
@@ -32,6 +33,8 @@ interface registerInform {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
+  apiUrl = environment.apiUrl;
+
   loginForm!: FormGroup;
   registerForm!: FormGroup;
 
@@ -50,11 +53,6 @@ export class AuthComponent {
     private formBuilder: FormBuilder,
     private router: Router
   ) {
-    // 이메일 입력 오류 컨트롤을 위한 merge
-    // 오류 발생 구간
-    // merge(this.registerForm.value.email.statusChanges, this.registerForm.value.email.valueChanges)
-    //   .pipe(takeUntilDestroyed())
-    //   .subscribe(() => this.updateErrorMessage());
   }
 
   // 로그인 폼과 회원가입 폼 전환
@@ -73,7 +71,7 @@ export class AuthComponent {
       username: ['', Validators.required],
       email: ['',  Validators.compose([ Validators.required, Validators.email ])],
       password: ['',  Validators.compose([ Validators.required, Validators.minLength(6) ])],
-      passwordCheck: ['', Validators.required]
+      // passwordCheck: ['', Validators.required]
     });
   }
 
@@ -95,12 +93,16 @@ export class AuthComponent {
       error: (err) => {
         if (err.status === 400) {
           console.error('Bad Request: Invalid login credentials.');
+          alert('Bad Request: Invalid login credentials.');
         } else if (err.status === 401) {
           console.error('Unauthorized: Incorrect username or password.');
+          alert('Incorrect username or password.');
         } else if (err.status === 500) {
           console.error('Server Error: Please try again later.');
+          alert('Server Error: Please try again later.');
         } else {
           console.error('An unknown error occurred:', err.message);
+          alert('An unknown error occurred:');
         }
       },
       complete: () => {
@@ -129,11 +131,11 @@ export class AuthComponent {
   }
 
   onKakaoGetCode(): void {
-    window.location.href = `http://localhost:3000/auth/kakao`;
+    window.location.href = `${this.apiUrl}/auth/kakao`;
   }
 
   onGoogleGetCode(): void {
-    window.location.href = `http://localhost:3000/auth/google`;
+    window.location.href = `${this.apiUrl}/auth/google`;
   }
 
   // 이메일 입력 오류 메시지

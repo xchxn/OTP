@@ -1,6 +1,6 @@
   <nav>
-      <button routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
-        Home
+      <button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page">
+        OTP
       </button>
       <button routerLink="/board" routerLinkActive="active" ariaCurrentWhenActive="page">
         Board
@@ -27,7 +27,7 @@
 <footer>
   <div class="footerContainer">
     <div class="license">
-      <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+      <p>&copy; 2024 OTP. All rights reserved.</p>
       <p>
         This project is licensed under the
         <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">

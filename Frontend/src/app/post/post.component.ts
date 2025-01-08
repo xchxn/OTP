@@ -40,7 +40,7 @@ export class PostComponent {
     this.postingForm = this.formBuilder.group({
       title: [''],
       content: [''],
-      userId: [this.cookieService.get('userId')],
+      userId: [localStorage.getItem('userId')],
       objekt: this.formBuilder.group({
         have: this.formBuilder.array([]),
         want: this.formBuilder.array([])

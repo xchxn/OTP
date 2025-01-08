@@ -30,6 +30,11 @@ export class MypageComponent {
   ngOnInit() {
     this.userId = localStorage.getItem('userId');
 
+    if (!this.userId) {
+      alert("Please Login!");
+      this.router.navigate([`/auth`]);
+    }
+
     this.updateForm = this.formBuilder.group({
       username: [''],
     });

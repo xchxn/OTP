@@ -47,9 +47,7 @@ export class DmComponent {
   ) { }
 
   ngOnInit() {
-    // this.userId = this.cookieService.get('userId');
     this.userId = localStorage.getItem('userId');
-    console.log(this.userId);
 
     if (!this.userId) {
       alert("Please Login!");
