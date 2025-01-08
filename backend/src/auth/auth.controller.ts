@@ -24,11 +24,15 @@ import {
   ApiConsumes,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('인증 API')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private configService: ConfigService
+  ) {}
 
   // 일반 로그인, 회원가입
   @ApiProduces('application/json')
@@ -66,10 +70,10 @@ export class AuthController {
       await this.authService.confirmEmail(token);
 
       // 이메일 확인 후 리다이렉트
-      res.redirect('http://localhost:4200/auth'); // 성공 페이지로 리다이렉트
+      res.redirect(`${this.configService.get<string>('CLIENT_URL')}/auth`); // 성공 페이지로 리다이렉트
     } catch (error) {
       // 이메일 확인 실패 시 리다이렉트
-      res.redirect('http://localhost:4200/auth'); // 실패 페이지로 리다이렉트
+      res.redirect(`${this.configService.get<string>('CLIENT_URL')}/auth`); // 실패 페이지로 리다이렉트
     }
   }
 
@@ -92,7 +96,7 @@ export class AuthController {
     const userId = user.id;
     const username = user.username;
     res.redirect(
-      `http://localhost:4200?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
+      `${this.configService.get<string>('CLIENT_URL')}?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
     );
   }
 
@@ -115,7 +119,7 @@ export class AuthController {
     const username = user.username;
 
     res.redirect(
-      `http://localhost:4200?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
+      `${this.configService.get<string>('CLIENT_URL')}?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
     );
 
     // return req.user;
@@ -137,9 +141,4 @@ export class AuthController {
       throw new UnauthorizedException('Failed to refresh access token');
     }
   }
-
-  // @Post('getUsernames')
-  // async getUsernames(@Body() body: { userIds: string[] }): Promise<any> {
-  //   return this.authService.getUsernames(body.userIds);
-  // }
 }

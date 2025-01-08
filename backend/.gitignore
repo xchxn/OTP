@@ -36,4 +36,6 @@ lerna-debug.log*
 
 # Environment Setting
 .env
-datasource.config.ts
+.env.prod
+.docker
+docker-compose.yml
