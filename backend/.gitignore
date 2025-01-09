@@ -39,3 +39,5 @@ lerna-debug.log*
 .env.prod
 .docker
 docker-compose.yml
+Dockerfile
+.dockerignore

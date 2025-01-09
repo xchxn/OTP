@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AuthEntity } from 'src/auth/entities/auth.entity';
 import { PostingEntity } from 'src/board/entities/posting.entity';
 import { Brackets, Repository } from 'typeorm';
@@ -9,11 +9,9 @@ export class SearchService {
     @Inject('POSTING_REPOSITORY')
     private postingRepository: Repository<PostingEntity>,
   ) {}
-
   // 하나의 오브젝트로 하나의 오브젝트 찾기
   // 사용자는 have와 want 각각 하나씩 입력
   async oneToOneSearch(body: any): Promise<any> {
-    console.log(body);
     const oneSearch = await this.postingRepository
       .createQueryBuilder()
       .select('id')
@@ -71,7 +69,7 @@ export class SearchService {
 
     const resPostingList = await this.postingRepository
       .createQueryBuilder('posting')
-      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.userId')
       .select([
         'posting.id',
         'posting.title',
@@ -79,11 +77,10 @@ export class SearchService {
         'posting.objekts',
         'posting.createdAt',
         'posting.updatedAt',
+        'auth.username',
       ])
-      .addSelect('auth.username', 'username')
       .where('posting.id IN (:...ids)', { ids })
       .getRawMany();
-    // console.log(resPostingList);
 
     return resPostingList;
   }
@@ -91,6 +88,16 @@ export class SearchService {
   // 게시글 기반으로 want와 have 하나씩 비교해서 일치하는 것 있으면 반환
   async autoMatching(body: any): Promise<any> {
     console.log(body);
+    // 자신의 포스팅 개수 확인하기
+    const myPostingCount = await this.postingRepository
+      .createQueryBuilder('posting')
+      .where('userId = :userId', { userId: body.user })
+      .getCount();
+
+    if (myPostingCount > 1) {
+      throw new BadRequestException('Your posting is more than one. Please makes your posting only one.');
+    }
+
     // 자신의 포스팅에서 오브젝트 want배열 가져오기
     const getArr = await this.postingRepository
       .createQueryBuilder('posting')
@@ -104,7 +111,7 @@ export class SearchService {
       .select('id');
 
     // 배열의 각 값이 objekt의 want 배열에 존재하는지 확인하는 조건 추가
-    getArr.wantArray.forEach((value) => {
+    getArr.wantArray.forEach((value: any) => {
       queryBuilder.orWhere(
         "JSON_CONTAINS(posting.objekts->'$.have', :haveValue)",
         { haveValue: JSON.stringify(value) },
@@ -120,7 +127,7 @@ export class SearchService {
 
     const resPostingList = await this.postingRepository
       .createQueryBuilder('posting')
-      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.username')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.userId')
       .select([
         'posting.id',
         'posting.title',
@@ -128,8 +135,8 @@ export class SearchService {
         'posting.objekts',
         'posting.createdAt',
         'posting.updatedAt',
+        'auth.username',
       ])
-      .addSelect('auth.username', 'username')
       .where('posting.id IN (:...ids)', { ids })
       .getRawMany();
     console.log(resPostingList);

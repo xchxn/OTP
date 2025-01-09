@@ -40,8 +40,12 @@ export class AuthService {
       where: { id: req.id },
     });
 
-    if (existingUser) {
-      throw new BadRequestException('ID already in use.');
+    const existingUsername = await this.authRepository.findOne({
+      where: { username: req.username },
+    });
+
+    if (existingUser || existingUsername) {
+      throw new BadRequestException('ID or username already in use.');
     }
 
     const emailConfirmationToken = randomBytes(16).toString('hex');
@@ -65,7 +69,6 @@ export class AuthService {
   }
 
   async sendEmail(to: string, subject: string, token: string): Promise<any> {
-    // const url = `${token}`;
     const mailOptions = {
       // from: '"Example Team" <example@example.com>',
       to: to,
