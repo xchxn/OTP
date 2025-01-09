@@ -108,7 +108,6 @@ export class DmComponent {
     // 서버로부터 받은 메시지 기록 구독
     this.fetchMessagesSubscription = this.dmService.onFetchMessages().subscribe({
       next: (messages) => {
-        console.log('Received messages:', messages);
         this.messages = messages; // 기존 메시지 기록으로 업데이트
         
         // Only scroll to bottom on initial load

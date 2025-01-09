@@ -16,7 +16,7 @@ export class AppComponent {
   isLoggedIn = false;
   userId!: any;
   username!: any;
-  isDarkMode = false;
+  isDarkMode = true;
 
   constructor(
     private authService: AuthService,
@@ -25,7 +25,7 @@ export class AppComponent {
     private themeService: ThemeService
   ) {
     this.themeService.loadTheme();
-  this.isDarkMode = this.themeService.isDarkMode();
+    this.isDarkMode = this.themeService.isDarkMode();
   }
   // 로그아웃 함수
   logout() {

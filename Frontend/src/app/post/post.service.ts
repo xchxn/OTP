@@ -35,11 +35,6 @@ export class PostService {
     return this.http.post<any>(`${this.apiUrl}/board/thumbnail`, body);
   }
 
-  // 포스팅 CRUD
-  // createPosting(body: any): Observable<any> {
-  //   return this.http.post<any>(`${this.apiUrl}/board/create`, body, this.httpOptions);
-  // }
-
   createPosting(body: any): Observable<any> {
     const token = localStorage.getItem('accessToken');
     console.log(token);
@@ -52,7 +47,7 @@ export class PostService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           console.log(error.error.message);
-          if (error.status === 401 && error.error.message === 'jwt expired' ) { //  && error.error.message === 'jwt expired'
+          if (error.status === 401 && error.error.message === 'jwt expired' ) {
             // 토큰 만료 에러가 발생했을 경우, 토큰 갱신을 시도
             console.log("토큰 갱신");
             return this.handleTokenExpiration().pipe(

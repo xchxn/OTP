@@ -122,10 +122,24 @@ export class AuthComponent {
       next: (res) => {
         console.log('Register in successfully!', res);
         // 이메일 인증 후 로그인 해주세요 팝업
-        alert('회원가입이 완료 되었습니다. 이메일 인증 후 로그인 해주세요');
+        alert('Successfully registered! Please check your email for verification.');
         this.router.navigate([`/`]);
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if (err.status === 400) {
+          console.error('Bad Request: ID or Username already in use.');
+          alert('Bad Request: ID or Username already in use.');
+        } else if (err.status === 401) {
+          console.error('Unauthorized: Incorrect username or password.');
+          alert('Incorrect username or password.');
+        } else if (err.status === 500) {
+          console.error('Server Error: Please try again later.');
+          alert('Server Error: Please try again later.');
+        } else {
+          console.error('An unknown error occurred:', err.message);
+          alert('An unknown error occurred:');
+        }
+      },
       complete: () => console.log('register success, please confirm email')
     });
   }
