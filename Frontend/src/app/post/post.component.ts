@@ -40,7 +40,7 @@ export class PostComponent {
     this.postingForm = this.formBuilder.group({
       title: [''],
       content: [''],
-      userId: [this.cookieService.get('userId')],
+      userId: [localStorage.getItem('userId')],
       objekt: this.formBuilder.group({
         have: this.formBuilder.array([]),
         want: this.formBuilder.array([])
@@ -84,7 +84,7 @@ export class PostComponent {
       },
       error: (err) => {
         console.error(err);
-        alert('objekt가 존재하지 않음');
+        alert('objekt is not exist');
       },
       complete: () => console.log('Data loading complete')
     });
@@ -103,7 +103,7 @@ export class PostComponent {
       },
       error: (err) => {
         console.error(err);
-        alert('objekt가 존재하지 않음');
+        alert('objekt is not exist');
       },
       complete: () => console.log('Data loading complete')
     });
@@ -177,7 +177,10 @@ export class PostComponent {
         console.log(data);
         this.router.navigate(['/board'])
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        alert('Failed to create posting');
+      },
       complete: () => {
         console.log('Data loading complete');
       }

@@ -37,6 +37,7 @@ export class BoardService {
   async getMyPost(body: any): Promise<any> {
     const myPost = await this.postingRepository
       .createQueryBuilder('posting')
+      .leftJoinAndSelect(AuthEntity, 'auth', 'auth.id = posting.userId')
       .select([
         'posting.id',
         'posting.userId',
@@ -45,6 +46,7 @@ export class BoardService {
         'posting.objekts',
         'posting.createdAt',
         'posting.updatedAt',
+        'auth.username',
       ])
       .where('userId = :userId', { userId: body.userId })
       .getRawMany();
@@ -87,10 +89,11 @@ export class BoardService {
 
   // 포스팅 삭제
   async deletePosting(body: any): Promise<any> {
+    console.log(body);
     const deleteTicket = await this.postingRepository
       .createQueryBuilder()
       .delete()
-      .where('id = :id', { id: body })
+      .where('id = :id', { id: body.posting_id })
       .execute();
     return deleteTicket;
   }

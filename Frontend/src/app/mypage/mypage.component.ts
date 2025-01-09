@@ -25,10 +25,15 @@ export class MypageComponent {
     private cookieService: CookieService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.userId = localStorage.getItem('userId');
+
+    if (!this.userId) {
+      alert("Please Login!");
+      this.router.navigate([`/auth`]);
+    }
 
     this.updateForm = this.formBuilder.group({
       username: [''],
@@ -43,7 +48,16 @@ export class MypageComponent {
       next: (data) => {
         this.updateForm.patchValue(data);
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if (err.status === 404) {
+          alert('사용자를 찾을 수 없습니다.');
+        } else if (err.status === 401) {
+          alert('인증이 필요합니다.');
+          this.router.navigate(['/auth']);
+        } else {
+          alert('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+        }
+      },
       complete: () => console.log('Data loading complete')
     });
   }
@@ -54,25 +68,48 @@ export class MypageComponent {
     this.mypageService.updateMyInfo(JSON.stringify({ userId: this.userId, ...updateFormValue })).subscribe({
       next: (data) => {
         console.log(data);
+        alert('Successfully updated my info.');
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if (err.status === 409) {
+          alert('Already exists username.');
+        } else if (err.status === 404) {
+          alert('Not found user.');
+        } else {
+          alert('Failed to update my info.');
+        }
+      },
       complete: () => {
         console.log('Update complete');
         this.loadData();
+        this.router.navigate(['/'])
       }
     });
   }
 
   deleteMyInfo(): void {
-    this.mypageService.deleteMyInfo(this.userId).subscribe({
-      next: (data) => {
-        console.log(data);
-      },
-      error: (err) => console.error(err),
-      complete: () => {
-        console.log('Delete complete');
-        this.router.navigate(['/auth']);
-      }
-    });
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      this.mypageService.deleteMyInfo(this.userId).subscribe({
+        next: (data) => {
+          console.log('Delete successful:', data);
+          localStorage.removeItem('userId');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          alert('Successfully deleted my info.');
+          this.router.navigate(['/auth']);
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            alert('Cannot find user to delete.');
+          } else {
+            alert('Failed to delete my info, please try again.');
+          }
+        },
+        complete: () => {
+          console.log('Delete complete');
+          this.router.navigate(['/auth']);
+        }
+      });
+    }
   }
 }

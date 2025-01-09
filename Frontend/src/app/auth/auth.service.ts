@@ -36,11 +36,10 @@ export class AuthService {
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshtoken', data.refreshtoken);
     localStorage.setItem('userId', data.userId);
-    // localStorage.setItem('username', data.username);
-    // this.cookieService.set('username', data.username);
-    this.cookieService.set('userId', data.userId);
-    console.log(data);
+
     // this.cookieService.set('accessToken', token , 7 * 24 * 60 * 60 * 1000);
+    // this.cookieService.set('userId', data.userId);
+    console.log(data);
     this.isLoggedInSubject.next(true);
   }
   // 로그아웃 함수
@@ -48,16 +47,14 @@ export class AuthService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshtoken');
     localStorage.removeItem('userId');
-    // localStorage.removeItem('username');
 
     localStorage.clear()
     console.log("logout");
+
     // this.cookieService.delete('accessToken');
-    this.cookieService.delete('userId');
+    // this.cookieService.delete('userId');
     // this.cookieService.delete('username');
-
     this.isLoggedInSubject.next(false);
-
     this.router.navigate(['/auth']);
   }
 
@@ -83,7 +80,7 @@ export class AuthService {
   // 갱신된 액세스 토큰 저장
   private storeAccessToken(token: string): void {
     localStorage.setItem('accessToken', token);
-    this.cookieService.set('accessToken', token); // 쿠키나 로컬스토리지에 저장
+    // this.cookieService.set('accessToken', token);
   }
 
   // Refresh token을 가져오는 메서드 (예: 쿠키 또는 로컬 스토리지에서 가져오기)

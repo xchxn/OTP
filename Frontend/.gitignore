@@ -44,3 +44,5 @@ Thumbs.db
 # Environment Setting
 .env
 src/environments/
+docker-compose.yml
+Dockerfile

@@ -103,7 +103,10 @@ export class BoardComponent {
         this.objektFilter = data;
         console.log(this.objektFilter);
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        alert('An unknown error occurred:');
+      },
       complete: () => {
         console.log('Data loading complete');
         this.objektFilterForm.reset();
@@ -125,7 +128,14 @@ export class BoardComponent {
         }));
         this.getThumbnail();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if (err.status === 404) {
+          console.log('No data found');
+        } else {
+          console.error('Error fetching data', err);
+          alert('An unknown error occurred:');
+        } 
+      },
       complete: () => console.log('Data loading complete')
     });
   }
@@ -201,11 +211,13 @@ export class BoardComponent {
   searchObjekt(): void {
     // 필터로 추가해서 찾기
     const target = this.searchForm.value.objekt;
-    console.log("target", target);
+    if(this.searchForm.get('objekt.have')?.value.length === 0 && this.searchForm.get('objekt.want')?.value.length === 0) {
+      alert("Objekt Array is empty");
+      return;
+    }
     this.boardService.searchObjekt(target).subscribe({
       next: (data) => {
         // 포스팅 배열 재생성
-        console.log(data);
         this.postings = data.map((posting: any) => ({
           ...posting,
           thumbnails: {
@@ -225,7 +237,6 @@ export class BoardComponent {
     this.boardService.searchWithPosting(user).subscribe({
       next: (data) => {
         // 포스팅 배열 재생성
-        console.log(data);
         this.postings = data.map((posting: any) => ({
           ...posting,
           thumbnails: {
@@ -235,7 +246,14 @@ export class BoardComponent {
         }));
         this.getThumbnail();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if (err.status === 400) {
+          alert('You have postings more than one, please make your posting one');
+        } else {
+          console.error('An error occurred:', err);
+          alert('An unknown error occurred:');
+        }
+      },
       complete: () => console.log('Thumbnail loading complete')
     });
   }
@@ -251,14 +269,6 @@ export class BoardComponent {
   }
 
   updatePosting(posting_id: any): void {
-    // html에서 해당 포스트 id 가져오기
-    // 해당 포스트 id로 update할 내용 전달
-
-    // posting?.thumbnails?.have/want 배열을 건들일 수 있도록
-    // img 위에 작은 버튼을 만들어서 해당 객체?(현 thumb)를 지울 수 있도록
-    // 포스팅에서 수정을 눌렀을 때, 자신의 게시글 위의 
-    // 오브젝트들만 우측 상단에 버튼이 보이도록?
-
     const postingToUpdate = this.postings.find(posting => posting.posting_id === posting_id);
 
     if (postingToUpdate) {
@@ -352,7 +362,14 @@ export class BoardComponent {
       next: (data) => {
         console.log('Posting delete successfully:', data);
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        if(err.status === 404) {
+          console.log('No data found');
+        } else {
+          console.error('Error deleting posting:', err);
+          alert('An unknown error occurred:');
+        }
+      },
       complete: () => {
         console.log('Delete complete');
         this.loadData();
@@ -368,7 +385,11 @@ export class BoardComponent {
   }
 
   goDM(userId: string, username: string): void {
-    this.router.navigate(['/dm'], { queryParams: { userId: userId, username: username } })
+    if( userId === localStorage.getItem('userId') ){
+      alert('You cannot chat with yourself.');
+      return;
+    }
+    this.router.navigate(['/dm'], { queryParams: { userId: userId } })
   }
 
   // Add new functions for menu handling

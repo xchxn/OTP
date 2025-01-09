@@ -91,8 +91,8 @@ export class ManageService {
   ) {}
 
   private readonly MAX_CONCURRENT_REQUESTS = 100; // 시스템에 맞게 조절하세요
-  private readonly START_ID = 1500001;
-  private readonly END_ID = 2000000;
+  private readonly START_ID = 6000001;
+  private readonly END_ID = 6700000;
 
   async getObjekt(): Promise<boolean> {
     const url = `https://api.cosmo.fans/objekt/v1/token`;
