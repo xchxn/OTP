@@ -50,12 +50,12 @@ export class MypageComponent {
       },
       error: (err) => {
         if (err.status === 404) {
-          alert('사용자를 찾을 수 없습니다.');
+          alert('Cannot find user.');
         } else if (err.status === 401) {
-          alert('인증이 필요합니다.');
+          alert('Need authorization.');
           this.router.navigate(['/auth']);
         } else {
-          alert('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+          alert('Failed to load user information.');
         }
       },
       complete: () => console.log('Data loading complete')

@@ -39,16 +39,27 @@ export class AppComponent {
       this.isLoggedIn = status;
     });
 
+    // 토큰 만료 확인
+    this.authService.requestAccessToken().subscribe({
+      next: (response) => {
+        console.log('Access token refreshed successfully!');
+      },
+      error: (error) => {
+        console.error('Failed to refresh access token:', error);
+      },
+      complete: () => {
+        console.log('Access token refresh complete!');
+      }
+    });
+
     const accessToken = localStorage.getItem('accessToken');
-    const refreshtoken = localStorage.getItem('refreshtoken');
+    const refreshToken = localStorage.getItem('refreshToken');
     this.userId = localStorage.getItem('userId');
-    this.username = localStorage.getItem('username');
 
     const data = {
       accessToken : accessToken,
-      refreshtoken : refreshtoken,
+      refreshToken : refreshToken,
       userId : this.userId,
-      username : this.username
     }
     if (accessToken) {
       // JWT 토큰을 localStorage에 저장
@@ -72,7 +83,6 @@ export class AppComponent {
         if (data) {
           // JWT 토큰을 localStorage에 저장
           this.authService.isLogin(data);
-          this.username = localStorage.getItem('username');
 
           // 인증된 사용자가 갈 수 있는 경로로 리다이렉트
           this.router.navigate(['/board']);
@@ -88,15 +98,13 @@ export class AppComponent {
     const urlParams = new URLSearchParams(window.location.search);
 
     const accessToken = urlParams.get('accessToken');
-    const refreshtoken = urlParams.get('refreshtoken');
+    const refreshToken = urlParams.get('refreshToken');
     const userId = urlParams.get('userId');
-    const username = urlParams.get('username');
 
     return {
       accessToken: accessToken,
-      refreshtoken: refreshtoken,
+      refreshToken: refreshToken,
       userId: userId,
-      username: username
     };
   }
 
