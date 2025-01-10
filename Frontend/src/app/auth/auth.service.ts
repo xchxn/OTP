@@ -34,7 +34,7 @@ export class AuthService {
   // 로그인 함수
   isLogin(data: any) {
     localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshtoken', data.refreshtoken);
+    localStorage.setItem('refreshToken', data.refreshToken);
     localStorage.setItem('userId', data.userId);
 
     // this.cookieService.set('accessToken', token , 7 * 24 * 60 * 60 * 1000);
@@ -45,7 +45,7 @@ export class AuthService {
   // 로그아웃 함수
   logout() {
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshtoken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('userId');
 
     localStorage.clear()

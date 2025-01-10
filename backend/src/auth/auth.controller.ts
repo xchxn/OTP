@@ -96,7 +96,7 @@ export class AuthController {
     const userId = user.id;
     const username = user.username;
     res.redirect(
-      `${this.configService.get<string>('CLIENT_URL')}?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
+      `${this.configService.get<string>('CLIENT_URL')}?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${userId}&username=${username}`,
     );
   }
 
@@ -119,7 +119,7 @@ export class AuthController {
     const username = user.username;
 
     res.redirect(
-      `${this.configService.get<string>('CLIENT_URL')}?accessToken=${accessToken}&refreshtoken=${refreshToken}&userId=${userId}&username=${username}`,
+      `${this.configService.get<string>('CLIENT_URL')}?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${userId}&username=${username}`,
     );
 
     // return req.user;
@@ -129,7 +129,7 @@ export class AuthController {
   // @UseGuards(JwtAuthGuard) // Optional: Use this if you require the user to be initially authenticated
   @Post('refresh')
   async refreshAccessToken(
-    @Body() body: { refreshToken: string },
+    @Body() body: any,
     @Res() res: Response,
   ) {
     try {
@@ -138,6 +138,7 @@ export class AuthController {
       );
       res.json({ accessToken: newAccessToken });
     } catch (error) {
+      console.log(body);
       throw new UnauthorizedException('Failed to refresh access token');
     }
   }
