@@ -1,25 +1,62 @@
-<div class="dmContainer">
-  <div class="receiver-list">
-    <h3>DM List</h3>
-    <div>
-      <button class="dmList" *ngFor="let receiver of dmList$ | async" (click)="selectDm(receiver.userId)">
-        {{ receiver.username }}
-      </button>
+<div class="dm-container">
+  <!-- 채팅 목록 -->
+  <div class="receiver-list" [class.hidden]="!showReceiverList">
+    <h2>채팅 목록</h2>
+    <div class="chat-list">
+      <div *ngFor="let chat of chatList" 
+           class="chat-item" 
+           [class.active]="chat.userId === selectedReceiverId"
+           (click)="selectChat(chat)">
+        <div class="chat-info">
+          <div class="username">{{ chat.username }}</div>
+          <div class="last-message">{{ chat.lastMessage }}</div>
+          <div class="timestamp">{{ chat.lastMessageTime | date:'short' }}</div>
+        </div>
+        <div class="chat-actions">
+          <span *ngIf="chat.unreadCount > 0" class="unread-count">{{ chat.unreadCount }}</span>
+          <button class="delete-btn" (click)="removeChat(chat.userId, $event)">삭제</button>
+        </div>
+      </div>
     </div>
   </div>
-  
-  <div class="nowDmContainer">
-    <div class="messageListContainer" #messageListContainer>
-      <div class="messageContainer" *ngFor="let msg of messages"
-      [ngClass]="{'myMessage': msg.senderId === userId, 'otherMessage': msg.senderId !== userId}">
-        {{ msg.message }}
-      </div>
+
+  <!-- 메시지 영역 -->
+  <div class="message-area" [class.hidden]="showReceiverList && isMobileView">
+    <!-- 모바일 뷰에서 뒤로가기 버튼 -->
+    <div *ngIf="isMobileView" class="mobile-header">
+      <button (click)="toggleView()">← 목록</button>
+      <span>{{ selectedUsername }}</span>
     </div>
-    <form [formGroup]="messageForm" (ngSubmit)="send()">
-      <div>
-        <input id="message" formControlName="message">
-        <button class="sendDm" type="submit">Send Message</button>
+
+    <!-- 메시지가 없을 때 -->
+    <div *ngIf="!selectedReceiverId" class="no-chat-selected">
+      채팅방을 선택해주세요
+    </div>
+
+    <!-- 메시지 목록 -->
+    <div *ngIf="selectedReceiverId" class="message-content">
+      <div #messageListContainer class="message-list">
+        <div *ngFor="let message of messages" 
+             class="message" 
+             [class.sent]="message.senderId === userId"
+             [class.received]="message.senderId !== userId">
+          <div class="message-bubble">
+            {{ message.message }}
+          </div>
+          <div class="message-time">
+            {{ message.timestamp | date:'short' }}
+          </div>
+        </div>
       </div>
-    </form>
+
+      <!-- 메시지 입력 폼 -->
+      <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form">
+        <input type="text" 
+               formControlName="message" 
+               placeholder="메시지를 입력하세요..."
+               (keyup.enter)="sendMessage()">
+        <button type="submit" [disabled]="messageForm.invalid">전송</button>
+      </form>
+    </div>
   </div>
 </div>

@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
-import { filter } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { ThemeService } from './theme/theme.service';
+import { DmService } from './dm/dm.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -20,9 +22,9 @@ export class AppComponent {
 
   constructor(
     private authService: AuthService,
-    private cookieService: CookieService,
     private router: Router,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private dmService: DmService
   ) {
     this.themeService.loadTheme();
     this.isDarkMode = this.themeService.isDarkMode();
@@ -30,7 +32,6 @@ export class AppComponent {
   // 로그아웃 함수
   logout() {
     this.authService.logout();
-    // this.router.navigate(['/auth']); // 로그아웃 후 로그인 페이지로 이동
   }
 
   ngOnInit() {
@@ -39,10 +40,13 @@ export class AppComponent {
       this.isLoggedIn = status;
     });
 
+    if (!this.isLoggedIn) this.setupRouterEvents();
+
     // 토큰 만료 확인
-    this.authService.requestAccessToken().subscribe({
+    this.authService.requestAccessToken(localStorage.getItem('refreshToken')).subscribe({
       next: (response) => {
-        console.log('Access token refreshed successfully!');
+        this.authService.storeToken(response);
+        console.log('Access token refreshed successfully!',response);
       },
       error: (error) => {
         console.error('Failed to refresh access token:', error);
@@ -57,17 +61,14 @@ export class AppComponent {
     this.userId = localStorage.getItem('userId');
 
     const data = {
-      accessToken : accessToken,
-      refreshToken : refreshToken,
-      userId : this.userId,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      userId: this.userId,
     }
     if (accessToken) {
       // JWT 토큰을 localStorage에 저장
       this.authService.isLogin(data);
-      // this.router.navigate(['/board']);
     }
-
-    this.setupRouterEvents();
   }
 
   setupRouterEvents() {
@@ -75,7 +76,7 @@ export class AppComponent {
       .pipe(
         filter(event => event instanceof NavigationEnd),
         filter((event: NavigationEnd) => event.url.startsWith('/?accessToken'))
-    )
+      )
       .subscribe((event: NavigationEnd) => {
         console.log('Route changed, do something:', event.url);
         // 현재 URL에서 토큰 추출

@@ -23,7 +23,20 @@ interface Posting {
     have: any[];
     want: any[];
   };
+  posting_comment: Comment[];
+  commentCount: number;
 }
+
+interface Comment {
+  comment_id: number;
+  comment_content: string;
+  comment_userId: string;
+  auth_username: string;
+  comment_postingId: number;
+  comment_replyTargetCommentId: number;
+  comment_createdAt: Date;
+  comment_updatedAt: Date;
+} 
 
 interface objektFilter {
   season: Array<string>;
@@ -47,17 +60,22 @@ export class BoardComponent {
   updateMode: boolean = false;
   showMenuId: number | null = null;  // Add this for user menu
   showPostActionsId: number | null = null;  // Add this for post actions menu
+  toggleCommentsId: number | null = null; 
 
   postings: Posting[] = [];
   searchForm!: FormGroup;
   objektFilter!: objektFilter;
   objektFilterForm!: FormGroup;
 
+  commentForm!: FormGroup;
+  replyTargetCommentId: number | null = null;
+
   constructor(
     private boardService: BoardService,
     private postService: PostService,
     private formBuilder: FormBuilder,
     private cookieService: CookieService,
+    private dmService: DmService,
     private authService: AuthService,
     private router: Router
   ) { this.loadData(); }
@@ -72,6 +90,17 @@ export class BoardComponent {
         want: this.formBuilder.array([])
       })
     });
+
+    this.commentForm = this.formBuilder.group({
+      comment: ['', Validators.required],
+    });
+    
+    this.objektFilter = {
+      season: [],
+      member: [],
+      collectionNo: [],
+      classes: []
+    };
 
     this.objektFilterForm = this.formBuilder.group({
       season: [''],
@@ -101,7 +130,7 @@ export class BoardComponent {
     this.postService.getSelectOption().subscribe({
       next: (data) => {
         this.objektFilter = data;
-        console.log(this.objektFilter);
+        // console.log(this.objektFilter);
       },
       error: (err) => {
         console.error(err);
@@ -184,7 +213,7 @@ export class BoardComponent {
         this.postService.getThumbnail(haveValue).subscribe({
           next: (data) => {
             // 썸네일 주소 배열에 data 추가
-            console.log(data);
+            // console.log(data);
             posting.thumbnails.have.push(data);
           },
           error: (err) => console.error(err),
@@ -377,6 +406,110 @@ export class BoardComponent {
     });
   }
 
+  showComments(posting:Posting) {
+    this.boardService.getComment({ 
+      posting_id: posting.posting_id,
+    }).subscribe({
+      next: (data) => {
+        if(data.length > 0) {
+          posting.posting_comment = data;
+          console.log('Comment update successfully:', data);
+        }
+      },
+      error: (err) => {
+        if(err.status === 401) {
+          console.log('No Authorization');
+        } else {
+          alert('An unknown error occurred.');
+        }
+      },
+    });
+
+    // this.toggleCommentId = this.toggleCommentId === posting.posting_id ? null : posting.posting_id;
+  }
+
+  createComment(posting: Posting) {
+    this.boardService.createComment({ 
+      posting_id: posting.posting_id, 
+      userId: localStorage.getItem('userId'), 
+      content: this.commentForm.value.comment
+    }).subscribe({
+      next: (data) => {
+        console.log('Comment create successfully:', data);
+        this.commentForm.value.comment = '';
+        this.showComments(posting);
+      },
+      error: (err) => {
+        if(err.status === 401) {
+          console.log('No Authorization');
+        } else {
+          alert('An unknown error occurred:');
+        }
+      },
+    });
+  }
+
+  createReply(comment_id:any, posting:Posting) {
+    this.boardService.createReply({ 
+      posting_id: posting.posting_id,
+      comment_id: comment_id,
+      userId: localStorage.getItem('userId'), 
+      content: this.commentForm.value.comment
+    }).subscribe({
+      next: (data) => {
+        console.log('Comment create successfully:', data);
+        this.commentForm.value.comment = '';
+        this.replyTargetCommentId = null;
+        this.showComments(posting);
+      },
+      error: (err) => {
+        if(err.status === 401) {
+          console.log('No Authorization');
+        } else {
+          alert('An unknown error occurred:');
+        }
+      },
+    });
+  }
+
+  deleteComment(posting: Posting, comment_id:any) {
+    this.boardService.deleteComment({ 
+      comment_id: comment_id,
+    }).subscribe({
+      next: (data) => {
+        console.log('Comment delete successfully:', data);
+        this.showComments(posting);
+      },
+      error: (err) => {
+        if(err.status === 401) {
+          console.log('No Authorization');
+        } else {
+          alert('An unknown error occurred.');
+        }
+      },
+    });
+  }
+
+  updateComment(comment_id:any, posting: Posting) {
+    this.boardService.updateComment({ 
+      comment_id: comment_id,
+      content: this.commentForm.value.comment
+    }).subscribe({
+      next: (data) => {
+        console.log('Comment update successfully:', data);
+        this.showComments(posting);
+        this.commentForm.value.comment = '';
+      },
+      error: (err) => {
+        if(err.status === 401) {
+          console.log('No Authorization');
+        } else {
+          alert('An unknown error occurred.');
+        }
+      },
+    });
+  }
+
   changeUpdateMode() {
     this.updateMode = !this.updateMode;
     if (!this.updateMode) {
@@ -384,15 +517,15 @@ export class BoardComponent {
     }
   }
 
-  goDM(userId: string, username: string): void {
+  goDM(userId: string): void {
     if( userId === localStorage.getItem('userId') ){
       alert('You cannot chat with yourself.');
       return;
     }
-    this.router.navigate(['/dm'], { queryParams: { userId: userId } })
+    // this.dmService.setSelectedReceiver(userId);
+    this.router.navigate(['/dm']);
   }
 
-  // Add new functions for menu handling
   showMenu(posting: Posting): void {
     this.showMenuId = this.showMenuId === posting.posting_id ? null : posting.posting_id;
   }
@@ -404,5 +537,15 @@ export class BoardComponent {
   closeMenus(): void {
     this.showMenuId = null;
     this.showPostActionsId = null;
+  }
+
+  toggleComments(posting: Posting): void {
+    this.showComments(posting);
+
+    this.toggleCommentsId = this.toggleCommentsId === posting.posting_id ? null : posting.posting_id;
+  }
+
+  setReplyTarget(commentId: number | null) {
+    this.replyTargetCommentId = commentId;
   }
 }

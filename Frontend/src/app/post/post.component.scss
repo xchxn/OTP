@@ -199,6 +199,7 @@
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
+      // white-space: nowrap;
 
       &.primary {
         background-color: var(--accent-color);

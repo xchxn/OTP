@@ -14,7 +14,7 @@ import { MypageModule } from './mypage/mypage.module';
       isGlobal: true,
     }),
     DatabaseModule,
-    DmModule,
+    // DmModule,
     AuthModule,
     BoardModule,
     SearchModule,

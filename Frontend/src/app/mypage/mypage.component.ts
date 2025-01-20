@@ -33,13 +33,12 @@ export class MypageComponent {
     if (!this.userId) {
       alert("Please Login!");
       this.router.navigate([`/auth`]);
+    } else {
+      this.updateForm = this.formBuilder.group({
+        username: [''],
+      });
+      this.loadData();
     }
-
-    this.updateForm = this.formBuilder.group({
-      username: [''],
-    });
-
-    this.loadData();
   }
 
   loadData(): void {

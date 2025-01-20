@@ -37,10 +37,12 @@
         </div>
       </form>
       <div class="button-group end">
-        <button type="button" class="btn secondary" (click)="addObjektToHaveArray()" aria-label="Find Have items">Have
-          찾기</button>
-        <button type="button" class="btn primary" (click)="addObjektToWantArray()" aria-label="Find Want items">Want
-          찾기</button>
+        <button type="button" class="btn secondary" (click)="addObjektToHaveArray()" aria-label="Find Have items">
+          Add to Have
+          </button>
+        <button type="button" class="btn primary" (click)="addObjektToWantArray()" aria-label="Find Want items">
+          Add to Want
+          </button>
       </div>
     </div>
 
@@ -104,7 +106,7 @@
       My Post
     </button>
     <button type="button" class="btn secondary" (click)="searchWithPosting()" aria-label="Search matching posts">
-      Search Matching for post
+      Auto Matching
     </button>
     <button class="btn primary" routerLink="/post" routerLinkActive="active" ariaCurrentWhenActive="page"
       aria-label="Create new post">
@@ -134,7 +136,7 @@
           {{ posting.auth_username }}
         </button>
         <div class="menu" *ngIf="showMenuId === posting.posting_id">
-          <button type="button" (click)="goDM(posting.posting_userId, posting.auth_username)">
+          <button type="button" (click)="goDM(posting.posting_userId)">
             <i class="fa-solid fa-message"></i>
             <span>DM</span>
           </button>
@@ -229,6 +231,61 @@
               <i class="fa-solid fa-x"></i>
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="commentSection">
+      <button class="btn-comment" (click)="toggleComments(posting)">
+        Show Comments
+      </button>
+      
+      <div class="comments" *ngIf="toggleCommentsId === posting.posting_id">
+        <!-- 댓글 입력 -->
+        <div class="comment-input">
+          <form [formGroup]="commentForm" (ngSubmit)="createComment(posting)" class="comment-form">
+            <div class="form-group">
+              <label for="comment">comment</label>
+              <input type="text" 
+                     id="comment" 
+                     formControlName="comment" 
+                     class="form-control"
+                     placeholder="Enter comment">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn primary">
+                Submit Comment
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 댓글 목록 -->
+        <div class="comment-list">
+          @for (comment of posting.posting_comment; track comment.comment_id) {
+            @if (!comment.comment_replyTargetCommentId) {
+              <div class="comment">
+                <div class="comment-content">
+                  <div class="comment-header">
+                    <span class="username">{{ comment.auth_username }}</span>
+                    <button 
+                      *ngIf="userId === comment.comment_userId" 
+                      class="btn-delete" 
+                      (click)="deleteComment(posting, comment.comment_id)"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                  <p>{{ comment.comment_content }}</p>
+                  <button 
+                    class="btn-reply" 
+                    (click)="setReplyTarget(comment.comment_id)"
+                  >
+                    답글
+                  </button>
+                </div>
+              </div>
+            }
+          }
         </div>
       </div>
     </div>

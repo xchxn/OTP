@@ -21,6 +21,7 @@ export class MypageController {
   @UseGuards(JwtAuthGuard)
   @Post('/myDelete')
   async deleteMyInfo(@Body() body: any): Promise<any> {
+    console.log(body);
     return this.mypageService.deleteMyInfo(body);
   }
 }
