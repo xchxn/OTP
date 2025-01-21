@@ -216,6 +216,7 @@ export class BoardService {
 
   // 포스팅 댓글에 대댓글 추가
   async createReply(body: any): Promise<any> {
+    console.log(body);
     const replyTicket = await this.commentRepository
       .createQueryBuilder()
       .insert()

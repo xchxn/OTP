@@ -413,7 +413,6 @@ export class BoardComponent {
       next: (data) => {
         if(data.length > 0) {
           posting.posting_comment = data;
-          console.log('Comment update successfully:', data);
         }
       },
       error: (err) => {
@@ -429,35 +428,38 @@ export class BoardComponent {
   }
 
   createComment(posting: Posting) {
-    this.boardService.createComment({ 
-      posting_id: posting.posting_id, 
-      userId: localStorage.getItem('userId'), 
-      content: this.commentForm.value.comment
-    }).subscribe({
-      next: (data) => {
-        console.log('Comment create successfully:', data);
-        this.commentForm.value.comment = '';
-        this.showComments(posting);
-      },
-      error: (err) => {
-        if(err.status === 401) {
-          console.log('No Authorization');
-        } else {
-          alert('An unknown error occurred:');
-        }
-      },
-    });
+    if(!this.replyTargetCommentId){
+      this.boardService.createComment({ 
+        posting_id: posting.posting_id, 
+        userId: localStorage.getItem('userId'), 
+        content: this.commentForm.value.comment
+      }).subscribe({
+        next: (data) => {
+          console.log('Comment create successfully:', data);
+          this.commentForm.value.comment = '';
+          this.showComments(posting);
+        },
+        error: (err) => {
+          if(err.status === 401) {
+            console.log('No Authorization');
+          } else {
+            alert('An unknown error occurred:');
+          }
+        },
+      });
+    } else this.createReply(this.replyTargetCommentId, posting);
   }
 
-  createReply(comment_id:any, posting:Posting) {
+  createReply(comment_id:number, posting:Posting) {
+    console.log("target reply comment id",comment_id);
     this.boardService.createReply({ 
       posting_id: posting.posting_id,
-      comment_id: comment_id,
+      replyTargetCommentId: comment_id,
       userId: localStorage.getItem('userId'), 
       content: this.commentForm.value.comment
     }).subscribe({
       next: (data) => {
-        console.log('Comment create successfully:', data);
+        console.log('Reply create successfully:', data);
         this.commentForm.value.comment = '';
         this.replyTargetCommentId = null;
         this.showComments(posting);
@@ -547,5 +549,6 @@ export class BoardComponent {
 
   setReplyTarget(commentId: number | null) {
     this.replyTargetCommentId = commentId;
+    console.log(this.replyTargetCommentId);
   }
 }
